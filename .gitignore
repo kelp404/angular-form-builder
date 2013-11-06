@@ -1,0 +1,11 @@
+# OS X noise
+.DS_Store
+
+# PyCharm
+.idea
+
+# node modules
+node_modules
+
+# compass
+.sass-cache
