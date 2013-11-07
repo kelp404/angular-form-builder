@@ -6,6 +6,7 @@
   a.run(function($builder) {});
 
   a.controller('BuilderController', function($scope, $builder) {
+    $builder.registerComponent('name', null);
     return $scope.form = [];
   });
 
