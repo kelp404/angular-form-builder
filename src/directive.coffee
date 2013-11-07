@@ -1,11 +1,24 @@
 
 a = angular.module 'builder.directive', ['builder.provider']
 
-a.directive 'fbBuilder', ->
+fbBuilder = ($injector) ->
     restrict: 'A'
     require: 'ngModel'  # builder data (the form information)
     link: (scope, element, attrs) ->
+        # ----------------------------------------
+        # providers
+        # ----------------------------------------
+        $parse = $injector.get '$parse'
+
+        # ----------------------------------------
+        # valuables
+        # ----------------------------------------
+        model = $parse attrs.ngModel
         name = attrs.fbBuilder
+
+
+fbBuilder.$inject = ['$injector']
+a.directive 'fbBuilder', fbBuilder
 
 
 a.directive 'fbComponents', ->

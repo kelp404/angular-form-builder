@@ -1,13 +1,12 @@
 (function() {
   var a;
 
-  a = angular.module('app', ['builder']);
+  a = angular.module('app', ['builder', 'builder.components']);
 
-  a.run(function($builder) {});
-
-  a.controller('BuilderController', function($scope, $builder) {
-    $builder.registerComponent('name', null);
-    return $scope.form = [];
+  a.run(function($builder) {
+    return $builder.registerComponent('name', null);
   });
+
+  a.controller('BuilderController', function($scope, $builder) {});
 
 }).call(this);

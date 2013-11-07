@@ -32,8 +32,16 @@ a.provider '$builder', ->
             description: component.description ? ''
             placeholder: component.placeholder ? ''
             required: component.required ? false
-            template: component.template ? ""
-
+            validation: component.validation ? /.*/
+            template: component.template ?
+                """
+                <div class="form-group">
+                    <label for="{{name}}" class="col-md-2 control-label" ng-bind="label"></label>
+                    <div class="col-md-10">
+                        <input type="text" validator="{{validation}}" ng-model="input" class="form-control" id="{{name}}" placeholder="{{placeholder}}"/>
+                    </div>
+                </div>
+                """
 
         result
 
