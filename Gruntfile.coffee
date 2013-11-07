@@ -19,6 +19,9 @@ module.exports = (grunt) ->
             source:
                 files:
                     './dist/angular-form-builder.js': ['./src/*.coffee']
+            components:
+                files:
+                    './dist/angular-form-builder-components.js': ['./components/*.coffee']
             demo:
                 files:
                     './example/demo.js': './example/demo.coffee'
@@ -30,7 +33,7 @@ module.exports = (grunt) ->
                 options:
                     spawn: false
             coffee:
-                files: ['./src/*.coffee', './example/*.coffee']
+                files: ['./src/*.coffee', './components/*.coffee', './example/*.coffee']
                 tasks: ['coffee']
                 options:
                     spawn: false
