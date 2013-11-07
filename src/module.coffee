@@ -1,1 +1,1 @@
-angular.module 'builder', ['builder.provider', 'builder.directive']
+angular.module 'builder', ['builder.provider', 'builder.directive', 'validator', 'validator.rules']
