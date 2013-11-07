@@ -1,3 +1,8 @@
 [submodule "submodules/angularjs"]
 	path = submodules/angularjs
 	url = https://github.com/kelp404/angularjs.git
+	ignore = dirty
+[submodule "submodules/jquery"]
+	path = submodules/jquery
+	url = https://github.com/kelp404/jquery.git
+	ignore = dirty
