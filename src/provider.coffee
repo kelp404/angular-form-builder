@@ -13,10 +13,11 @@ a.provider '$builder', ->
     # ----------------------------------------
     # all components
     @components = {}
-    # builders.
-    #   builder mode: `fb-builder` you could drag and drop to build this builder.
+    # forms
+    #   builder mode: `fb-builder` you could drag and drop to build the form.
     #   form mode: `fb-form` this is the form for user to input value.
-    @builders = {}
+    @forms = {}
+    @forms[''] = []
 
 
     # ----------------------------------------
@@ -28,22 +29,27 @@ a.provider '$builder', ->
     @convertComponent = (name, component) ->
         result =
             name: name
+            group: component.group ? 'Default'
             label: component.label ? ''
             description: component.description ? ''
             placeholder: component.placeholder ? ''
             required: component.required ? false
             validation: component.validation ? /.*/
+            options: component.options ? []
             template: component.template ?
                 """
                 <div class="form-group">
-                    <label for="{{name}}" class="col-md-2 control-label" ng-bind="label"></label>
+                    <label for="{{name+label}}" ng-bind="label" class="col-md-2 control-label"></label>
                     <div class="col-md-10">
-                        <input type="text" validator="{{validation}}" ng-model="input" class="form-control" id="{{name}}" placeholder="{{placeholder}}"/>
+                        <input type="text" validator="{{validation}}" class="form-control" id="{{name+label}}" placeholder="{{placeholder}}"/>
                     </div>
                 </div>
                 """
 
         result
+
+    @convertFormGroup = (formGroup={}) ->
+        formGroup
 
 
     # ----------------------------------------
@@ -54,16 +60,35 @@ a.provider '$builder', ->
         Register the component for form-builder.
         @param name: The component name.
         @param component: The component object.
-
+            group: The compoent group.
+            label: The label of the input.
+            descriptiont: The description of the input.
+            placeholder: The placeholder of the input.
+            required: yes / no
+            validation: RegExp
+            template: html template
         ###
         @components[name] = @convertComponent name, component
 
-    @loadBuilder = (name, object=[]) ->
+    @getComponentGroups = =>
+        groupSet = {}
+        for name, component of @components
+            groupSet[component.group] = null
+        Object.keys groupSet
+
+    @getComponentsByGroup = (group) =>
+        component for name, component of @components when component.group is group
+
+    @addFormGroup = (name, formGroup={}) =>
         ###
-        Load the form information into the builder which name is `name`.
-        @param name: The builder name.
-        @param object: The form information.
+        Add the form group into the form.
+        @param name: The form name.
+        @param formGroup: The form group.
+            removable: true
+            label:
         ###
+        @forms[name] ?= []
+        @forms[name].push @convertFormGroup(formGroup)
 
 
     # ----------------------------------------
@@ -71,11 +96,12 @@ a.provider '$builder', ->
     # ----------------------------------------
     @get = ($injector) ->
         @setupProviders $injector
-        @builders[''] = []
 
         components: @components
-        builders: @builder
+        forms: @forms
         registerComponent: @registerComponent
-        loadBuilder: @loadBuilder
+        getComponentGroups: @getComponentGroups
+        getComponentsByGroup: @getComponentsByGroup
+        addFormGroup: @addFormGroup
     @get.$inject = ['$injector']
     @$get = @get
