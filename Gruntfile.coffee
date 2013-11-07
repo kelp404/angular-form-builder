@@ -4,10 +4,15 @@ module.exports = (grunt) ->
     # -----------------------------------
     grunt.config.init
         compass:
-            dev:
+            example:
                 options:
                     sassDir: './example'
                     cssDir: './example'
+                    outputStyle: 'compressed'
+            src:
+                options:
+                    sassDir: './src'
+                    cssDir: './dist'
                     outputStyle: 'compressed'
 
         coffee:
@@ -20,7 +25,7 @@ module.exports = (grunt) ->
 
         watch:
             compass:
-                files: ['./example/*.scss']
+                files: ['./example/*.scss', './src/*.scss']
                 tasks: ['compass']
                 options:
                     spawn: false
