@@ -8,10 +8,19 @@ fbComponentsController = ($scope, $injector) ->
     # providers
     $builder = $injector.get '$builder'
 
-    groups = $builder.getComponentGroups()
-    $scope.components = {}
-    for group in groups
-        $scope.components[group] = $builder.getComponentsByGroup group
+    # data
+    $scope.groups = $builder.getComponentGroups()
+    $scope.components = (value for key, value of $builder.components)
+
+    # status
+    $scope.status =
+        activeGroup: $scope.groups[0]
+
+    # action
+    $scope.action =
+        selectGroup: ($event, group) ->
+            $event.preventDefault()
+            $scope.status.activeGroup = group
 
 fbComponentsController.$inject = ['$scope', '$injector']
 a.controller 'fbComponentsController', fbComponentsController

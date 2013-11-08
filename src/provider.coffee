@@ -76,9 +76,6 @@ a.provider '$builder', ->
             groupSet[component.group] = null
         Object.keys groupSet
 
-    @getComponentsByGroup = (group) =>
-        component for name, component of @components when component.group is group
-
     @addFormGroup = (name, formGroup={}) =>
         ###
         Add the form group into the form.
@@ -101,7 +98,6 @@ a.provider '$builder', ->
         forms: @forms
         registerComponent: @registerComponent
         getComponentGroups: @getComponentGroups
-        getComponentsByGroup: @getComponentsByGroup
         addFormGroup: @addFormGroup
     @get.$inject = ['$injector']
     @$get = @get

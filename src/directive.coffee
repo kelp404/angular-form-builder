@@ -31,9 +31,13 @@ fbComponents = ($injector) ->
     template:
         """
         <ul class="nav nav-tabs nav-justified">
-            <li ng-repeat="(group, component) in components" ng-class="{active:$first}"><a>{{group}}</a></li>
+            <li ng-repeat="group in groups" ng-class="{active:status.activeGroup==group}">
+                <a href='#' ng-click="action.selectGroup($event, group)">{{group}}</a>
+            </li>
         </ul>
-        <div ng-repeat="component in components">{{component}}</div>
+        <div ng-repeat="component in components|filter:{group:status.activeGroup}">
+            {{component}}
+        </div>
         """
     controller: 'fbComponentsController'
     link: (scope, element, attrs) ->

@@ -4,16 +4,28 @@
   a = angular.module('builder.controller', ['builder.provider']);
 
   fbComponentsController = function($scope, $injector) {
-    var $builder, group, groups, _i, _len, _results;
+    var $builder, key, value;
     $builder = $injector.get('$builder');
-    groups = $builder.getComponentGroups();
-    $scope.components = {};
-    _results = [];
-    for (_i = 0, _len = groups.length; _i < _len; _i++) {
-      group = groups[_i];
-      _results.push($scope.components[group] = $builder.getComponentsByGroup(group));
-    }
-    return _results;
+    $scope.groups = $builder.getComponentGroups();
+    $scope.components = (function() {
+      var _ref, _results;
+      _ref = $builder.components;
+      _results = [];
+      for (key in _ref) {
+        value = _ref[key];
+        _results.push(value);
+      }
+      return _results;
+    })();
+    $scope.status = {
+      activeGroup: $scope.groups[0]
+    };
+    return $scope.action = {
+      selectGroup: function($event, group) {
+        $event.preventDefault();
+        return $scope.status.activeGroup = group;
+      }
+    };
   };
 
   fbComponentsController.$inject = ['$scope', '$injector'];
@@ -47,7 +59,7 @@
   fbComponents = function($injector) {
     return {
       restrict: 'A',
-      template: "<ul class=\"nav nav-tabs nav-justified\">\n    <li ng-repeat=\"(group, component) in components\" ng-class=\"{active:$first}\"><a>{{group}}</a></li>\n</ul>\n<div ng-repeat=\"component in components\">{{component}}</div>",
+      template: "<ul class=\"nav nav-tabs nav-justified\">\n    <li ng-repeat=\"group in groups\" ng-class=\"{active:status.activeGroup==group}\">\n        <a href='#' ng-click=\"action.selectGroup($event, group)\">{{group}}</a>\n    </li>\n</ul>\n<div ng-repeat=\"component in components|filter:{group:status.activeGroup}\">\n    {{component}}\n</div>",
       controller: 'fbComponentsController',
       link: function(scope, element, attrs) {}
     };
@@ -144,18 +156,6 @@
       }
       return Object.keys(groupSet);
     };
-    this.getComponentsByGroup = function(group) {
-      var component, name, _ref, _results;
-      _ref = _this.components;
-      _results = [];
-      for (name in _ref) {
-        component = _ref[name];
-        if (component.group === group) {
-          _results.push(component);
-        }
-      }
-      return _results;
-    };
     this.addFormGroup = function(name, formGroup) {
       var _base;
       if (formGroup == null) {
@@ -181,7 +181,6 @@
         forms: this.forms,
         registerComponent: this.registerComponent,
         getComponentGroups: this.getComponentGroups,
-        getComponentsByGroup: this.getComponentsByGroup,
         addFormGroup: this.addFormGroup
       };
     };
