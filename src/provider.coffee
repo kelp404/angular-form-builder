@@ -101,3 +101,4 @@ a.provider '$builder', ->
         addFormGroup: @addFormGroup
     @get.$inject = ['$injector']
     @$get = @get
+    return

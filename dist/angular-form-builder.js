@@ -185,7 +185,7 @@
       };
     };
     this.get.$inject = ['$injector'];
-    return this.$get = this.get;
+    this.$get = this.get;
   });
 
 }).call(this);
