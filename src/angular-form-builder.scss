@@ -1,7 +1,17 @@
-.fb-components {
-    .fb-draggable {
-        cursor: move;
-        input { cursor: move; }
-        label { cursor: move; }
-    }
+
+@import "compass/css3";
+
+
+.fb-component {
+    padding: 10px 10px 10px 0;
+    cursor: move;
+    input { cursor: move; }
+    label { cursor: move; }
+}
+
+.fb-draggable.dragging {
+    background-color: #ffffff;
+    position: absolute;
+    z-index: 800;
+    @include box-shadow(#666 0 0 20px);
 }

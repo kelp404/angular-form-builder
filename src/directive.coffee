@@ -1,4 +1,42 @@
 
+class Draggable
+    constructor: ($injector, object) ->
+        @injector = $injector
+        @$maternal = null
+        @$element = null
+
+        if object.maternal
+            # mirror mode
+            @$maternal = $(object.maternal)
+            @mirrorMode(@$maternal)
+
+    mirrorMode: (maternal) =>
+        maternal.bind 'mousedown', (e) =>
+            e.preventDefault()
+            @$element = maternal.clone()
+            callback =
+                move: (e) =>
+                    @$element.offset
+                        left: e.pageX - @$element.width() / 2
+                        top: e.pageY - @$element.height() / 2
+                up: (e) => @$element.remove()
+            @setupElement @$element, callback,
+                left: e.pageX - @$maternal.width() / 2
+                top: e.pageY - @$maternal.height() / 2
+
+    setupElement: (element, callback, object) =>
+        element.addClass 'fb-draggable dragging form-horizontal'
+        element.css
+            width: @$maternal.width()
+            height: @$maternal.height()
+            left: object.left ? @$maternal.offset().left
+            top: object.top ? @$maternal.offset().top
+        element.bind 'mousedown', (e) -> callback.down(e) if callback.down
+        element.bind 'mousemove', (e) -> callback.move(e) if callback.move
+        element.bind 'mouseup', (e) -> callback.up(e) if callback.up
+        $('body').append element
+
+
 a = angular.module 'builder.directive', ['builder.provider', 'builder.controller']
 
 # ----------------------------------------
@@ -37,9 +75,9 @@ fbComponents = ($injector) ->
                 </li>
             </ul>
             <div class='form-horizontal'>
-                <div class='fb-component fb-draggable'
+                <div class='fb-component'
                     ng-repeat="component in components|filter:{group:status.activeGroup}"
-                    fb-component="component"></div>
+                    fb-component="component" fb-draggable-maternal></div>
             </div>
         </div>
         """
@@ -64,11 +102,23 @@ fbComponent = ($injector) ->
         cs = scope.$new()   # component scope
 
         $.extend cs, component
-        view = $compile(component.template) cs
-        $(element).html "<div class='fb-mock'></div>"
+        $template = $(component.template)
+        view = $compile($template) cs
         $(element).append view
 fbComponent.$inject = ['$injector']
 a.directive 'fbComponent', fbComponent
+
+# ----------------------------------------
+# fb-draggable-maternal
+# ----------------------------------------
+fbDraggableMaternal = ($injector) ->
+    restrict: 'A'
+    link: (scope, element, attrs) ->
+        new Draggable $injector,
+            maternal: element
+
+fbDraggableMaternal.$inject = ['$injector']
+a.directive 'fbDraggableMaternal', fbDraggableMaternal
 
 
 # ----------------------------------------
@@ -79,6 +129,7 @@ fbForm = ($injector) ->
     require: 'ngModel'  # form data (user input value)
     link: (scope, element, attrs) ->
         name = attrs.fbForm
+        console.log 'form'
 
 fbForm.$inject = ['$injector']
 a.directive 'fbForm', fbForm

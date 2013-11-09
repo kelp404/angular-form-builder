@@ -43,9 +43,9 @@ a.provider '$builder', ->
             template: component.template ?
                 """
                 <div class="form-group">
-                    <label for="{{name+label}}" ng-bind="label" class="col-md-2 control-label"></label>
+                    <label for="{{name+label}}" class="col-md-2 control-label">{{label}}</label>
                     <div class="col-md-10">
-                        <input type="text" validator="{{validation}}" class="form-control" id="{{name+label}}" placeholder="{{placeholder}}"/>
+                        <input type="text" class="form-control" id="{{name+label}}" placeholder="{{placeholder}}"/>
                     </div>
                 </div>
                 """

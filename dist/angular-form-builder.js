@@ -26,7 +26,76 @@
 }).call(this);
 
 (function() {
-  var a, fbBuilder, fbComponent, fbComponents, fbForm;
+  var Draggable, a, fbBuilder, fbComponent, fbComponents, fbDraggableMaternal, fbForm,
+    __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
+
+  Draggable = (function() {
+    function Draggable($injector, object) {
+      this.setupElement = __bind(this.setupElement, this);
+      this.mirrorMode = __bind(this.mirrorMode, this);
+      this.injector = $injector;
+      this.$maternal = null;
+      this.$element = null;
+      if (object.maternal) {
+        this.$maternal = $(object.maternal);
+        this.mirrorMode(this.$maternal);
+      }
+    }
+
+    Draggable.prototype.mirrorMode = function(maternal) {
+      var _this = this;
+      return maternal.bind('mousedown', function(e) {
+        var callback;
+        e.preventDefault();
+        _this.$element = maternal.clone();
+        callback = {
+          move: function(e) {
+            return _this.$element.offset({
+              left: e.pageX - _this.$element.width() / 2,
+              top: e.pageY - _this.$element.height() / 2
+            });
+          },
+          up: function(e) {
+            return _this.$element.remove();
+          }
+        };
+        return _this.setupElement(_this.$element, callback, {
+          left: e.pageX - _this.$maternal.width() / 2,
+          top: e.pageY - _this.$maternal.height() / 2
+        });
+      });
+    };
+
+    Draggable.prototype.setupElement = function(element, callback, object) {
+      var _ref, _ref1;
+      element.addClass('fb-draggable dragging form-horizontal');
+      element.css({
+        width: this.$maternal.width(),
+        height: this.$maternal.height(),
+        left: (_ref = object.left) != null ? _ref : this.$maternal.offset().left,
+        top: (_ref1 = object.top) != null ? _ref1 : this.$maternal.offset().top
+      });
+      element.bind('mousedown', function(e) {
+        if (callback.down) {
+          return callback.down(e);
+        }
+      });
+      element.bind('mousemove', function(e) {
+        if (callback.move) {
+          return callback.move(e);
+        }
+      });
+      element.bind('mouseup', function(e) {
+        if (callback.up) {
+          return callback.up(e);
+        }
+      });
+      return $('body').append(element);
+    };
+
+    return Draggable;
+
+  })();
 
   a = angular.module('builder.directive', ['builder.provider', 'builder.controller']);
 
@@ -50,7 +119,7 @@
   fbComponents = function($injector) {
     return {
       restrict: 'A',
-      template: "<div class='fb-components'>\n    <ul ng-if=\"groups.length > 1\" class=\"nav nav-tabs nav-justified\">\n        <li ng-repeat=\"group in groups\" ng-class=\"{active:status.activeGroup==group}\">\n            <a href='#' ng-click=\"action.selectGroup($event, group)\">{{group}}</a>\n        </li>\n    </ul>\n    <div class='form-horizontal'>\n        <div class='fb-component fb-draggable'\n            ng-repeat=\"component in components|filter:{group:status.activeGroup}\"\n            fb-component=\"component\"></div>\n    </div>\n</div>",
+      template: "<div class='fb-components'>\n    <ul ng-if=\"groups.length > 1\" class=\"nav nav-tabs nav-justified\">\n        <li ng-repeat=\"group in groups\" ng-class=\"{active:status.activeGroup==group}\">\n            <a href='#' ng-click=\"action.selectGroup($event, group)\">{{group}}</a>\n        </li>\n    </ul>\n    <div class='form-horizontal'>\n        <div class='fb-component'\n            ng-repeat=\"component in components|filter:{group:status.activeGroup}\"\n            fb-component=\"component\" fb-draggable-maternal></div>\n    </div>\n</div>",
       controller: 'fbComponentsController',
       link: function(scope, element, attrs) {}
     };
@@ -64,14 +133,14 @@
     return {
       restrict: 'A',
       link: function(scope, element, attrs) {
-        var $compile, $parse, component, cs, view;
+        var $compile, $parse, $template, component, cs, view;
         $parse = $injector.get('$parse');
         $compile = $injector.get('$compile');
         component = $parse(attrs.fbComponent)(scope);
         cs = scope.$new();
         $.extend(cs, component);
-        view = $compile(component.template)(cs);
-        $(element).html("<div class='fb-mock'></div>");
+        $template = $(component.template);
+        view = $compile($template)(cs);
         return $(element).append(view);
       }
     };
@@ -81,13 +150,29 @@
 
   a.directive('fbComponent', fbComponent);
 
+  fbDraggableMaternal = function($injector) {
+    return {
+      restrict: 'A',
+      link: function(scope, element, attrs) {
+        return new Draggable($injector, {
+          maternal: element
+        });
+      }
+    };
+  };
+
+  fbDraggableMaternal.$inject = ['$injector'];
+
+  a.directive('fbDraggableMaternal', fbDraggableMaternal);
+
   fbForm = function($injector) {
     return {
       restrict: 'A',
       require: 'ngModel',
       link: function(scope, element, attrs) {
         var name;
-        return name = attrs.fbForm;
+        name = attrs.fbForm;
+        return console.log('form');
       }
     };
   };
@@ -132,7 +217,7 @@
         required: (_ref4 = component.required) != null ? _ref4 : false,
         validation: (_ref5 = component.validation) != null ? _ref5 : /.*/,
         options: (_ref6 = component.options) != null ? _ref6 : [],
-        template: (_ref7 = component.template) != null ? _ref7 : "<div class=\"form-group\">\n    <label for=\"{{name+label}}\" ng-bind=\"label\" class=\"col-md-2 control-label\"></label>\n    <div class=\"col-md-10\">\n        <input type=\"text\" validator=\"{{validation}}\" class=\"form-control\" id=\"{{name+label}}\" placeholder=\"{{placeholder}}\"/>\n    </div>\n</div>"
+        template: (_ref7 = component.template) != null ? _ref7 : "<div class=\"form-group\">\n    <label for=\"{{name+label}}\" class=\"col-md-2 control-label\">{{label}}</label>\n    <div class=\"col-md-10\">\n        <input type=\"text\" class=\"form-control\" id=\"{{name+label}}\" placeholder=\"{{placeholder}}\"/>\n    </div>\n</div>"
       };
       return result;
     };
