@@ -26,7 +26,7 @@
 }).call(this);
 
 (function() {
-  var a, fbBuilder, fbComponents, fbForm;
+  var a, fbBuilder, fbComponent, fbComponents, fbForm;
 
   a = angular.module('builder.directive', ['builder.provider', 'builder.controller']);
 
@@ -50,7 +50,7 @@
   fbComponents = function($injector) {
     return {
       restrict: 'A',
-      template: "<div class='fb-components'>\n    <ul ng-if=\"groups.length > 1\" class=\"nav nav-tabs nav-justified\">\n        <li ng-repeat=\"group in groups\" ng-class=\"{active:status.activeGroup==group}\">\n            <a href='#' ng-click=\"action.selectGroup($event, group)\">{{group}}</a>\n        </li>\n    </ul>\n    <div class='fb-component fb-draggable' ng-repeat=\"component in components|filter:{group:status.activeGroup}\">\n        {{component}}\n    </div>\n</div>",
+      template: "<div class='fb-components'>\n    <ul ng-if=\"groups.length > 1\" class=\"nav nav-tabs nav-justified\">\n        <li ng-repeat=\"group in groups\" ng-class=\"{active:status.activeGroup==group}\">\n            <a href='#' ng-click=\"action.selectGroup($event, group)\">{{group}}</a>\n        </li>\n    </ul>\n    <div class='form-horizontal'>\n        <div class='fb-component fb-draggable'\n            ng-repeat=\"component in components|filter:{group:status.activeGroup}\"\n            fb-component=\"component\"></div>\n    </div>\n</div>",
       controller: 'fbComponentsController',
       link: function(scope, element, attrs) {}
     };
@@ -59,6 +59,27 @@
   fbComponents.$inject = ['$injector'];
 
   a.directive('fbComponents', fbComponents);
+
+  fbComponent = function($injector) {
+    return {
+      restrict: 'A',
+      link: function(scope, element, attrs) {
+        var $compile, $parse, component, cs, view;
+        $parse = $injector.get('$parse');
+        $compile = $injector.get('$compile');
+        component = $parse(attrs.fbComponent)(scope);
+        cs = scope.$new();
+        $.extend(cs, component);
+        view = $compile(component.template)(cs);
+        $(element).html("<div class='fb-mock'></div>");
+        return $(element).append(view);
+      }
+    };
+  };
+
+  fbComponent.$inject = ['$injector'];
+
+  a.directive('fbComponent', fbComponent);
 
   fbForm = function($injector) {
     return {
@@ -136,6 +157,7 @@
           placeholder: The placeholder of the input.
           required: yes / no
           validation: RegExp
+          options: []
           template: html template
       */
 

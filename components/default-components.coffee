@@ -14,9 +14,10 @@ config = ($builderProvider) ->
         template:
             """
             <div class="form-group">
-                <label for="{{name+label}}" ng-bind="label" class="col-md-2 control-label"></label>
-                <div class="col-md-10">
-                    <input type="text" validator="{{validation}}" id="{{name+label}}" class="form-control" placeholder="{{placeholder}}"/>
+                <label for="{{name+label}}" class="col-md-4 control-label">{{label}}</label>
+                <div class="col-md-8">
+                    <input type="text" id="{{name+label}}" class="form-control" placeholder="{{placeholder}}"/>
+                    <p class='help-block'>{{description}}</p>
                 </div>
             </div>
             """

@@ -1,5 +1,7 @@
 .fb-components {
     .fb-draggable {
-
+        cursor: move;
+        input { cursor: move; }
+        label { cursor: move; }
     }
 }

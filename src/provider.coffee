@@ -70,6 +70,7 @@ a.provider '$builder', ->
             placeholder: The placeholder of the input.
             required: yes / no
             validation: RegExp
+            options: []
             template: html template
         ###
         if not @components[name]?
