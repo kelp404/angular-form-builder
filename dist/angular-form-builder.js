@@ -4,19 +4,10 @@
   a = angular.module('builder.controller', ['builder.provider']);
 
   fbComponentsController = function($scope, $injector) {
-    var $builder, key, value;
+    var $builder;
     $builder = $injector.get('$builder');
-    $scope.groups = $builder.getComponentGroups();
-    $scope.components = (function() {
-      var _ref, _results;
-      _ref = $builder.components;
-      _results = [];
-      for (key in _ref) {
-        value = _ref[key];
-        _results.push(value);
-      }
-      return _results;
-    })();
+    $scope.groups = $builder.groups;
+    $scope.components = $builder.componentsArray;
     $scope.status = {
       activeGroup: $scope.groups[0]
     };
@@ -59,7 +50,7 @@
   fbComponents = function($injector) {
     return {
       restrict: 'A',
-      template: "<ul class=\"nav nav-tabs nav-justified\">\n    <li ng-repeat=\"group in groups\" ng-class=\"{active:status.activeGroup==group}\">\n        <a href='#' ng-click=\"action.selectGroup($event, group)\">{{group}}</a>\n    </li>\n</ul>\n<div ng-repeat=\"component in components|filter:{group:status.activeGroup}\">\n    {{component}}\n</div>",
+      template: "<div class='fb-components'>\n    <ul ng-if=\"groups.length > 1\" class=\"nav nav-tabs nav-justified\">\n        <li ng-repeat=\"group in groups\" ng-class=\"{active:status.activeGroup==group}\">\n            <a href='#' ng-click=\"action.selectGroup($event, group)\">{{group}}</a>\n        </li>\n    </ul>\n    <div class='fb-component fb-draggable' ng-repeat=\"component in components|filter:{group:status.activeGroup}\">\n        {{component}}\n    </div>\n</div>",
       controller: 'fbComponentsController',
       link: function(scope, element, attrs) {}
     };
@@ -92,7 +83,8 @@
 }).call(this);
 
 (function() {
-  var a;
+  var a,
+    __indexOf = [].indexOf || function(item) { for (var i = 0, l = this.length; i < l; i++) { if (i in this && this[i] === item) return i; } return -1; };
 
   a = angular.module('builder.provider', []);
 
@@ -101,6 +93,8 @@
       _this = this;
     $injector = null;
     this.components = {};
+    this.componentsArray = [];
+    this.groups = [];
     this.forms = {};
     this.forms[''] = [];
     this.setupProviders = function(injector) {
@@ -128,6 +122,7 @@
       return formGroup;
     };
     this.registerComponent = function(name, component) {
+      var newComponent, _ref;
       if (component == null) {
         component = {};
       }
@@ -144,17 +139,14 @@
           template: html template
       */
 
-      return _this.components[name] = _this.convertComponent(name, component);
-    };
-    this.getComponentGroups = function() {
-      var component, groupSet, name, _ref;
-      groupSet = {};
-      _ref = _this.components;
-      for (name in _ref) {
-        component = _ref[name];
-        groupSet[component.group] = null;
+      if (_this.components[name] == null) {
+        newComponent = _this.convertComponent(name, component);
+        _this.components[name] = newComponent;
+        _this.componentsArray.push(newComponent);
+        if (_ref = newComponent.group, __indexOf.call(_this.groups, _ref) < 0) {
+          return _this.groups.push(newComponent.group);
+        }
       }
-      return Object.keys(groupSet);
     };
     this.addFormGroup = function(name, formGroup) {
       var _base;
@@ -178,9 +170,10 @@
       this.setupProviders($injector);
       return {
         components: this.components,
+        componentsArray: this.componentsArray,
+        groups: this.groups,
         forms: this.forms,
         registerComponent: this.registerComponent,
-        getComponentGroups: this.getComponentGroups,
         addFormGroup: this.addFormGroup
       };
     };

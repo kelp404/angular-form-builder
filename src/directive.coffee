@@ -30,13 +30,15 @@ fbComponents = ($injector) ->
     restrict: 'A'
     template:
         """
-        <ul class="nav nav-tabs nav-justified">
-            <li ng-repeat="group in groups" ng-class="{active:status.activeGroup==group}">
-                <a href='#' ng-click="action.selectGroup($event, group)">{{group}}</a>
-            </li>
-        </ul>
-        <div ng-repeat="component in components|filter:{group:status.activeGroup}">
-            {{component}}
+        <div class='fb-components'>
+            <ul ng-if="groups.length > 1" class="nav nav-tabs nav-justified">
+                <li ng-repeat="group in groups" ng-class="{active:status.activeGroup==group}">
+                    <a href='#' ng-click="action.selectGroup($event, group)">{{group}}</a>
+                </li>
+            </ul>
+            <div class='fb-component fb-draggable' ng-repeat="component in components|filter:{group:status.activeGroup}">
+                {{component}}
+            </div>
         </div>
         """
     controller: 'fbComponentsController'

@@ -13,6 +13,10 @@ a.provider '$builder', ->
     # ----------------------------------------
     # all components
     @components = {}
+    @componentsArray = []
+    # all groups of components
+    @groups = []
+
     # forms
     #   builder mode: `fb-builder` you could drag and drop to build the form.
     #   form mode: `fb-form` this is the form for user to input value.
@@ -68,13 +72,13 @@ a.provider '$builder', ->
             validation: RegExp
             template: html template
         ###
-        @components[name] = @convertComponent name, component
-
-    @getComponentGroups = =>
-        groupSet = {}
-        for name, component of @components
-            groupSet[component.group] = null
-        Object.keys groupSet
+        if not @components[name]?
+            # regist the new component
+            newComponent = @convertComponent name, component
+            @components[name] = newComponent
+            @componentsArray.push newComponent
+            if newComponent.group not in @groups
+                @groups.push newComponent.group
 
     @addFormGroup = (name, formGroup={}) =>
         ###
@@ -95,9 +99,10 @@ a.provider '$builder', ->
         @setupProviders $injector
 
         components: @components
+        componentsArray: @componentsArray
+        groups: @groups
         forms: @forms
         registerComponent: @registerComponent
-        getComponentGroups: @getComponentGroups
         addFormGroup: @addFormGroup
     @get.$inject = ['$injector']
     @$get = @get

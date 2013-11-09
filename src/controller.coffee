@@ -9,8 +9,8 @@ fbComponentsController = ($scope, $injector) ->
     $builder = $injector.get '$builder'
 
     # data
-    $scope.groups = $builder.getComponentGroups()
-    $scope.components = (value for key, value of $builder.components)
+    $scope.groups = $builder.groups
+    $scope.components = $builder.componentsArray
 
     # status
     $scope.status =

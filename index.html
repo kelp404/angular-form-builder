@@ -9,7 +9,7 @@
     <link type="text/css" rel="stylesheet" href="dist/angular-form-builder.css"/>
     <script type="text/javascript" src="submodules/jquery/jquery-1.10.2.js"></script>
     <script type="text/javascript" src="//netdna.bootstrapcdn.com/bootstrap/3.0.2/js/bootstrap.min.js"></script>
-    <script type="text/javascript" src="submodules/angularjs/angular.1.0.8.min.js"></script>
+    <script type="text/javascript" src="submodules/angularjs/angular.1.2.0.min.js"></script>
     <script type="text/javascript" src="dist/angular-form-builder.js"></script>
     <script type="text/javascript" src="dist/angular-form-builder-components.js"></script>
     <script type="text/javascript" src="submodules/angular-validator/dist/angular-validator.js"></script>
@@ -18,6 +18,11 @@
 </head>
 <body class="container">
     <div class="row" ng-controller="BuilderController">
+        <div>
+            <input type="button" ng-click="add()" value="Add" class="btn btn-default"/>
+        </div>
+
+
         <div class="col-md-7" ng-model="form" fb-builder></div>
         <div class="col-md-5">
             <div class="col-md-12" fb-components></div>

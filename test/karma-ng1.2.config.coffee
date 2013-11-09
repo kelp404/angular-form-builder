@@ -7,9 +7,10 @@ module.exports = (config) ->
 
         # list of files / patterns to load in the browser
         files: [
-            'test/lib/angularjs/angular.1.0.8.min.js'
-            'test/lib/angularjs/angular-mocks.1.0.8.js'
+            'test/lib/angularjs/angular.1.2.0.min.js'
+            'test/lib/angularjs/angular-mocks.1.2.0.js'
             'dist/angular-form-builder.js'
+            'dist/angular-form-builder-components.js'
             'test/specs/*.coffee'
         ]
 
@@ -23,7 +24,7 @@ module.exports = (config) ->
 
         # web server port
         # CLI --port 9876
-        port: 8081
+        port: 8082
 
         # enable / disable colors in the output (reporters and logs)
         # CLI --colors --no-colors
