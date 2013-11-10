@@ -4,9 +4,12 @@
   a = angular.module('app', ['builder', 'builder.components']);
 
   a.controller('BuilderController', function($scope, $builder) {
-    $builder.addFormGroup('form', {
-      label: 'label'
+    $builder.addFormObject('default', {
+      component: 'textInput',
+      label: 'label',
+      description: 'your description'
     });
+    $scope.form = $builder.forms['default'];
     return $scope.add = function() {
       return $builder.registerComponent('textInput AA', {
         group: 'AA',

@@ -1,7 +1,16 @@
 (function() {
-  var a, fbComponentsController;
+  var a, fbBuilderController, fbComponentsController;
 
   a = angular.module('builder.controller', ['builder.provider']);
+
+  fbBuilderController = function($scope, $injector) {
+    var $builder;
+    return $builder = $injector.get('$builder');
+  };
+
+  fbBuilderController.$inject = ['$scope', '$injector'];
+
+  a.controller('fbBuilderController', fbBuilderController);
 
   fbComponentsController = function($scope, $injector) {
     var $builder;
@@ -26,12 +35,13 @@
 }).call(this);
 
 (function() {
-  var Draggable, a, fbBuilder, fbComponent, fbComponents, fbDraggableMaternal, fbForm,
+  var Draggable, a, fbBuilder, fbComponent, fbComponents, fbDraggable, fbDraggableMaternal, fbForm,
     __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
 
   Draggable = (function() {
     function Draggable($injector, object) {
-      this.setupElement = __bind(this.setupElement, this);
+      this.beginDrag = __bind(this.beginDrag, this);
+      this.dragMode = __bind(this.dragMode, this);
       this.mirrorMode = __bind(this.mirrorMode, this);
       this.injector = $injector;
       this.$maternal = null;
@@ -39,15 +49,20 @@
       if (object.maternal) {
         this.$maternal = $(object.maternal);
         this.mirrorMode(this.$maternal);
+      } else if (object.element) {
+        this.$element = $(object.element);
+        this.dragMode(this.$element);
       }
     }
 
-    Draggable.prototype.mirrorMode = function(maternal) {
+    Draggable.prototype.mirrorMode = function($maternal) {
       var _this = this;
-      return maternal.bind('mousedown', function(e) {
+      return $maternal.bind('mousedown', function(e) {
         var callback;
         e.preventDefault();
-        _this.$element = maternal.clone();
+        _this.$element = $maternal.clone();
+        _this.$element.addClass('fb-draggable form-horizontal');
+        $('body').append(_this.$element);
         callback = {
           move: function(e) {
             return _this.$element.offset({
@@ -59,38 +74,73 @@
             return _this.$element.remove();
           }
         };
-        return _this.setupElement(_this.$element, callback, {
+        return _this.beginDrag(_this.$element, callback, {
+          width: _this.$maternal.width(),
+          height: _this.$maternal.height(),
           left: e.pageX - _this.$maternal.width() / 2,
           top: e.pageY - _this.$maternal.height() / 2
         });
       });
     };
 
-    Draggable.prototype.setupElement = function(element, callback, object) {
-      var _ref, _ref1;
-      element.addClass('fb-draggable dragging form-horizontal');
-      element.css({
-        width: this.$maternal.width(),
-        height: this.$maternal.height(),
-        left: (_ref = object.left) != null ? _ref : this.$maternal.offset().left,
-        top: (_ref1 = object.top) != null ? _ref1 : this.$maternal.offset().top
-      });
-      element.bind('mousedown', function(e) {
-        if (callback.down) {
-          return callback.down(e);
+    Draggable.prototype.dragMode = function($element) {
+      var _this = this;
+      $element.addClass('fb-draggable');
+      return $element.bind('mousedown', function(e) {
+        var callback;
+        e.preventDefault();
+        if ($element.hasClass('dragging')) {
+          return;
         }
+        callback = {
+          move: function(e) {
+            if (!$element.hasClass('dragging')) {
+              return;
+            }
+            return $element.offset({
+              left: e.pageX - $element.width() / 2,
+              top: e.pageY - $element.height() / 2
+            });
+          },
+          up: function(e) {
+            if (!$element.hasClass('dragging')) {
+              return;
+            }
+            $element.css({
+              width: '',
+              height: '',
+              left: '',
+              top: ''
+            });
+            return $element.removeClass('dragging');
+          }
+        };
+        return _this.beginDrag($element, callback, {
+          width: $element.width(),
+          height: $element.height()
+        });
       });
-      element.bind('mousemove', function(e) {
+    };
+
+    Draggable.prototype.beginDrag = function(element, callback, object) {
+      element.addClass('dragging');
+      element.css({
+        width: object.width,
+        height: object.height,
+        left: object != null ? object.left : void 0,
+        top: object != null ? object.top : void 0
+      });
+      $(document).on('mousemove', element, function(e) {
         if (callback.move) {
           return callback.move(e);
         }
       });
-      element.bind('mouseup', function(e) {
+      return element.bind('mouseup', function(e) {
+        $(document).off('mousemove', element);
         if (callback.up) {
           return callback.up(e);
         }
       });
-      return $('body').append(element);
     };
 
     return Draggable;
@@ -102,12 +152,17 @@
   fbBuilder = function($injector) {
     return {
       restrict: 'A',
-      require: 'ngModel',
+      template: "<div class='form-horizontal'>\n    <div class='fb-component'\n        ng-repeat=\"object in form\"\n        fb-form-object=\"object\" fb-draggable></div>\n</div>",
+      controller: 'fbBuilderController',
       link: function(scope, element, attrs) {
-        var $parse, model, name;
-        $parse = $injector.get('$parse');
-        model = $parse(attrs.ngModel);
-        return name = attrs.fbBuilder;
+        var $builder, _base, _name;
+        $builder = $injector.get('$builder');
+        scope.formName = attrs.fbBuilder;
+        if ((_base = $builder.forms)[_name = scope.formName] == null) {
+          _base[_name] = [];
+        }
+        scope.form = $builder.forms[scope.formName];
+        return $(element).addClass('fb-builder fb-droppable');
       }
     };
   };
@@ -119,9 +174,8 @@
   fbComponents = function($injector) {
     return {
       restrict: 'A',
-      template: "<div class='fb-components'>\n    <ul ng-if=\"groups.length > 1\" class=\"nav nav-tabs nav-justified\">\n        <li ng-repeat=\"group in groups\" ng-class=\"{active:status.activeGroup==group}\">\n            <a href='#' ng-click=\"action.selectGroup($event, group)\">{{group}}</a>\n        </li>\n    </ul>\n    <div class='form-horizontal'>\n        <div class='fb-component'\n            ng-repeat=\"component in components|filter:{group:status.activeGroup}\"\n            fb-component=\"component\" fb-draggable-maternal></div>\n    </div>\n</div>",
-      controller: 'fbComponentsController',
-      link: function(scope, element, attrs) {}
+      template: "<ul ng-if=\"groups.length > 1\" class=\"nav nav-tabs nav-justified\">\n    <li ng-repeat=\"group in groups\" ng-class=\"{active:status.activeGroup==group}\">\n        <a href='#' ng-click=\"action.selectGroup($event, group)\">{{group}}</a>\n    </li>\n</ul>\n<div class='form-horizontal'>\n    <div class='fb-component'\n        ng-repeat=\"component in components|filter:{group:status.activeGroup}\"\n        fb-component=\"component\" fb-draggable-maternal></div>\n</div>",
+      controller: 'fbComponentsController'
     };
   };
 
@@ -133,12 +187,19 @@
     return {
       restrict: 'A',
       link: function(scope, element, attrs) {
-        var $compile, $parse, $template, component, cs, view;
+        var $builder, $compile, $parse, $template, component, cs, formObject, view;
+        $builder = $injector.get('$builder');
         $parse = $injector.get('$parse');
         $compile = $injector.get('$compile');
-        component = $parse(attrs.fbComponent)(scope);
         cs = scope.$new();
-        $.extend(cs, component);
+        if (attrs.fbComponent) {
+          component = $parse(attrs.fbComponent)(scope);
+          $.extend(cs, component);
+        } else {
+          formObject = $parse(attrs.fbFormObject)(scope);
+          component = $builder.components[formObject.component];
+          $.extend(cs, formObject);
+        }
         $template = $(component.template);
         view = $compile($template)(cs);
         return $(element).append(view);
@@ -150,10 +211,12 @@
 
   a.directive('fbComponent', fbComponent);
 
+  a.directive('fbFormObject', fbComponent);
+
   fbDraggableMaternal = function($injector) {
     return {
       restrict: 'A',
-      link: function(scope, element, attrs) {
+      link: function(scope, element) {
         return new Draggable($injector, {
           maternal: element
         });
@@ -164,6 +227,21 @@
   fbDraggableMaternal.$inject = ['$injector'];
 
   a.directive('fbDraggableMaternal', fbDraggableMaternal);
+
+  fbDraggable = function($injector) {
+    return {
+      restrict: 'A',
+      link: function(scope, element) {
+        return new Draggable($injector, {
+          element: element
+        });
+      }
+    };
+  };
+
+  fbDraggableMaternal.$inject = ['$injector'];
+
+  a.directive('fbDraggable', fbDraggable);
 
   fbForm = function($injector) {
     return {
@@ -202,7 +280,7 @@
     this.componentsArray = [];
     this.groups = [];
     this.forms = {};
-    this.forms[''] = [];
+    this.forms['default'] = [];
     this.setupProviders = function(injector) {
       return $injector = injector;
     };
@@ -221,11 +299,26 @@
       };
       return result;
     };
-    this.convertFormGroup = function(formGroup) {
-      if (formGroup == null) {
-        formGroup = {};
+    this.convertFormObject = function(formObject) {
+      var component, result, _ref, _ref1, _ref2, _ref3, _ref4, _ref5, _ref6;
+      if (formObject == null) {
+        formObject = {};
       }
-      return formGroup;
+      component = this.components[formObject.component];
+      if (component == null) {
+        console.error("component " + formObject.component + " was not registered.");
+      }
+      result = {
+        component: formObject.component,
+        removable: (_ref = formObject.removable) != null ? _ref : true,
+        draggable: (_ref1 = formObject.draggable) != null ? _ref1 : true,
+        index: (_ref2 = formObject.index) != null ? _ref2 : 0,
+        label: (_ref3 = formObject.label) != null ? _ref3 : component.label,
+        description: (_ref4 = formObject.description) != null ? _ref4 : component.description,
+        placeholder: (_ref5 = formObject.placeholder) != null ? _ref5 : component.placeholder,
+        options: (_ref6 = formObject.options) != null ? _ref6 : component.options
+      };
+      return result;
     };
     this.registerComponent = function(name, component) {
       var newComponent, _ref;
@@ -255,23 +348,29 @@
         }
       }
     };
-    this.addFormGroup = function(name, formGroup) {
+    this.addFormObject = function(name, formObject) {
       var _base;
-      if (formGroup == null) {
-        formGroup = {};
+      if (formObject == null) {
+        formObject = {};
       }
       /*
-      Add the form group into the form.
+      Add the form object into the form.
       @param name: The form name.
-      @param formGroup: The form group.
+      @param form: The form object.
+          component: The component name
           removable: true
+          draggable: true
+          index: 0
           label:
+          description:
+          placeholder:
+          options:
       */
 
       if ((_base = _this.forms)[name] == null) {
         _base[name] = [];
       }
-      return _this.forms[name].push(_this.convertFormGroup(formGroup));
+      return _this.forms[name].push(_this.convertFormObject(formObject));
     };
     this.get = function($injector) {
       this.setupProviders($injector);
@@ -281,7 +380,7 @@
         groups: this.groups,
         forms: this.forms,
         registerComponent: this.registerComponent,
-        addFormGroup: this.addFormGroup
+        addFormObject: this.addFormObject
       };
     };
     this.get.$inject = ['$injector'];

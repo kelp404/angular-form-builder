@@ -2,8 +2,11 @@
 a = angular.module 'app', ['builder', 'builder.components']
 
 a.controller 'BuilderController', ($scope, $builder) ->
-    $builder.addFormGroup 'form',
+    $builder.addFormObject 'default',
+        component: 'textInput'
         label: 'label'
+        description: 'your description'
+    $scope.form = $builder.forms['default']
 
     $scope.add = ->
         $builder.registerComponent 'textInput AA',

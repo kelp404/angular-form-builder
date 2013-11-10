@@ -21,7 +21,7 @@ a.provider '$builder', ->
     #   builder mode: `fb-builder` you could drag and drop to build the form.
     #   form mode: `fb-form` this is the form for user to input value.
     @forms = {}
-    @forms[''] = []
+    @forms['default'] = []
 
 
     # ----------------------------------------
@@ -37,7 +37,7 @@ a.provider '$builder', ->
             label: component.label ? ''
             description: component.description ? ''
             placeholder: component.placeholder ? ''
-            required: component.required ? false
+            required: component.required ? no
             validation: component.validation ? /.*/
             options: component.options ? []
             template: component.template ?
@@ -52,8 +52,19 @@ a.provider '$builder', ->
 
         result
 
-    @convertFormGroup = (formGroup={}) ->
-        formGroup
+    @convertFormObject = (formObject={}) ->
+        component = @components[formObject.component]
+        console.error "component #{formObject.component} was not registered." if not component?
+        result =
+            component: formObject.component
+            removable: formObject.removable ? yes
+            draggable: formObject.draggable ? yes
+            index: formObject.index ? 0
+            label: formObject.label ? component.label
+            description: formObject.description ? component.description
+            placeholder: formObject.placeholder ? component.placeholder
+            options: formObject.options ? component.options
+        result
 
 
     # ----------------------------------------
@@ -81,16 +92,22 @@ a.provider '$builder', ->
             if newComponent.group not in @groups
                 @groups.push newComponent.group
 
-    @addFormGroup = (name, formGroup={}) =>
+    @addFormObject = (name, formObject={}) =>
         ###
-        Add the form group into the form.
+        Add the form object into the form.
         @param name: The form name.
-        @param formGroup: The form group.
+        @param form: The form object.
+            component: The component name
             removable: true
+            draggable: true
+            index: 0
             label:
+            description:
+            placeholder:
+            options:
         ###
         @forms[name] ?= []
-        @forms[name].push @convertFormGroup(formGroup)
+        @forms[name].push @convertFormObject(formObject)
 
 
     # ----------------------------------------
@@ -104,7 +121,7 @@ a.provider '$builder', ->
         groups: @groups
         forms: @forms
         registerComponent: @registerComponent
-        addFormGroup: @addFormGroup
+        addFormObject: @addFormObject
     @get.$inject = ['$injector']
     @$get = @get
     return

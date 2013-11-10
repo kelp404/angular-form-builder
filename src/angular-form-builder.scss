@@ -3,7 +3,7 @@
 
 
 .fb-component {
-    padding: 10px 10px 10px 0;
+    padding: 10px;
     cursor: move;
     input { cursor: move; }
     label { cursor: move; }
@@ -14,4 +14,11 @@
     position: absolute;
     z-index: 800;
     @include box-shadow(#666 0 0 20px);
+}
+
+.fb-builder {
+    min-height: 250px;
+}
+.fb-droppable {
+
 }

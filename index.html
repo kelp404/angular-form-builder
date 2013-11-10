@@ -22,8 +22,16 @@
             <input type="button" ng-click="add()" value="Add" class="btn btn-default"/>
         </div>
 
+        <div class="col-md-6">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h3 class="panel-title">Builder</h3>
+                </div>
+                <div fb-builder="default"></div>
+                <div class="panel-footer">{{form}}</div>
+            </div>
+        </div>
 
-        <div class="col-md-6" ng-model="form" fb-builder></div>
         <div class="col-md-6">
             <div fb-components></div>
         </div>
