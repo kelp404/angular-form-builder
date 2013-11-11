@@ -1,76 +1,8 @@
 
-class Draggable
-    constructor: ($injector, object) ->
-        @injector = $injector
-        @$maternal = null
-        @$element = null
-
-        if object.maternal
-            # mirror mode
-            @$maternal = $(object.maternal)
-            @mirrorMode(@$maternal)
-        else if object.element
-            @$element = $(object.element)
-            @dragMode(@$element)
-
-    mirrorMode: ($maternal) =>
-        $maternal.bind 'mousedown', (e) =>
-            e.preventDefault()
-            @$element = $maternal.clone()
-            @$element.addClass 'fb-draggable form-horizontal'
-            $('body').append @$element
-            callback =
-                move: (e) =>
-                    @$element.offset
-                        left: e.pageX - @$element.width() / 2
-                        top: e.pageY - @$element.height() / 2
-                up: (e) => @$element.remove()
-            @beginDrag @$element, callback,
-                width: @$maternal.width()
-                height: @$maternal.height()
-                left: e.pageX - @$maternal.width() / 2
-                top: e.pageY - @$maternal.height() / 2
-
-    dragMode: ($element) =>
-        $element.addClass 'fb-draggable'
-        $element.bind 'mousedown', (e) =>
-            e.preventDefault()
-            return if $element.hasClass 'dragging'
-            callback =
-                move: (e) =>
-                    return if not $element.hasClass 'dragging'
-                    $element.offset
-                        left: e.pageX - $element.width() / 2
-                        top: e.pageY - $element.height() / 2
-                up: (e) =>
-                    return if not $element.hasClass 'dragging'
-                    $element.css
-                        width: ''
-                        height: ''
-                        left: ''
-                        top: ''
-                    $element.removeClass 'dragging'
-            @beginDrag $element, callback,
-                width: $element.width()
-                height: $element.height()
-
-    beginDrag: (element, callback, object) =>
-        element.addClass 'dragging'
-        element.css
-            width: object.width
-            height: object.height
-            left: object?.left
-            top: object?.top
-        $(document).on 'mousemove', element, (e) -> callback.move(e) if callback.move
-        element.bind 'mouseup', (e) ->
-            $(document).off 'mousemove', element
-            callback.up(e) if callback.up
-
-
 # ----------------------------------------
 # builder.directive
 # ----------------------------------------
-a = angular.module 'builder.directive', ['builder.provider', 'builder.controller']
+a = angular.module 'builder.directive', ['builder.provider', 'builder.controller', 'builder.drag']
 
 # ----------------------------------------
 # fb-builder, fb-droppable
@@ -163,8 +95,13 @@ a.directive 'fbFormObject', fbComponent
 fbDraggableMaternal = ($injector) ->
     restrict: 'A'
     link: (scope, element) ->
-        new Draggable $injector,
-            maternal: element
+        # ----------------------------------------
+        # providers
+        # ----------------------------------------
+        $drag = $injector.get '$drag'
+
+        $drag.draggable $(element),
+            mode: 'mirror'
 
 fbDraggableMaternal.$inject = ['$injector']
 a.directive 'fbDraggableMaternal', fbDraggableMaternal
@@ -175,8 +112,12 @@ a.directive 'fbDraggableMaternal', fbDraggableMaternal
 fbDraggable = ($injector) ->
     restrict: 'A'
     link: (scope, element) ->
-        new Draggable $injector,
-            element: element
+        # ----------------------------------------
+        # providers
+        # ----------------------------------------
+        $drag = $injector.get '$drag'
+
+        $drag.draggable $(element)
 
 fbDraggableMaternal.$inject = ['$injector']
 a.directive 'fbDraggable', fbDraggable

@@ -35,119 +35,9 @@
 }).call(this);
 
 (function() {
-  var Draggable, a, fbBuilder, fbComponent, fbComponents, fbDraggable, fbDraggableMaternal, fbForm,
-    __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
+  var a, fbBuilder, fbComponent, fbComponents, fbDraggable, fbDraggableMaternal, fbForm;
 
-  Draggable = (function() {
-    function Draggable($injector, object) {
-      this.beginDrag = __bind(this.beginDrag, this);
-      this.dragMode = __bind(this.dragMode, this);
-      this.mirrorMode = __bind(this.mirrorMode, this);
-      this.injector = $injector;
-      this.$maternal = null;
-      this.$element = null;
-      if (object.maternal) {
-        this.$maternal = $(object.maternal);
-        this.mirrorMode(this.$maternal);
-      } else if (object.element) {
-        this.$element = $(object.element);
-        this.dragMode(this.$element);
-      }
-    }
-
-    Draggable.prototype.mirrorMode = function($maternal) {
-      var _this = this;
-      return $maternal.bind('mousedown', function(e) {
-        var callback;
-        e.preventDefault();
-        _this.$element = $maternal.clone();
-        _this.$element.addClass('fb-draggable form-horizontal');
-        $('body').append(_this.$element);
-        callback = {
-          move: function(e) {
-            return _this.$element.offset({
-              left: e.pageX - _this.$element.width() / 2,
-              top: e.pageY - _this.$element.height() / 2
-            });
-          },
-          up: function(e) {
-            return _this.$element.remove();
-          }
-        };
-        return _this.beginDrag(_this.$element, callback, {
-          width: _this.$maternal.width(),
-          height: _this.$maternal.height(),
-          left: e.pageX - _this.$maternal.width() / 2,
-          top: e.pageY - _this.$maternal.height() / 2
-        });
-      });
-    };
-
-    Draggable.prototype.dragMode = function($element) {
-      var _this = this;
-      $element.addClass('fb-draggable');
-      return $element.bind('mousedown', function(e) {
-        var callback;
-        e.preventDefault();
-        if ($element.hasClass('dragging')) {
-          return;
-        }
-        callback = {
-          move: function(e) {
-            if (!$element.hasClass('dragging')) {
-              return;
-            }
-            return $element.offset({
-              left: e.pageX - $element.width() / 2,
-              top: e.pageY - $element.height() / 2
-            });
-          },
-          up: function(e) {
-            if (!$element.hasClass('dragging')) {
-              return;
-            }
-            $element.css({
-              width: '',
-              height: '',
-              left: '',
-              top: ''
-            });
-            return $element.removeClass('dragging');
-          }
-        };
-        return _this.beginDrag($element, callback, {
-          width: $element.width(),
-          height: $element.height()
-        });
-      });
-    };
-
-    Draggable.prototype.beginDrag = function(element, callback, object) {
-      element.addClass('dragging');
-      element.css({
-        width: object.width,
-        height: object.height,
-        left: object != null ? object.left : void 0,
-        top: object != null ? object.top : void 0
-      });
-      $(document).on('mousemove', element, function(e) {
-        if (callback.move) {
-          return callback.move(e);
-        }
-      });
-      return element.bind('mouseup', function(e) {
-        $(document).off('mousemove', element);
-        if (callback.up) {
-          return callback.up(e);
-        }
-      });
-    };
-
-    return Draggable;
-
-  })();
-
-  a = angular.module('builder.directive', ['builder.provider', 'builder.controller']);
+  a = angular.module('builder.directive', ['builder.provider', 'builder.controller', 'builder.drag']);
 
   fbBuilder = function($injector) {
     return {
@@ -217,8 +107,10 @@
     return {
       restrict: 'A',
       link: function(scope, element) {
-        return new Draggable($injector, {
-          maternal: element
+        var $drag;
+        $drag = $injector.get('$drag');
+        return $drag.draggable($(element), {
+          mode: 'mirror'
         });
       }
     };
@@ -232,9 +124,9 @@
     return {
       restrict: 'A',
       link: function(scope, element) {
-        return new Draggable($injector, {
-          element: element
-        });
+        var $drag;
+        $drag = $injector.get('$drag');
+        return $drag.draggable($(element));
       }
     };
   };
@@ -258,6 +150,153 @@
   fbForm.$inject = ['$injector'];
 
   a.directive('fbForm', fbForm);
+
+}).call(this);
+
+(function() {
+  var a, drag;
+
+  a = angular.module('builder.drag', []);
+
+  drag = function($injector) {
+    var _this = this;
+    this.data = {
+      draggables: [],
+      droppables: []
+    };
+    this.eventMouseDown = function() {};
+    this.eventMouseMove = function() {};
+    this.eventMouseUp = function() {};
+    $(function() {
+      $(document).on('mousedown', function(e) {
+        return _this.eventMouseDown(e);
+      });
+      $(document).on('mousemove', function(e) {
+        return _this.eventMouseMove(e);
+      });
+      return $(document).on('mouseup', function(e) {
+        return _this.eventMouseUp(e);
+      });
+    });
+    this.makeMirrorMode = function($element) {
+      var result;
+      result = {
+        mode: 'mirror',
+        maternal: $element[0],
+        element: null
+      };
+      $element.on('mousedown', function(e) {
+        var $clone;
+        e.preventDefault();
+        $clone = $element.clone();
+        result.element = $clone[0];
+        $clone.css({
+          width: $element.width(),
+          height: $element.height()
+        });
+        $clone.addClass("fb-draggable form-horizontal dragging");
+        _this.eventMouseMove = function(e) {
+          return $clone.offset({
+            left: e.pageX - $clone.width() / 2,
+            top: e.pageY - $clone.height() / 2
+          });
+        };
+        _this.eventMouseUp = function(e) {
+          _this.eventMouseMove = function() {};
+          _this.eventMouseUp = function() {};
+          result.element = null;
+          return $clone.remove();
+        };
+        $('body').append($clone);
+        return _this.eventMouseMove(e);
+      });
+      return result;
+    };
+    this.makeDragMode = function($element) {
+      var result;
+      result = {
+        mode: 'drag',
+        maternal: null,
+        element: $element[0]
+      };
+      $element.addClass('fb-draggable');
+      $element.on('mousedown', function(e) {
+        e.preventDefault();
+        if ($element.hasClass('dragging')) {
+          return;
+        }
+        $element.css({
+          width: $element.width(),
+          height: $element.height()
+        });
+        $element.addClass('dragging');
+        _this.eventMouseMove = function(e) {
+          return $element.offset({
+            left: e.pageX - $element.width() / 2,
+            top: e.pageY - $element.height() / 2
+          });
+        };
+        _this.eventMouseUp = function(e) {
+          _this.eventMouseMove = function() {};
+          _this.eventMouseUp = function() {};
+          $element.css({
+            width: '',
+            height: '',
+            left: '',
+            top: ''
+          });
+          return $element.removeClass('dragging');
+        };
+        return _this.eventMouseMove(e);
+      });
+      return result;
+    };
+    this.draggable = function($element, options) {
+      var element, _i, _j, _len, _len1;
+      if (options == null) {
+        options = {};
+      }
+      /*
+      Make the element could be drag.
+      @param element: The jQuery element.
+      @param options: Options
+          mode: 'drag' [default], 'mirror'
+      */
+
+      if (options.mode === 'mirror') {
+        for (_i = 0, _len = $element.length; _i < _len; _i++) {
+          element = $element[_i];
+          _this.data.draggables.push(_this.makeMirrorMode($(element)));
+        }
+      } else {
+        for (_j = 0, _len1 = $element.length; _j < _len1; _j++) {
+          element = $element[_j];
+          _this.data.draggables.push(_this.makeDragMode($(element)));
+        }
+      }
+    };
+    this.removeDraggable = function($element) {
+      return $element;
+    };
+    this.droppable = function($element, opeions) {
+      /*
+      Make the element coulde be drop.
+      @param $element: The jQuery element.
+      */
+
+      return $element;
+    };
+    return {
+      data: this.data,
+      draggable: this.draggable,
+      removeDraggable: this.removeDraggable,
+      droppable: this.droppable
+    };
+  };
+
+  drag.$inject = ['$injector'];
+
+  a.factory('$drag', drag);
 
 }).call(this);
 
