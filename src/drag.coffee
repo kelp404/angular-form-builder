@@ -13,9 +13,9 @@ a.provider '$drag', ->
     # ----------------------------------------
     @data =
         # all draggable objects
-        draggables: []
+        draggables: {}
         # all droppable objects
-        droppables: []
+        droppables: {}
 
 
     # ----------------------------------------
@@ -100,14 +100,14 @@ a.provider '$drag', ->
                 $clone.offset offset
 
                 # execute callback for droppables
-                for droppable in @data.droppables
+                for id, droppable of @data.droppables
                     if @isHover $clone, $(droppable.element)
                         droppable.move e, result
                     else
                         droppable.out e, result
             @hooks.up.drag = (e) =>
                 # execute callback for droppables
-                for droppable in @data.droppables when @isHover $clone, $(droppable.element)
+                for id, droppable of @data.droppables when @isHover $clone, $(droppable.element)
                     droppable.up e, result
                 delete @hooks.move.drag
                 delete @hooks.up.drag
@@ -141,14 +141,14 @@ a.provider '$drag', ->
                 $element.offset offset
 
                 # execute callback for droppables
-                for droppable in @data.droppables
+                for id, droppable of @data.droppables
                     if @isHover $element, $(droppable.element)
                         droppable.move e, result
                     else
                         droppable.out e, result
             @hooks.up.drag = (e) =>
                 # execute callback for droppables
-                for droppable in @data.droppables when @isHover $element, $(droppable.element)
+                for id, droppable of @data.droppables when @isHover $element, $(droppable.element)
                     droppable.up e, result
 
                 delete @hooks.move.drag
@@ -182,13 +182,18 @@ a.provider '$drag', ->
         @param options: Options
             mode: 'drag' [default], 'mirror'
         ###
+        result = []
         if options.mode is 'mirror'
             for element in $element
-                @data.draggables.push @dragMirrorMode($(element))
+                draggable = @dragMirrorMode $(element)
+                result.push draggable.id
+                @data.draggables[draggable.id] = draggable
         else
             for element in $element
-                @data.draggables.push @dragDragMode($(element))
-        return
+                draggable = @dragDragMode $(element)
+                result.push draggable.id
+                @data.draggables[draggable.id] = draggable
+        result
 
 
     @droppable = ($element, options={}) =>
@@ -201,10 +206,13 @@ a.provider '$drag', ->
             up: The custom mouse up callback. (e, draggable)->
             out: The custom mouse out callback. (e, draggable)->
         ###
+        result = []
         if options.mode is 'custom'
             for element in $element
-                @data.droppables.push @dropCustomMode($(element), options)
-        return
+                droppable = @dropCustomMode $(element), options
+                result.push droppable
+                @data.droppables[droppable.id] = droppable
+        result
 
 
     # ----------------------------------------

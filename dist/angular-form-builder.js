@@ -211,8 +211,8 @@
       _this = this;
     $injector = null;
     this.data = {
-      draggables: [],
-      droppables: []
+      draggables: {},
+      droppables: {}
     };
     this.hooks = {
       move: {},
@@ -303,7 +303,7 @@
         });
         $clone.addClass("fb-draggable form-horizontal dragging");
         _this.hooks.move.drag = function(e) {
-          var droppable, offset, _i, _len, _ref, _results;
+          var droppable, id, offset, _ref, _results;
           offset = {
             left: e.pageX - $clone.width() / 2,
             top: e.pageY - $clone.height() / 2
@@ -311,8 +311,8 @@
           $clone.offset(offset);
           _ref = _this.data.droppables;
           _results = [];
-          for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-            droppable = _ref[_i];
+          for (id in _ref) {
+            droppable = _ref[id];
             if (_this.isHover($clone, $(droppable.element))) {
               _results.push(droppable.move(e, result));
             } else {
@@ -322,10 +322,10 @@
           return _results;
         };
         _this.hooks.up.drag = function(e) {
-          var droppable, _i, _len, _ref;
+          var droppable, id, _ref;
           _ref = _this.data.droppables;
-          for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-            droppable = _ref[_i];
+          for (id in _ref) {
+            droppable = _ref[id];
             if (_this.isHover($clone, $(droppable.element))) {
               droppable.up(e, result);
             }
@@ -360,7 +360,7 @@
         });
         $element.addClass('dragging');
         _this.hooks.move.drag = function(e) {
-          var droppable, offset, _i, _len, _ref, _results;
+          var droppable, id, offset, _ref, _results;
           offset = {
             left: e.pageX - $element.width() / 2,
             top: e.pageY - $element.height() / 2
@@ -368,8 +368,8 @@
           $element.offset(offset);
           _ref = _this.data.droppables;
           _results = [];
-          for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-            droppable = _ref[_i];
+          for (id in _ref) {
+            droppable = _ref[id];
             if (_this.isHover($element, $(droppable.element))) {
               _results.push(droppable.move(e, result));
             } else {
@@ -379,10 +379,10 @@
           return _results;
         };
         _this.hooks.up.drag = function(e) {
-          var droppable, _i, _len, _ref;
+          var droppable, id, _ref;
           _ref = _this.data.droppables;
-          for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-            droppable = _ref[_i];
+          for (id in _ref) {
+            droppable = _ref[id];
             if (_this.isHover($element, $(droppable.element))) {
               droppable.up(e, result);
             }
@@ -414,7 +414,7 @@
       return result;
     };
     this.draggable = function($element, options) {
-      var element, _i, _j, _len, _len1;
+      var draggable, element, result, _i, _j, _len, _len1;
       if (options == null) {
         options = {};
       }
@@ -425,20 +425,26 @@
           mode: 'drag' [default], 'mirror'
       */
 
+      result = [];
       if (options.mode === 'mirror') {
         for (_i = 0, _len = $element.length; _i < _len; _i++) {
           element = $element[_i];
-          _this.data.draggables.push(_this.dragMirrorMode($(element)));
+          draggable = _this.dragMirrorMode($(element));
+          result.push(draggable.id);
+          _this.data.draggables[draggable.id] = draggable;
         }
       } else {
         for (_j = 0, _len1 = $element.length; _j < _len1; _j++) {
           element = $element[_j];
-          _this.data.draggables.push(_this.dragDragMode($(element)));
+          draggable = _this.dragDragMode($(element));
+          result.push(draggable.id);
+          _this.data.draggables[draggable.id] = draggable;
         }
       }
+      return result;
     };
     this.droppable = function($element, options) {
-      var element, _i, _len;
+      var droppable, element, result, _i, _len;
       if (options == null) {
         options = {};
       }
@@ -452,12 +458,16 @@
           out: The custom mouse out callback. (e, draggable)->
       */
 
+      result = [];
       if (options.mode === 'custom') {
         for (_i = 0, _len = $element.length; _i < _len; _i++) {
           element = $element[_i];
-          _this.data.droppables.push(_this.dropCustomMode($(element), options));
+          droppable = _this.dropCustomMode($(element), options);
+          result.push(droppable);
+          _this.data.droppables[droppable.id] = droppable;
         }
       }
+      return result;
     };
     this.get = function($injector) {
       this.setupProviders($injector);
