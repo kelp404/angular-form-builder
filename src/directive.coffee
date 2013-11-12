@@ -94,10 +94,15 @@ fbFormObject = ($injector) ->
         component = $builder.components[formObject.component]
         $.extend cs, formObject
 
-        $(element).on 'click', ->
-            console.log 'click'
         $drag.draggable $(element)
+        $(element).on 'click', ->
+            $(element).popover
+                html: yes
+                content: "<h2>And here's some amazing content. It's very engaging. right?</h2>"
+            $(element).popover 'show'
+            console.log 'click'
 
+        # compile formObject
         $template = $(component.template)
         view = $compile($template) cs
         $(element).append view

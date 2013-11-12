@@ -122,10 +122,15 @@
         formObject = $parse(attrs.fbFormObject)(scope);
         component = $builder.components[formObject.component];
         $.extend(cs, formObject);
+        $drag.draggable($(element));
         $(element).on('click', function() {
+          $(element).popover({
+            html: true,
+            content: "<h2>And here's some amazing content. It's very engaging. right?</h2>"
+          });
+          $(element).popover('show');
           return console.log('click');
         });
-        $drag.draggable($(element));
         $template = $(component.template);
         view = $compile($template)(cs);
         return $(element).append(view);
