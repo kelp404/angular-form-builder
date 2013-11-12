@@ -4,6 +4,10 @@
 # ----------------------------------------
 a = angular.module 'builder.directive', ['builder.provider', 'builder.controller', 'builder.drag']
 
+a.config ($dragProvider) ->
+    console.log $dragProvider
+
+
 # ----------------------------------------
 # fb-builder, fb-droppable
 # ----------------------------------------
@@ -23,6 +27,7 @@ fbBuilder = ($injector) ->
         # providers
         # ----------------------------------------
         $builder = $injector.get '$builder'
+        $drag = $injector.get '$drag'
 
         # ----------------------------------------
         # valuables
@@ -31,8 +36,11 @@ fbBuilder = ($injector) ->
         $builder.forms[scope.formName] ?= []
         scope.form = $builder.forms[scope.formName]
 
-        $(element).addClass 'fb-builder fb-droppable'
-
+        $(element).addClass 'fb-builder'
+        $drag.droppable $(element),
+            mode: 'custom'
+            move: (e) ->
+                console.log e
 fbBuilder.$inject = ['$injector']
 a.directive 'fbBuilder', fbBuilder
 

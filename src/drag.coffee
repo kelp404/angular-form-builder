@@ -1,10 +1,11 @@
 
 a = angular.module 'builder.drag', []
 
-drag = ($injector) ->
+a.provider '$drag', ->
     # ----------------------------------------
     # provider
     # ----------------------------------------
+    $injector = null
 
 
     # ----------------------------------------
@@ -20,20 +21,65 @@ drag = ($injector) ->
     # ----------------------------------------
     # event hooks
     # ----------------------------------------
-    @eventMouseDown = ->
+    @hooks =
+        move: {}
+        up: {}
     @eventMouseMove = ->
     @eventMouseUp = ->
     $ =>
-        $(document).on 'mousedown', (e) => @eventMouseDown e
-        $(document).on 'mousemove', (e) => @eventMouseMove e
-        $(document).on 'mouseup', (e) => @eventMouseUp e
+        $(document).on 'mousemove', (e) =>
+            func?(e) for key, func of @hooks.move
+            return
+        $(document).on 'mouseup', (e) =>
+            func?(e) for key, func of @hooks.up
+            return
 
 
     # ----------------------------------------
     # private methods
     # ----------------------------------------
-    @makeMirrorMode = ($element) =>
+    @currentId = 0
+    @getNewId = =>
+        return "#{@currentId++}"
+
+
+    @setupProviders = (injector) ->
+        ###
+        Setup providers.
+        ###
+        $injector = injector
+
+
+    @isHover = ($elementA, $elementB) =>
+        ###
+        Is element A hover on element B?
+        @param $elementA: jQuery object
+        @param $elementB: jQuery object
+        ###
+        offsetA = $elementA.offset()
+        offsetB = $elementB.offset()
+        sizeA =
+            width: $elementA.width()
+            height: $elementA.height()
+        sizeB =
+            width: $elementB.width()
+            height: $elementB.height()
+        isHover =
+            x: no
+            y: no
+        # x
+        isHover.x = offsetA.left > offsetB.left and offsetA.left < offsetB.left + sizeB.width
+        isHover.x = isHover.x or offsetA.left + sizeA.width > offsetB.left and offsetA.left + sizeA.width < offsetB.left + sizeB.width
+        return no if not isHover
+        # y
+        isHover.y = offsetA.top > offsetB.top and offsetA.top < offsetB.top + sizeB.height
+        isHover.y = isHover.y or offsetA.top + sizeA.height > offsetB.top and offsetA.top + sizeA.height < offsetB.top + sizeB.height
+        isHover.x and isHover.y
+
+
+    @dragMirrorMode = ($element) =>
         result =
+            id: @getNewId()
             mode: 'mirror'
             maternal: $element[0]
             element: null
@@ -47,22 +93,27 @@ drag = ($injector) ->
                 width: $element.width()
                 height: $element.height()
             $clone.addClass "fb-draggable form-horizontal dragging"
-            @eventMouseMove = (e) =>
-                $clone.offset
+            @hooks.move.drag = (e) =>
+                offset =
                     left: e.pageX - $clone.width() / 2
                     top: e.pageY - $clone.height() / 2
-            @eventMouseUp = (e) =>
-                @eventMouseMove = ->
-                @eventMouseUp = ->
+                $clone.offset offset
+                # is hover droppable?
+                for droppable in @data.droppables when @isHover $clone, $(droppable.element)
+                    console.log 'xx'
+            @hooks.up.drag = (e) =>
+                delete @hooks.move.drag
+                delete @hooks.up.drag
                 result.element = null
                 $clone.remove()
             $('body').append $clone
-            @eventMouseMove e   # setup left & top of the element
+            @hooks.move.drag e   # setup left & top of the element
         result
 
 
-    @makeDragMode = ($element) =>
+    @dragDragMode = ($element) =>
         result =
+            id: @getNewId()
             mode: 'drag'
             maternal: null
             element: $element[0]
@@ -76,23 +127,35 @@ drag = ($injector) ->
                 width: $element.width()
                 height: $element.height()
             $element.addClass 'dragging'
-            @eventMouseMove = (e) =>
-                $element.offset
+            @hooks.move.drag = (e) =>
+                offset =
                     left: e.pageX - $element.width() / 2
                     top: e.pageY - $element.height() / 2
-            @eventMouseUp = (e) =>
-                @eventMouseMove = ->
-                @eventMouseUp = ->
+                $element.offset offset
+                # is hover droppable?
+                for droppable in @data.droppables when @isHover $element, $(droppable.element)
+                    console.log 'xx'
+            @hooks.up.drag = (e) =>
+                delete @hooks.move.drag
+                delete @hooks.up.drag
                 $element.css
                     width: ''
                     height: ''
                     left: ''
                     top: ''
                 $element.removeClass 'dragging'
-            @eventMouseMove e   # setup left & top of the element
+            @hooks.move.drag e   # setup left & top of the element
         result
 
 
+    @dropCustomMode = ($element, options) =>
+        result =
+            id: @getNewId()
+            mode: 'custom'
+            element: $element[0]
+            move: options.move
+            up: options.up
+        result
     # ----------------------------------------
     # public methods
     # ----------------------------------------
@@ -105,32 +168,37 @@ drag = ($injector) ->
         ###
         if options.mode is 'mirror'
             for element in $element
-                @data.draggables.push @makeMirrorMode($(element))
+                @data.draggables.push @dragMirrorMode($(element))
         else
             for element in $element
-                @data.draggables.push @makeDragMode($(element))
+                @data.draggables.push @dragDragMode($(element))
         return
 
 
-    @removeDraggable = ($element) ->
-        $element
-
-
-    @droppable = ($element, opeions) ->
+    @droppable = ($element, options={}) =>
         ###
         Make the element coulde be drop.
         @param $element: The jQuery element.
+        @param options: The droppable options.
+            mode: 'default' [default], 'custom'
+            move: The custom mouse move callback. (e)->
+            up: The custom mouse up callback. (e)->
         ###
-        $element
+        if options.mode is 'custom'
+            for element in $element
+                @data.droppables.push @dropCustomMode($(element), options)
+        return
 
 
     # ----------------------------------------
-    # factory
+    # $get
     # ----------------------------------------
-    data: @data
-    draggable: @draggable
-    removeDraggable: @removeDraggable
-    droppable: @droppable
+    @get = ($injector) ->
+        @setupProviders $injector
 
-drag.$inject = ['$injector']
-a.factory '$drag', drag
+        data: @data
+        draggable: @draggable
+        droppable: @droppable
+    @get.inject = ['$injector']
+    @$get = @get
+    return

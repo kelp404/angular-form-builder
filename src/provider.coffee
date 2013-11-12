@@ -49,7 +49,6 @@ a.provider '$builder', ->
                     </div>
                 </div>
                 """
-
         result
 
     @convertFormObject = (formObject={}) ->
