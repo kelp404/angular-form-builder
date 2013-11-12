@@ -13,9 +13,8 @@ fbBuilder = ($injector) ->
     template:
         """
         <div class='form-horizontal'>
-            <div class='fb-form-object'
-                ng-repeat="object in formObjects"
-                fb-form-object="object" fb-draggable></div>
+            <div class='fb-form-object' ng-repeat="object in formObjects"
+                fb-form-object="object"></div>
         </div>
         """
     controller: 'fbBuilderController'
@@ -93,7 +92,7 @@ fbComponents = ($injector) ->
         <div class='form-horizontal'>
             <div class='fb-component'
                 ng-repeat="component in components|filter:{group:status.activeGroup}"
-                fb-component="component" fb-draggable-maternal></div>
+                fb-component="component"></div>
         </div>
         """
     controller: 'fbComponentsController'
@@ -109,6 +108,7 @@ fbComponent = ($injector) ->
     link: (scope, element, attrs) ->
         # providers
         $builder = $injector.get '$builder'
+        $drag = $injector.get '$drag'
         $parse = $injector.get '$parse'
         $compile = $injector.get '$compile'
 
@@ -117,10 +117,18 @@ fbComponent = ($injector) ->
         if attrs.fbComponent
             component = $parse(attrs.fbComponent) scope
             $.extend cs, component
+
+            $drag.draggable $(element),
+                mode: 'mirror'
+                defer: no
         else
             formObject = $parse(attrs.fbFormObject) scope
             component = $builder.components[formObject.component]
             $.extend cs, formObject
+
+            $(element).on 'click', ->
+                console.log 'click'
+            $drag.draggable $(element)
 
         $template = $(component.template)
         view = $compile($template) cs
@@ -128,42 +136,6 @@ fbComponent = ($injector) ->
 fbComponent.$inject = ['$injector']
 a.directive 'fbComponent', fbComponent
 a.directive 'fbFormObject', fbComponent
-
-
-# ----------------------------------------
-# fb-draggable-maternal
-# ----------------------------------------
-fbDraggableMaternal = ($injector) ->
-    restrict: 'A'
-    link: (scope, element) ->
-        # ----------------------------------------
-        # providers
-        # ----------------------------------------
-        $drag = $injector.get '$drag'
-
-        $drag.draggable $(element),
-            mode: 'mirror'
-
-fbDraggableMaternal.$inject = ['$injector']
-a.directive 'fbDraggableMaternal', fbDraggableMaternal
-
-# ----------------------------------------
-# fb-draggable
-# ----------------------------------------
-fbDraggable = ($injector) ->
-    restrict: 'A'
-    link: (scope, element) ->
-        # ----------------------------------------
-        # providers
-        # ----------------------------------------
-        $drag = $injector.get '$drag'
-
-        $(element).on 'click', ->
-            console.log 'click'
-        $drag.draggable $(element)
-
-fbDraggableMaternal.$inject = ['$injector']
-a.directive 'fbDraggable', fbDraggable
 
 
 # ----------------------------------------

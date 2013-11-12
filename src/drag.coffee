@@ -77,7 +77,7 @@ a.provider '$drag', ->
         isHover.x and isHover.y
 
 
-    @dragMirrorMode = ($element) =>
+    @dragMirrorMode = ($element, defer=yes) =>
         result =
             id: @getNewId()
             mode: 'mirror'
@@ -89,15 +89,19 @@ a.provider '$drag', ->
 
             $clone = $element.clone()
             result.element = $clone[0]
-            $clone.css
-                width: $element.width()
-                height: $element.height()
-            $clone.addClass "fb-draggable form-horizontal dragging"
-            @hooks.move.drag = (e) =>
-                offset =
+            $clone.addClass "fb-draggable form-horizontal prepare-dragging"
+            @hooks.move.drag = (e, defer) =>
+                if $clone.hasClass 'prepare-dragging'
+                    $clone.css
+                        width: $element.width()
+                        height: $element.height()
+                    $clone.removeClass 'prepare-dragging'
+                    $clone.addClass 'dragging'
+                    return if defer
+
+                $clone.offset
                     left: e.pageX - $clone.width() / 2
                     top: e.pageY - $clone.height() / 2
-                $clone.offset offset
 
                 # execute callback for droppables
                 for id, droppable of @data.droppables
@@ -114,11 +118,12 @@ a.provider '$drag', ->
                 result.element = null
                 $clone.remove()
             $('body').append $clone
-            @hooks.move.drag e   # setup left & top of the element
+            # setup left & top of the element
+            @hooks.move.drag(e, defer) if not defer
         result
 
 
-    @dragDragMode = ($element) =>
+    @dragDragMode = ($element, defer=yes) =>
         result =
             id: @getNewId()
             mode: 'drag'
@@ -130,15 +135,19 @@ a.provider '$drag', ->
             e.preventDefault()
             return if $element.hasClass 'dragging'
 
-            $element.css
-                width: $element.width()
-                height: $element.height()
-            $element.addClass 'dragging'
-            @hooks.move.drag = (e) =>
-                offset =
+            $element.addClass 'prepare-dragging'
+            @hooks.move.drag = (e, defer) =>
+                if $element.hasClass 'prepare-dragging'
+                    $element.css
+                        width: $element.width()
+                        height: $element.height()
+                    $element.removeClass 'prepare-dragging'
+                    $element.addClass 'dragging'
+                    return if defer
+
+                $element.offset
                     left: e.pageX - $element.width() / 2
                     top: e.pageY - $element.height() / 2
-                $element.offset offset
 
                 # execute callback for droppables
                 for id, droppable of @data.droppables
@@ -154,12 +163,11 @@ a.provider '$drag', ->
                 delete @hooks.move.drag
                 delete @hooks.up.drag
                 $element.css
-                    width: ''
-                    height: ''
-                    left: ''
-                    top: ''
-                $element.removeClass 'dragging'
-            @hooks.move.drag e   # setup left & top of the element
+                    width: '', height: ''
+                    left: '', top: ''
+                $element.removeClass 'dragging defer-dragging'
+            # setup left & top of the element
+            @hooks.move.drag(e, defer) if not defer
         result
 
 
@@ -181,16 +189,17 @@ a.provider '$drag', ->
         @param element: The jQuery element.
         @param options: Options
             mode: 'drag' [default], 'mirror'
+            defer: yes/no. defer dragging
         ###
         result = []
         if options.mode is 'mirror'
             for element in $element
-                draggable = @dragMirrorMode $(element)
+                draggable = @dragMirrorMode $(element), options.defer
                 result.push draggable.id
                 @data.draggables[draggable.id] = draggable
         else
             for element in $element
-                draggable = @dragDragMode $(element)
+                draggable = @dragDragMode $(element), options.defer
                 result.push draggable.id
                 @data.draggables[draggable.id] = draggable
         result

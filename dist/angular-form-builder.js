@@ -35,14 +35,14 @@
 }).call(this);
 
 (function() {
-  var a, fbBuilder, fbComponent, fbComponents, fbDraggable, fbDraggableMaternal, fbForm;
+  var a, fbBuilder, fbComponent, fbComponents, fbForm;
 
   a = angular.module('builder.directive', ['builder.provider', 'builder.controller', 'builder.drag']);
 
   fbBuilder = function($injector) {
     return {
       restrict: 'A',
-      template: "<div class='form-horizontal'>\n    <div class='fb-form-object'\n        ng-repeat=\"object in formObjects\"\n        fb-form-object=\"object\" fb-draggable></div>\n</div>",
+      template: "<div class='form-horizontal'>\n    <div class='fb-form-object' ng-repeat=\"object in formObjects\"\n        fb-form-object=\"object\"></div>\n</div>",
       controller: 'fbBuilderController',
       link: function(scope, element, attrs) {
         var $builder, $drag, _base, _name;
@@ -112,7 +112,7 @@
   fbComponents = function($injector) {
     return {
       restrict: 'A',
-      template: "<ul ng-if=\"groups.length > 1\" class=\"nav nav-tabs nav-justified\">\n    <li ng-repeat=\"group in groups\" ng-class=\"{active:status.activeGroup==group}\">\n        <a href='#' ng-click=\"action.selectGroup($event, group)\">{{group}}</a>\n    </li>\n</ul>\n<div class='form-horizontal'>\n    <div class='fb-component'\n        ng-repeat=\"component in components|filter:{group:status.activeGroup}\"\n        fb-component=\"component\" fb-draggable-maternal></div>\n</div>",
+      template: "<ul ng-if=\"groups.length > 1\" class=\"nav nav-tabs nav-justified\">\n    <li ng-repeat=\"group in groups\" ng-class=\"{active:status.activeGroup==group}\">\n        <a href='#' ng-click=\"action.selectGroup($event, group)\">{{group}}</a>\n    </li>\n</ul>\n<div class='form-horizontal'>\n    <div class='fb-component'\n        ng-repeat=\"component in components|filter:{group:status.activeGroup}\"\n        fb-component=\"component\"></div>\n</div>",
       controller: 'fbComponentsController'
     };
   };
@@ -125,18 +125,27 @@
     return {
       restrict: 'A',
       link: function(scope, element, attrs) {
-        var $builder, $compile, $parse, $template, component, cs, formObject, view;
+        var $builder, $compile, $drag, $parse, $template, component, cs, formObject, view;
         $builder = $injector.get('$builder');
+        $drag = $injector.get('$drag');
         $parse = $injector.get('$parse');
         $compile = $injector.get('$compile');
         cs = scope.$new();
         if (attrs.fbComponent) {
           component = $parse(attrs.fbComponent)(scope);
           $.extend(cs, component);
+          $drag.draggable($(element), {
+            mode: 'mirror',
+            defer: false
+          });
         } else {
           formObject = $parse(attrs.fbFormObject)(scope);
           component = $builder.components[formObject.component];
           $.extend(cs, formObject);
+          $(element).on('click', function() {
+            return console.log('click');
+          });
+          $drag.draggable($(element));
         }
         $template = $(component.template);
         view = $compile($template)(cs);
@@ -150,41 +159,6 @@
   a.directive('fbComponent', fbComponent);
 
   a.directive('fbFormObject', fbComponent);
-
-  fbDraggableMaternal = function($injector) {
-    return {
-      restrict: 'A',
-      link: function(scope, element) {
-        var $drag;
-        $drag = $injector.get('$drag');
-        return $drag.draggable($(element), {
-          mode: 'mirror'
-        });
-      }
-    };
-  };
-
-  fbDraggableMaternal.$inject = ['$injector'];
-
-  a.directive('fbDraggableMaternal', fbDraggableMaternal);
-
-  fbDraggable = function($injector) {
-    return {
-      restrict: 'A',
-      link: function(scope, element) {
-        var $drag;
-        $drag = $injector.get('$drag');
-        $(element).on('click', function() {
-          return console.log('click');
-        });
-        return $drag.draggable($(element));
-      }
-    };
-  };
-
-  fbDraggableMaternal.$inject = ['$injector'];
-
-  a.directive('fbDraggable', fbDraggable);
 
   fbForm = function($injector) {
     return {
@@ -287,8 +261,11 @@
       isHover.y = isHover.y || offsetA.top + sizeA.height > offsetB.top && offsetA.top + sizeA.height < offsetB.top + sizeB.height;
       return isHover.x && isHover.y;
     };
-    this.dragMirrorMode = function($element) {
+    this.dragMirrorMode = function($element, defer) {
       var result;
+      if (defer == null) {
+        defer = true;
+      }
       result = {
         id: _this.getNewId(),
         mode: 'mirror',
@@ -300,18 +277,24 @@
         e.preventDefault();
         $clone = $element.clone();
         result.element = $clone[0];
-        $clone.css({
-          width: $element.width(),
-          height: $element.height()
-        });
-        $clone.addClass("fb-draggable form-horizontal dragging");
-        _this.hooks.move.drag = function(e) {
-          var droppable, id, offset, _ref, _results;
-          offset = {
+        $clone.addClass("fb-draggable form-horizontal prepare-dragging");
+        _this.hooks.move.drag = function(e, defer) {
+          var droppable, id, _ref, _results;
+          if ($clone.hasClass('prepare-dragging')) {
+            $clone.css({
+              width: $element.width(),
+              height: $element.height()
+            });
+            $clone.removeClass('prepare-dragging');
+            $clone.addClass('dragging');
+            if (defer) {
+              return;
+            }
+          }
+          $clone.offset({
             left: e.pageX - $clone.width() / 2,
             top: e.pageY - $clone.height() / 2
-          };
-          $clone.offset(offset);
+          });
           _ref = _this.data.droppables;
           _results = [];
           for (id in _ref) {
@@ -339,12 +322,17 @@
           return $clone.remove();
         };
         $('body').append($clone);
-        return _this.hooks.move.drag(e);
+        if (!defer) {
+          return _this.hooks.move.drag(e, defer);
+        }
       });
       return result;
     };
-    this.dragDragMode = function($element) {
+    this.dragDragMode = function($element, defer) {
       var result;
+      if (defer == null) {
+        defer = true;
+      }
       result = {
         id: _this.getNewId(),
         mode: 'drag',
@@ -357,18 +345,24 @@
         if ($element.hasClass('dragging')) {
           return;
         }
-        $element.css({
-          width: $element.width(),
-          height: $element.height()
-        });
-        $element.addClass('dragging');
-        _this.hooks.move.drag = function(e) {
-          var droppable, id, offset, _ref, _results;
-          offset = {
+        $element.addClass('prepare-dragging');
+        _this.hooks.move.drag = function(e, defer) {
+          var droppable, id, _ref, _results;
+          if ($element.hasClass('prepare-dragging')) {
+            $element.css({
+              width: $element.width(),
+              height: $element.height()
+            });
+            $element.removeClass('prepare-dragging');
+            $element.addClass('dragging');
+            if (defer) {
+              return;
+            }
+          }
+          $element.offset({
             left: e.pageX - $element.width() / 2,
             top: e.pageY - $element.height() / 2
-          };
-          $element.offset(offset);
+          });
           _ref = _this.data.droppables;
           _results = [];
           for (id in _ref) {
@@ -398,9 +392,11 @@
             left: '',
             top: ''
           });
-          return $element.removeClass('dragging');
+          return $element.removeClass('dragging defer-dragging');
         };
-        return _this.hooks.move.drag(e);
+        if (!defer) {
+          return _this.hooks.move.drag(e, defer);
+        }
       });
       return result;
     };
@@ -426,20 +422,21 @@
       @param element: The jQuery element.
       @param options: Options
           mode: 'drag' [default], 'mirror'
+          defer: yes/no. defer dragging
       */
 
       result = [];
       if (options.mode === 'mirror') {
         for (_i = 0, _len = $element.length; _i < _len; _i++) {
           element = $element[_i];
-          draggable = _this.dragMirrorMode($(element));
+          draggable = _this.dragMirrorMode($(element), options.defer);
           result.push(draggable.id);
           _this.data.draggables[draggable.id] = draggable;
         }
       } else {
         for (_j = 0, _len1 = $element.length; _j < _len1; _j++) {
           element = $element[_j];
-          draggable = _this.dragDragMode($(element));
+          draggable = _this.dragDragMode($(element), options.defer);
           result.push(draggable.id);
           _this.data.draggables[draggable.id] = draggable;
         }
