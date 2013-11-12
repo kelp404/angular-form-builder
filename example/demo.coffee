@@ -6,6 +6,10 @@ a.controller 'BuilderController', ($scope, $builder) ->
         component: 'textInput'
         label: 'label'
         description: 'your description'
+    $builder.addFormObject 'default',
+        component: 'textInput'
+        label: 'label'
+        description: 'your description'
     $scope.form = $builder.forms['default']
 
     $scope.add = ->

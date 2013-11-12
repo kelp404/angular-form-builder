@@ -98,10 +98,17 @@ a.provider '$drag', ->
                     left: e.pageX - $clone.width() / 2
                     top: e.pageY - $clone.height() / 2
                 $clone.offset offset
-                # is hover droppable?
-                for droppable in @data.droppables when @isHover $clone, $(droppable.element)
-                    console.log 'xx'
+
+                # execute callback for droppables
+                for droppable in @data.droppables
+                    if @isHover $clone, $(droppable.element)
+                        droppable.move e, result
+                    else
+                        droppable.out e, result
             @hooks.up.drag = (e) =>
+                # execute callback for droppables
+                for droppable in @data.droppables when @isHover $clone, $(droppable.element)
+                    droppable.up e, result
                 delete @hooks.move.drag
                 delete @hooks.up.drag
                 result.element = null
@@ -132,10 +139,18 @@ a.provider '$drag', ->
                     left: e.pageX - $element.width() / 2
                     top: e.pageY - $element.height() / 2
                 $element.offset offset
-                # is hover droppable?
-                for droppable in @data.droppables when @isHover $element, $(droppable.element)
-                    console.log 'xx'
+
+                # execute callback for droppables
+                for droppable in @data.droppables
+                    if @isHover $element, $(droppable.element)
+                        droppable.move e, result
+                    else
+                        droppable.out e, result
             @hooks.up.drag = (e) =>
+                # execute callback for droppables
+                for droppable in @data.droppables when @isHover $element, $(droppable.element)
+                    droppable.up e, result
+
                 delete @hooks.move.drag
                 delete @hooks.up.drag
                 $element.css
@@ -155,6 +170,7 @@ a.provider '$drag', ->
             element: $element[0]
             move: options.move
             up: options.up
+            out: options.out
         result
     # ----------------------------------------
     # public methods
@@ -181,8 +197,9 @@ a.provider '$drag', ->
         @param $element: The jQuery element.
         @param options: The droppable options.
             mode: 'default' [default], 'custom'
-            move: The custom mouse move callback. (e)->
-            up: The custom mouse up callback. (e)->
+            move: The custom mouse move callback. (e, draggable)->
+            up: The custom mouse up callback. (e, draggable)->
+            out: The custom mouse out callback. (e, draggable)->
         ###
         if options.mode is 'custom'
             for element in $element

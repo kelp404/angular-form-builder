@@ -39,10 +39,6 @@
 
   a = angular.module('builder.directive', ['builder.provider', 'builder.controller', 'builder.drag']);
 
-  a.config(function($dragProvider) {
-    return console.log($dragProvider);
-  });
-
   fbBuilder = function($injector) {
     return {
       restrict: 'A',
@@ -60,8 +56,49 @@
         $(element).addClass('fb-builder');
         return $drag.droppable($(element), {
           mode: 'custom',
-          move: function(e) {
-            return console.log(e);
+          move: function(e, draggable) {
+            var $component, $components, $empty, height, index, offset, positions, _i, _j, _ref, _ref1;
+            $components = $(element).find('.fb-component:not(.empty,.dragging)');
+            if ($components.length === 0) {
+              if ($(element).find('.fb-component.empty') === 0) {
+                $(element).append($("<div class='fb-component empty'></div>"));
+              }
+              return;
+            }
+            positions = [];
+            positions.push(-1000);
+            positions.push($($components[0]).offset().top + $($components[0]).height() / 2);
+            for (index = _i = 0, _ref = $components.length - 1; 0 <= _ref ? _i <= _ref : _i >= _ref; index = 0 <= _ref ? ++_i : --_i) {
+              if (index === 0) {
+                continue;
+              }
+              $component = $($components[index]);
+              offset = $component.offset();
+              height = $component.height();
+              positions.push(offset.top + height / 2);
+            }
+            positions.push(positions[positions.length - 1] + 1000);
+            for (index = _j = 0, _ref1 = positions.length - 1; 0 <= _ref1 ? _j <= _ref1 : _j >= _ref1; index = 0 <= _ref1 ? ++_j : --_j) {
+              if (index === 0) {
+                continue;
+              }
+              if (e.pageY > positions[index - 1] && e.pageY <= positions[index]) {
+                $(element).find('.empty').remove();
+                $empty = $("<div class='fb-component empty'></div>");
+                if (index - 1 < $components.length) {
+                  $empty.insertBefore($($components[index - 1]));
+                } else {
+                  $empty.insertAfter($($components[index - 2]));
+                }
+                break;
+              }
+            }
+          },
+          out: function(e, draggable) {
+            return $(element).find('.empty').remove();
+          },
+          up: function(e, draggable) {
+            return $(element).find('.empty').remove();
           }
         });
       }
@@ -277,12 +314,22 @@
           for (_i = 0, _len = _ref.length; _i < _len; _i++) {
             droppable = _ref[_i];
             if (_this.isHover($clone, $(droppable.element))) {
-              _results.push(console.log('xx'));
+              _results.push(droppable.move(e, result));
+            } else {
+              _results.push(droppable.out(e, result));
             }
           }
           return _results;
         };
         _this.hooks.up.drag = function(e) {
+          var droppable, _i, _len, _ref;
+          _ref = _this.data.droppables;
+          for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+            droppable = _ref[_i];
+            if (_this.isHover($clone, $(droppable.element))) {
+              droppable.up(e, result);
+            }
+          }
           delete _this.hooks.move.drag;
           delete _this.hooks.up.drag;
           result.element = null;
@@ -324,12 +371,22 @@
           for (_i = 0, _len = _ref.length; _i < _len; _i++) {
             droppable = _ref[_i];
             if (_this.isHover($element, $(droppable.element))) {
-              _results.push(console.log('xx'));
+              _results.push(droppable.move(e, result));
+            } else {
+              _results.push(droppable.out(e, result));
             }
           }
           return _results;
         };
         _this.hooks.up.drag = function(e) {
+          var droppable, _i, _len, _ref;
+          _ref = _this.data.droppables;
+          for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+            droppable = _ref[_i];
+            if (_this.isHover($element, $(droppable.element))) {
+              droppable.up(e, result);
+            }
+          }
           delete _this.hooks.move.drag;
           delete _this.hooks.up.drag;
           $element.css({
@@ -351,7 +408,8 @@
         mode: 'custom',
         element: $element[0],
         move: options.move,
-        up: options.up
+        up: options.up,
+        out: options.out
       };
       return result;
     };
@@ -389,8 +447,9 @@
       @param $element: The jQuery element.
       @param options: The droppable options.
           mode: 'default' [default], 'custom'
-          move: The custom mouse move callback. (e)->
-          up: The custom mouse up callback. (e)->
+          move: The custom mouse move callback. (e, draggable)->
+          up: The custom mouse up callback. (e, draggable)->
+          out: The custom mouse out callback. (e, draggable)->
       */
 
       if (options.mode === 'custom') {

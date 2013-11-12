@@ -4,9 +4,6 @@
 # ----------------------------------------
 a = angular.module 'builder.directive', ['builder.provider', 'builder.controller', 'builder.drag']
 
-a.config ($dragProvider) ->
-    console.log $dragProvider
-
 
 # ----------------------------------------
 # fb-builder, fb-droppable
@@ -39,8 +36,44 @@ fbBuilder = ($injector) ->
         $(element).addClass 'fb-builder'
         $drag.droppable $(element),
             mode: 'custom'
-            move: (e) ->
-                console.log e
+            move: (e, draggable) ->
+                $components = $(element).find '.fb-component:not(.empty,.dragging)'
+                if $components.length is 0
+                    # there are no components in the builder.
+                    if $(element).find('.fb-component.empty') is 0
+                        $(element).append $("<div class='fb-component empty'></div>")
+                    return
+
+                # the positions could added .empty div.
+                positions = []
+                # first
+                positions.push -1000
+                positions.push $($components[0]).offset().top + $($components[0]).height() / 2
+                for index in [0..$components.length - 1]
+                    continue if index is 0
+                    $component = $($components[index])
+                    offset = $component.offset()
+                    height = $component.height()
+                    positions.push offset.top + height / 2
+                positions.push positions[positions.length - 1] + 1000   # last
+
+                # search where should I insert the .empty
+                for index in [0..positions.length - 1]
+                    continue if index is 0
+                    if e.pageY > positions[index - 1] and e.pageY <= positions[index]
+                        # this one
+                        $(element).find('.empty').remove()
+                        $empty = $ "<div class='fb-component empty'></div>"
+                        if index - 1 < $components.length
+                            $empty.insertBefore $($components[index - 1])
+                        else
+                            $empty.insertAfter $($components[index - 2])
+                        break
+                return
+            out: (e, draggable) ->
+                $(element).find('.empty').remove()
+            up: (e, draggable) ->
+                $(element).find('.empty').remove()
 fbBuilder.$inject = ['$injector']
 a.directive 'fbBuilder', fbBuilder
 

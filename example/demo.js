@@ -9,6 +9,11 @@
       label: 'label',
       description: 'your description'
     });
+    $builder.addFormObject('default', {
+      component: 'textInput',
+      label: 'label',
+      description: 'your description'
+    });
     $scope.form = $builder.forms['default'];
     return $scope.add = function() {
       return $builder.registerComponent('textInput AA', {

@@ -8,6 +8,13 @@
     input { cursor: move; }
     label { cursor: move; }
 }
+.fb-component.empty {
+    cursor: default;
+    margin: 6px;
+    height: 80px;
+    border:dashed 1px #aaa;
+    background-color: #eee;
+}
 
 .fb-draggable.dragging {
     background-color: #ffffff;
