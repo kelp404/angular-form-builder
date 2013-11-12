@@ -13,8 +13,8 @@ fbBuilder = ($injector) ->
     template:
         """
         <div class='form-horizontal'>
-            <div class='fb-component'
-                ng-repeat="object in form"
+            <div class='fb-form-object'
+                ng-repeat="object in formObjects"
                 fb-form-object="object" fb-draggable></div>
         </div>
         """
@@ -31,29 +31,29 @@ fbBuilder = ($injector) ->
         # ----------------------------------------
         scope.formName = attrs.fbBuilder
         $builder.forms[scope.formName] ?= []
-        scope.form = $builder.forms[scope.formName]
+        scope.formObjects = $builder.forms[scope.formName]
 
         $(element).addClass 'fb-builder'
         $drag.droppable $(element),
             mode: 'custom'
             move: (e, draggable) ->
-                $components = $(element).find '.fb-component:not(.empty,.dragging)'
-                if $components.length is 0
+                $formObjects = $(element).find '.fb-form-object:not(.empty,.dragging)'
+                if $formObjects.length is 0
                     # there are no components in the builder.
-                    if $(element).find('.fb-component.empty') is 0
-                        $(element).append $("<div class='fb-component empty'></div>")
+                    if $(element).find('.fb-form-object.empty') is 0
+                        $(element).append $("<div class='fb-form-object empty'></div>")
                     return
 
                 # the positions could added .empty div.
                 positions = []
                 # first
                 positions.push -1000
-                positions.push $($components[0]).offset().top + $($components[0]).height() / 2
-                for index in [0..$components.length - 1]
+                positions.push $($formObjects[0]).offset().top + $($formObjects[0]).height() / 2
+                for index in [0..$formObjects.length - 1]
                     continue if index is 0
-                    $component = $($components[index])
-                    offset = $component.offset()
-                    height = $component.height()
+                    $formObject = $($formObjects[index])
+                    offset = $formObject.offset()
+                    height = $formObject.height()
                     positions.push offset.top + height / 2
                 positions.push positions[positions.length - 1] + 1000   # last
 
@@ -63,11 +63,11 @@ fbBuilder = ($injector) ->
                     if e.pageY > positions[index - 1] and e.pageY <= positions[index]
                         # this one
                         $(element).find('.empty').remove()
-                        $empty = $ "<div class='fb-component empty'></div>"
-                        if index - 1 < $components.length
-                            $empty.insertBefore $($components[index - 1])
+                        $empty = $ "<div class='fb-form-object empty'></div>"
+                        if index - 1 < $formObjects.length
+                            $empty.insertBefore $($formObjects[index - 1])
                         else
-                            $empty.insertAfter $($components[index - 2])
+                            $empty.insertAfter $($formObjects[index - 2])
                         break
                 return
             out: (e, draggable) ->
@@ -158,6 +158,8 @@ fbDraggable = ($injector) ->
         # ----------------------------------------
         $drag = $injector.get '$drag'
 
+        $(element).on 'click', ->
+            console.log 'click'
         $drag.draggable $(element)
 
 fbDraggableMaternal.$inject = ['$injector']

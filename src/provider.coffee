@@ -1,3 +1,15 @@
+###
+    component:
+        It is like a class.
+        The base components are textInput, textArea, select, check, radio.
+        User can custom the form with components.
+    formObject:
+        It is like an object (an instance of the component).
+        User can custom the label, description, required and validation of the input.
+    form:
+        This is for end-user. There are form groups int the form.
+        They can input the value to the form.
+###
 
 a = angular.module 'builder.provider', []
 

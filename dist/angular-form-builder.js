@@ -42,7 +42,7 @@
   fbBuilder = function($injector) {
     return {
       restrict: 'A',
-      template: "<div class='form-horizontal'>\n    <div class='fb-component'\n        ng-repeat=\"object in form\"\n        fb-form-object=\"object\" fb-draggable></div>\n</div>",
+      template: "<div class='form-horizontal'>\n    <div class='fb-form-object'\n        ng-repeat=\"object in formObjects\"\n        fb-form-object=\"object\" fb-draggable></div>\n</div>",
       controller: 'fbBuilderController',
       link: function(scope, element, attrs) {
         var $builder, $drag, _base, _name;
@@ -52,29 +52,29 @@
         if ((_base = $builder.forms)[_name = scope.formName] == null) {
           _base[_name] = [];
         }
-        scope.form = $builder.forms[scope.formName];
+        scope.formObjects = $builder.forms[scope.formName];
         $(element).addClass('fb-builder');
         return $drag.droppable($(element), {
           mode: 'custom',
           move: function(e, draggable) {
-            var $component, $components, $empty, height, index, offset, positions, _i, _j, _ref, _ref1;
-            $components = $(element).find('.fb-component:not(.empty,.dragging)');
-            if ($components.length === 0) {
-              if ($(element).find('.fb-component.empty') === 0) {
-                $(element).append($("<div class='fb-component empty'></div>"));
+            var $empty, $formObject, $formObjects, height, index, offset, positions, _i, _j, _ref, _ref1;
+            $formObjects = $(element).find('.fb-form-object:not(.empty,.dragging)');
+            if ($formObjects.length === 0) {
+              if ($(element).find('.fb-form-object.empty') === 0) {
+                $(element).append($("<div class='fb-form-object empty'></div>"));
               }
               return;
             }
             positions = [];
             positions.push(-1000);
-            positions.push($($components[0]).offset().top + $($components[0]).height() / 2);
-            for (index = _i = 0, _ref = $components.length - 1; 0 <= _ref ? _i <= _ref : _i >= _ref; index = 0 <= _ref ? ++_i : --_i) {
+            positions.push($($formObjects[0]).offset().top + $($formObjects[0]).height() / 2);
+            for (index = _i = 0, _ref = $formObjects.length - 1; 0 <= _ref ? _i <= _ref : _i >= _ref; index = 0 <= _ref ? ++_i : --_i) {
               if (index === 0) {
                 continue;
               }
-              $component = $($components[index]);
-              offset = $component.offset();
-              height = $component.height();
+              $formObject = $($formObjects[index]);
+              offset = $formObject.offset();
+              height = $formObject.height();
               positions.push(offset.top + height / 2);
             }
             positions.push(positions[positions.length - 1] + 1000);
@@ -84,11 +84,11 @@
               }
               if (e.pageY > positions[index - 1] && e.pageY <= positions[index]) {
                 $(element).find('.empty').remove();
-                $empty = $("<div class='fb-component empty'></div>");
-                if (index - 1 < $components.length) {
-                  $empty.insertBefore($($components[index - 1]));
+                $empty = $("<div class='fb-form-object empty'></div>");
+                if (index - 1 < $formObjects.length) {
+                  $empty.insertBefore($($formObjects[index - 1]));
                 } else {
-                  $empty.insertAfter($($components[index - 2]));
+                  $empty.insertAfter($($formObjects[index - 2]));
                 }
                 break;
               }
@@ -174,6 +174,9 @@
       link: function(scope, element) {
         var $drag;
         $drag = $injector.get('$drag');
+        $(element).on('click', function() {
+          return console.log('click');
+        });
         return $drag.draggable($(element));
       }
     };
@@ -487,6 +490,20 @@
   angular.module('builder', ['builder.directive', 'validator.rules']);
 
 }).call(this);
+
+/*
+    component:
+        It is like a class.
+        The base components are textInput, textArea, select, check, radio.
+        User can custom the form with components.
+    formObject:
+        It is like an object (an instance of the component).
+        User can custom the label, description, required and validation of the input.
+    form:
+        This is for end-user. There are form groups int the form.
+        They can input the value to the form.
+*/
+
 
 (function() {
   var a,
