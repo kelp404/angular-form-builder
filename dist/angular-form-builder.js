@@ -35,7 +35,7 @@
 }).call(this);
 
 (function() {
-  var a, fbBuilder, fbComponent, fbComponents, fbForm;
+  var a, fbBuilder, fbComponent, fbComponents, fbForm, fbFormObject;
 
   a = angular.module('builder.directive', ['builder.provider', 'builder.controller', 'builder.drag']);
 
@@ -109,6 +109,34 @@
 
   a.directive('fbBuilder', fbBuilder);
 
+  fbFormObject = function($injector) {
+    return {
+      restrict: 'A',
+      link: function(scope, element, attrs) {
+        var $builder, $compile, $drag, $parse, $template, component, cs, formObject, view;
+        $builder = $injector.get('$builder');
+        $drag = $injector.get('$drag');
+        $parse = $injector.get('$parse');
+        $compile = $injector.get('$compile');
+        cs = scope.$new();
+        formObject = $parse(attrs.fbFormObject)(scope);
+        component = $builder.components[formObject.component];
+        $.extend(cs, formObject);
+        $(element).on('click', function() {
+          return console.log('click');
+        });
+        $drag.draggable($(element));
+        $template = $(component.template);
+        view = $compile($template)(cs);
+        return $(element).append(view);
+      }
+    };
+  };
+
+  fbFormObject.$inject = ['$injector'];
+
+  a.directive('fbFormObject', fbFormObject);
+
   fbComponents = function($injector) {
     return {
       restrict: 'A',
@@ -125,28 +153,18 @@
     return {
       restrict: 'A',
       link: function(scope, element, attrs) {
-        var $builder, $compile, $drag, $parse, $template, component, cs, formObject, view;
+        var $builder, $compile, $drag, $parse, $template, component, cs, view;
         $builder = $injector.get('$builder');
         $drag = $injector.get('$drag');
         $parse = $injector.get('$parse');
         $compile = $injector.get('$compile');
         cs = scope.$new();
-        if (attrs.fbComponent) {
-          component = $parse(attrs.fbComponent)(scope);
-          $.extend(cs, component);
-          $drag.draggable($(element), {
-            mode: 'mirror',
-            defer: false
-          });
-        } else {
-          formObject = $parse(attrs.fbFormObject)(scope);
-          component = $builder.components[formObject.component];
-          $.extend(cs, formObject);
-          $(element).on('click', function() {
-            return console.log('click');
-          });
-          $drag.draggable($(element));
-        }
+        component = $parse(attrs.fbComponent)(scope);
+        $.extend(cs, component);
+        $drag.draggable($(element), {
+          mode: 'mirror',
+          defer: false
+        });
         $template = $(component.template);
         view = $compile($template)(cs);
         return $(element).append(view);
@@ -157,8 +175,6 @@
   fbComponent.$inject = ['$injector'];
 
   a.directive('fbComponent', fbComponent);
-
-  a.directive('fbFormObject', fbComponent);
 
   fbForm = function($injector) {
     return {
@@ -580,8 +596,10 @@
         _this.components[name] = newComponent;
         _this.componentsArray.push(newComponent);
         if (_ref = newComponent.group, __indexOf.call(_this.groups, _ref) < 0) {
-          return _this.groups.push(newComponent.group);
+          _this.groups.push(newComponent.group);
         }
+      } else {
+        console.error("The component " + name + " was registered.");
       }
     };
     this.addFormObject = function(name, formObject) {

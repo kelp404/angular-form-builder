@@ -102,6 +102,9 @@ a.provider '$builder', ->
             @componentsArray.push newComponent
             if newComponent.group not in @groups
                 @groups.push newComponent.group
+        else
+            console.error "The component #{name} was registered."
+        return
 
     @addFormObject = (name, formObject={}) =>
         ###

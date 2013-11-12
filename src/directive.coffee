@@ -76,6 +76,34 @@ fbBuilder = ($injector) ->
 fbBuilder.$inject = ['$injector']
 a.directive 'fbBuilder', fbBuilder
 
+# ----------------------------------------
+# fb-form-object
+# ----------------------------------------
+fbFormObject = ($injector) ->
+    restrict: 'A'
+    link: (scope, element, attrs) ->
+        # providers
+        $builder = $injector.get '$builder'
+        $drag = $injector.get '$drag'
+        $parse = $injector.get '$parse'
+        $compile = $injector.get '$compile'
+
+        # valuables
+        cs = scope.$new()   # component scope
+        formObject = $parse(attrs.fbFormObject) scope
+        component = $builder.components[formObject.component]
+        $.extend cs, formObject
+
+        $(element).on 'click', ->
+            console.log 'click'
+        $drag.draggable $(element)
+
+        $template = $(component.template)
+        view = $compile($template) cs
+        $(element).append view
+fbFormObject.$inject = ['$injector']
+a.directive 'fbFormObject', fbFormObject
+
 
 # ----------------------------------------
 # fb-components
@@ -101,7 +129,7 @@ fbComponents.$inject = ['$injector']
 a.directive 'fbComponents', fbComponents
 
 # ----------------------------------------
-# fb-component, fb-form-object
+# fb-component
 # ----------------------------------------
 fbComponent = ($injector) ->
     restrict: 'A'
@@ -114,28 +142,18 @@ fbComponent = ($injector) ->
 
         # valuables
         cs = scope.$new()   # component scope
-        if attrs.fbComponent
-            component = $parse(attrs.fbComponent) scope
-            $.extend cs, component
+        component = $parse(attrs.fbComponent) scope
+        $.extend cs, component
 
-            $drag.draggable $(element),
-                mode: 'mirror'
-                defer: no
-        else
-            formObject = $parse(attrs.fbFormObject) scope
-            component = $builder.components[formObject.component]
-            $.extend cs, formObject
-
-            $(element).on 'click', ->
-                console.log 'click'
-            $drag.draggable $(element)
+        $drag.draggable $(element),
+            mode: 'mirror'
+            defer: no
 
         $template = $(component.template)
         view = $compile($template) cs
         $(element).append view
 fbComponent.$inject = ['$injector']
 a.directive 'fbComponent', fbComponent
-a.directive 'fbFormObject', fbComponent
 
 
 # ----------------------------------------
