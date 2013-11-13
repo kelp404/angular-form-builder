@@ -89,23 +89,61 @@ fbFormObject = ($injector) ->
         $compile = $injector.get '$compile'
 
         # valuables
-        cs = scope.$new()   # component scope
-        formObject = $parse(attrs.fbFormObject) scope
-        component = $builder.components[formObject.component]
-        $.extend cs, formObject
+        component = $builder.components[scope.object.component]
+        scope.$watch 'object', ->
+            for key, value of scope.object when key isnt '$$hashKey'
+                # ng-repeat="object in formObjects"
+                # copy scope.object.{} to scope.{}
+                scope[key] = value
+        , true
 
+        # draggable
         $drag.draggable $(element)
-        $(element).on 'click', ->
-            $(element).popover
-                html: yes
-                content: "<h2>And here's some amazing content. It's very engaging. right?</h2>"
-            $(element).popover 'show'
-            console.log 'click'
 
         # compile formObject
         $template = $(component.template)
-        view = $compile($template) cs
+        view = $compile($template) scope
         $(element).append view
+
+        # ----------------------------------------
+        # bootstrap popover
+        # ----------------------------------------
+        popoverId = "fo-#{Math.random().toString().substr(2)}"
+        popover =
+            view: null
+            html:
+                """
+                <form class='#{popoverId}'>
+                    <div class="form-group">
+                        <label class='control-label col-md-10'>Label</label>
+                        <div class="col-md-10">
+                            <input type='text' ng-model="object.label" class='form-control '/>
+                        </div>
+                    </div>
+                </form>
+                """
+        popover.view = $compile(popover.html) scope
+        $(element).addClass popoverId
+        $(element).popover
+            html: yes
+            title: component.label
+            content: popover.view
+        $(element).on 'hide.bs.popover', ->
+            # do not remove the DOM
+            $("form.#{popoverId}").closest('.popover').removeClass 'in'
+            false
+        $(element).on 'show.bs.popover', ->
+            $popover = $("form.#{popoverId}").closest '.popover'
+            if $popover.length > 0
+                $popover.addClass 'in'
+                $(element).triggerHandler 'shown.bs.popover'
+                false
+        $(element).on 'shown.bs.popover', ->
+            # select the first input
+            $(".popover .#{popoverId} input:first").select()
+        $(element).on 'click', ->
+            # hide other popovers
+            $("div.fb-form-object:not(.#{popoverId})").popover 'hide'
 fbFormObject.$inject = ['$injector']
 a.directive 'fbFormObject', fbFormObject
 

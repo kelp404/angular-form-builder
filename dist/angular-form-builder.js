@@ -113,27 +113,59 @@
     return {
       restrict: 'A',
       link: function(scope, element, attrs) {
-        var $builder, $compile, $drag, $parse, $template, component, cs, formObject, view;
+        var $builder, $compile, $drag, $parse, $template, component, popover, popoverId, view;
         $builder = $injector.get('$builder');
         $drag = $injector.get('$drag');
         $parse = $injector.get('$parse');
         $compile = $injector.get('$compile');
-        cs = scope.$new();
-        formObject = $parse(attrs.fbFormObject)(scope);
-        component = $builder.components[formObject.component];
-        $.extend(cs, formObject);
+        component = $builder.components[scope.object.component];
+        scope.$watch('object', function() {
+          var key, value, _ref, _results;
+          _ref = scope.object;
+          _results = [];
+          for (key in _ref) {
+            value = _ref[key];
+            if (key !== '$$hashKey') {
+              _results.push(scope[key] = value);
+            }
+          }
+          return _results;
+        }, true);
         $drag.draggable($(element));
-        $(element).on('click', function() {
-          $(element).popover({
-            html: true,
-            content: "<h2>And here's some amazing content. It's very engaging. right?</h2>"
-          });
-          $(element).popover('show');
-          return console.log('click');
-        });
         $template = $(component.template);
-        view = $compile($template)(cs);
-        return $(element).append(view);
+        view = $compile($template)(scope);
+        $(element).append(view);
+        popoverId = "fo-" + (Math.random().toString().substr(2));
+        popover = {
+          view: null,
+          html: "<form class='" + popoverId + "'>\n    <div class=\"form-group\">\n        <label class='control-label col-md-10'>Label</label>\n        <div class=\"col-md-10\">\n            <input type='text' ng-model=\"object.label\" class='form-control '/>\n        </div>\n    </div>\n</form>"
+        };
+        popover.view = $compile(popover.html)(scope);
+        $(element).addClass(popoverId);
+        $(element).popover({
+          html: true,
+          title: component.label,
+          content: popover.view
+        });
+        $(element).on('hide.bs.popover', function() {
+          $("form." + popoverId).closest('.popover').removeClass('in');
+          return false;
+        });
+        $(element).on('show.bs.popover', function() {
+          var $popover;
+          $popover = $("form." + popoverId).closest('.popover');
+          if ($popover.length > 0) {
+            $popover.addClass('in');
+            $(element).triggerHandler('shown.bs.popover');
+            return false;
+          }
+        });
+        $(element).on('shown.bs.popover', function() {
+          return $(".popover ." + popoverId + " input:first").select();
+        });
+        return $(element).on('click', function() {
+          return $("div.fb-form-object:not(." + popoverId + ")").popover('hide');
+        });
       }
     };
   };
