@@ -95,7 +95,7 @@ fbFormObject = ($injector) ->
                 # ng-repeat="object in formObjects"
                 # copy scope.object.{} to scope.{}
                 scope[key] = value
-        , true
+        , yes
 
         # draggable
         $drag.draggable $(element)
@@ -130,14 +130,22 @@ fbFormObject = ($injector) ->
             content: popover.view
         $(element).on 'hide.bs.popover', ->
             # do not remove the DOM
-            $("form.#{popoverId}").closest('.popover').removeClass 'in'
-            false
+            $popover = $("form.#{popoverId}").closest '.popover'
+            $popover.removeClass 'in'
+            setTimeout ->
+                $popover.hide()
+            , 300
+            no
         $(element).on 'show.bs.popover', ->
+            return no if $drag.isMouseMoved()
             $popover = $("form.#{popoverId}").closest '.popover'
             if $popover.length > 0
-                $popover.addClass 'in'
-                $(element).triggerHandler 'shown.bs.popover'
-                false
+                $popover.show()
+                setTimeout ->
+                    $popover.addClass 'in'
+                    $(element).triggerHandler 'shown.bs.popover'
+                , 0
+                no
         $(element).on 'shown.bs.popover', ->
             # select the first input
             $(".popover .#{popoverId} input:first").select()

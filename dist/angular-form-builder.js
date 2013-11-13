@@ -148,15 +148,26 @@
           content: popover.view
         });
         $(element).on('hide.bs.popover', function() {
-          $("form." + popoverId).closest('.popover').removeClass('in');
+          var $popover;
+          $popover = $("form." + popoverId).closest('.popover');
+          $popover.removeClass('in');
+          setTimeout(function() {
+            return $popover.hide();
+          }, 300);
           return false;
         });
         $(element).on('show.bs.popover', function() {
           var $popover;
+          if ($drag.isMouseMoved()) {
+            return false;
+          }
           $popover = $("form." + popoverId).closest('.popover');
           if ($popover.length > 0) {
-            $popover.addClass('in');
-            $(element).triggerHandler('shown.bs.popover');
+            $popover.show();
+            setTimeout(function() {
+              $popover.addClass('in');
+              return $(element).triggerHandler('shown.bs.popover');
+            }, 0);
             return false;
           }
         });
@@ -244,15 +255,32 @@
       draggables: {},
       droppables: {}
     };
+    this.mouseMoved = false;
+    this.isMouseMoved = function() {
+      return _this.mouseMoved;
+    };
     this.hooks = {
+      down: {},
       move: {},
       up: {}
     };
     this.eventMouseMove = function() {};
     this.eventMouseUp = function() {};
     $(function() {
+      $(document).on('mousedown', function(e) {
+        var func, key, _ref;
+        _this.mouseMoved = false;
+        _ref = _this.hooks.down;
+        for (key in _ref) {
+          func = _ref[key];
+          if (typeof func === "function") {
+            func(e);
+          }
+        }
+      });
       $(document).on('mousemove', function(e) {
         var func, key, _ref;
+        _this.mouseMoved = true;
         _ref = _this.hooks.move;
         for (key in _ref) {
           func = _ref[key];
@@ -400,7 +428,7 @@
         }
         $element.addClass('prepare-dragging');
         _this.hooks.move.drag = function(e, defer) {
-          var droppable, id, _ref, _results;
+          var droppable, id, _ref;
           if ($element.hasClass('prepare-dragging')) {
             $element.css({
               width: $element.width(),
@@ -417,16 +445,14 @@
             top: e.pageY - $element.height() / 2
           });
           _ref = _this.data.droppables;
-          _results = [];
           for (id in _ref) {
             droppable = _ref[id];
             if (_this.isHover($element, $(droppable.element))) {
-              _results.push(droppable.move(e, result));
+              droppable.move(e, result);
             } else {
-              _results.push(droppable.out(e, result));
+              droppable.out(e, result);
             }
           }
-          return _results;
         };
         _this.hooks.up.drag = function(e) {
           var droppable, id, _ref;
@@ -525,6 +551,7 @@
     this.get = function($injector) {
       this.setupProviders($injector);
       return {
+        isMouseMoved: this.isMouseMoved,
         data: this.data,
         draggable: this.draggable,
         droppable: this.droppable

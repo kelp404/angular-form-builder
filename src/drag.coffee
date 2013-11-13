@@ -21,13 +21,21 @@ a.provider '$drag', ->
     # ----------------------------------------
     # event hooks
     # ----------------------------------------
+    @mouseMoved = no
+    @isMouseMoved = => @mouseMoved
     @hooks =
+        down: {}
         move: {}
         up: {}
     @eventMouseMove = ->
     @eventMouseUp = ->
     $ =>
+        $(document).on 'mousedown', (e) =>
+            @mouseMoved = no
+            func?(e) for key, func of @hooks.down
+            return
         $(document).on 'mousemove', (e) =>
+            @mouseMoved = yes
             func?(e) for key, func of @hooks.move
             return
         $(document).on 'mouseup', (e) =>
@@ -155,6 +163,7 @@ a.provider '$drag', ->
                         droppable.move e, result
                     else
                         droppable.out e, result
+                return
             @hooks.up.drag = (e) =>
                 # execute callback for droppables
                 for id, droppable of @data.droppables when @isHover $element, $(droppable.element)
@@ -230,6 +239,7 @@ a.provider '$drag', ->
     @get = ($injector) ->
         @setupProviders $injector
 
+        isMouseMoved: @isMouseMoved
         data: @data
         draggable: @draggable
         droppable: @droppable
