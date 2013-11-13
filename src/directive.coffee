@@ -105,6 +105,11 @@ fbFormObject = ($injector) ->
         view = $compile($template) scope
         $(element).append view
 
+        $(element).on 'click', ->
+            # hide other popovers
+            $("div.fb-form-object:not(.#{popoverId})").popover 'hide'
+            return no
+
         # ----------------------------------------
         # bootstrap popover
         # ----------------------------------------
@@ -120,22 +125,56 @@ fbFormObject = ($injector) ->
                             <input type='text' ng-model="object.label" class='form-control '/>
                         </div>
                     </div>
+
+                    <hr/>
+                    <div class='form-group'>
+                        <div class="col-md-10">
+                            <input type='submit' ng-click="popover.save($event)" class='btn btn-primary' value='Save'/>
+                            <input type='button' ng-click="popover.cancel($event)" class='btn btn-default' value='Cancel'/>
+                            <input type='button' ng-click="popover.remove($event)" class='btn btn-danger' value='Delete'/>
+                        </div>
+                    </div>
                 </form>
                 """
+        scope.popover =
+            ngModel: null
+            save: ($event) ->
+                $event.preventDefault()
+                $(element).popover 'hide'
+                return
+            remove: ($event) ->
+                $event.preventDefault()
+                console.log 'remove'
+                $(element).popover 'hide'
+                return
+            shown: ->
+                # copy model for revivification
+                @ngModel =
+                    label: scope.object.label
+                    description: scope.object.description
+                    placeholder: scope.object.placeholder
+                    required: scope.object.required
+                    options: (x for x in scope.object.options)
+            cancel: ($event) ->
+                $event.preventDefault()
+                scope.object.label = @ngModel.label
+                scope.object.description = @ngModel.description
+                scope.object.placeholder = @ngModel.placeholder
+                scope.object.required = @ngModel.required
+                scope.object.options.length = 0
+                scope.object.options.push(x) for x in @ngModel
+                $(element).popover 'hide'
+                return
+        # compile popover
         popover.view = $compile(popover.html) scope
         $(element).addClass popoverId
         $(element).popover
             html: yes
             title: component.label
             content: popover.view
-        $(element).on 'hide.bs.popover', ->
-            # do not remove the DOM
-            $popover = $("form.#{popoverId}").closest '.popover'
-            $popover.removeClass 'in'
-            setTimeout ->
-                $popover.hide()
-            , 300
-            no
+        # ----------------------------------------
+        # show
+        # ----------------------------------------
         $(element).on 'show.bs.popover', ->
             return no if $drag.isMouseMoved()
             $popover = $("form.#{popoverId}").closest '.popover'
@@ -146,12 +185,24 @@ fbFormObject = ($injector) ->
                     $(element).triggerHandler 'shown.bs.popover'
                 , 0
                 no
+        # ----------------------------------------
+        # shown
+        # ----------------------------------------
         $(element).on 'shown.bs.popover', ->
             # select the first input
             $(".popover .#{popoverId} input:first").select()
-        $(element).on 'click', ->
-            # hide other popovers
-            $("div.fb-form-object:not(.#{popoverId})").popover 'hide'
+            scope.$apply -> scope.popover.shown()
+        # ----------------------------------------
+        # hide
+        # ----------------------------------------
+        $(element).on 'hide.bs.popover', ->
+            # do not remove the DOM
+            $popover = $("form.#{popoverId}").closest '.popover'
+            $popover.removeClass 'in'
+            setTimeout ->
+                $popover.hide()
+            , 300
+            no
 fbFormObject.$inject = ['$injector']
 a.directive 'fbFormObject', fbFormObject
 

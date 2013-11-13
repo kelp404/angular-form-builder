@@ -119,6 +119,7 @@ a.provider '$builder', ->
             description:
             placeholder:
             options:
+            required:
         ###
         @forms[name] ?= []
         @forms[name].push @convertFormObject(formObject)

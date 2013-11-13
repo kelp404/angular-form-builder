@@ -135,10 +135,60 @@
         $template = $(component.template);
         view = $compile($template)(scope);
         $(element).append(view);
+        $(element).on('click', function() {
+          $("div.fb-form-object:not(." + popoverId + ")").popover('hide');
+          return false;
+        });
         popoverId = "fo-" + (Math.random().toString().substr(2));
         popover = {
           view: null,
-          html: "<form class='" + popoverId + "'>\n    <div class=\"form-group\">\n        <label class='control-label col-md-10'>Label</label>\n        <div class=\"col-md-10\">\n            <input type='text' ng-model=\"object.label\" class='form-control '/>\n        </div>\n    </div>\n</form>"
+          html: "<form class='" + popoverId + "'>\n    <div class=\"form-group\">\n        <label class='control-label col-md-10'>Label</label>\n        <div class=\"col-md-10\">\n            <input type='text' ng-model=\"object.label\" class='form-control '/>\n        </div>\n    </div>\n\n    <hr/>\n    <div class='form-group'>\n        <div class=\"col-md-10\">\n            <input type='submit' ng-click=\"popover.save($event)\" class='btn btn-primary' value='Save'/>\n            <input type='button' ng-click=\"popover.cancel($event)\" class='btn btn-default' value='Cancel'/>\n            <input type='button' ng-click=\"popover.remove($event)\" class='btn btn-danger' value='Delete'/>\n        </div>\n    </div>\n</form>"
+        };
+        scope.popover = {
+          ngModel: null,
+          save: function($event) {
+            $event.preventDefault();
+            $(element).popover('hide');
+          },
+          remove: function($event) {
+            $event.preventDefault();
+            console.log('remove');
+            $(element).popover('hide');
+          },
+          shown: function() {
+            var x;
+            return this.ngModel = {
+              label: scope.object.label,
+              description: scope.object.description,
+              placeholder: scope.object.placeholder,
+              required: scope.object.required,
+              options: (function() {
+                var _i, _len, _ref, _results;
+                _ref = scope.object.options;
+                _results = [];
+                for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+                  x = _ref[_i];
+                  _results.push(x);
+                }
+                return _results;
+              })()
+            };
+          },
+          cancel: function($event) {
+            var x, _i, _len, _ref;
+            $event.preventDefault();
+            scope.object.label = this.ngModel.label;
+            scope.object.description = this.ngModel.description;
+            scope.object.placeholder = this.ngModel.placeholder;
+            scope.object.required = this.ngModel.required;
+            scope.object.options.length = 0;
+            _ref = this.ngModel;
+            for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+              x = _ref[_i];
+              scope.object.options.push(x);
+            }
+            $(element).popover('hide');
+          }
         };
         popover.view = $compile(popover.html)(scope);
         $(element).addClass(popoverId);
@@ -146,15 +196,6 @@
           html: true,
           title: component.label,
           content: popover.view
-        });
-        $(element).on('hide.bs.popover', function() {
-          var $popover;
-          $popover = $("form." + popoverId).closest('.popover');
-          $popover.removeClass('in');
-          setTimeout(function() {
-            return $popover.hide();
-          }, 300);
-          return false;
         });
         $(element).on('show.bs.popover', function() {
           var $popover;
@@ -172,10 +213,19 @@
           }
         });
         $(element).on('shown.bs.popover', function() {
-          return $(".popover ." + popoverId + " input:first").select();
+          $(".popover ." + popoverId + " input:first").select();
+          return scope.$apply(function() {
+            return scope.popover.shown();
+          });
         });
-        return $(element).on('click', function() {
-          return $("div.fb-form-object:not(." + popoverId + ")").popover('hide');
+        return $(element).on('hide.bs.popover', function() {
+          var $popover;
+          $popover = $("form." + popoverId).closest('.popover');
+          $popover.removeClass('in');
+          setTimeout(function() {
+            return $popover.hide();
+          }, 300);
+          return false;
         });
       }
     };
@@ -683,6 +733,7 @@
           description:
           placeholder:
           options:
+          required:
       */
 
       if ((_base = _this.forms)[name] == null) {
