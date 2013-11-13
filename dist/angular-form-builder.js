@@ -113,23 +113,25 @@
     return {
       restrict: 'A',
       link: function(scope, element, attrs) {
-        var $builder, $compile, $drag, $parse, $template, component, popover, popoverId, view;
+        var $builder, $compile, $drag, $parse, $template, component, key, popover, popoverId, value, view, _ref;
         $builder = $injector.get('$builder');
         $drag = $injector.get('$drag');
         $parse = $injector.get('$parse');
         $compile = $injector.get('$compile');
         component = $builder.components[scope.object.component];
-        scope.$watch('object', function() {
-          var key, value, _ref, _results;
-          _ref = scope.object;
-          _results = [];
-          for (key in _ref) {
-            value = _ref[key];
-            if (key !== '$$hashKey') {
-              _results.push(scope[key] = value);
-            }
+        _ref = scope.object;
+        for (key in _ref) {
+          value = _ref[key];
+          if (key !== '$$hashKey') {
+            scope[key] = value;
           }
-          return _results;
+        }
+        scope.$watch('[label, description, placeholder, required, options]', function() {
+          scope.object.label = scope.label;
+          scope.object.description = scope.description;
+          scope.object.placeholder = scope.placeholder;
+          scope.object.required = scope.required;
+          return scope.object.options = scope.options;
         }, true);
         $drag.draggable($(element));
         $template = $(component.template);
@@ -142,32 +144,45 @@
         popoverId = "fo-" + (Math.random().toString().substr(2));
         popover = {
           view: null,
-          html: "<form class='" + popoverId + "'>\n    <div class=\"form-group\">\n        <label class='control-label col-md-10'>Label</label>\n        <div class=\"col-md-10\">\n            <input type='text' ng-model=\"object.label\" class='form-control'/>\n        </div>\n    </div>\n    <div class=\"form-group\">\n        <label class='control-label col-md-10'>Description</label>\n        <div class=\"col-md-10\">\n            <input type='text' ng-model=\"object.description\" class='form-control'/>\n        </div>\n    </div>\n    <div class=\"form-group\">\n        <label class='control-label col-md-10'>Placeholder</label>\n        <div class=\"col-md-10\">\n            <input type='text' ng-model=\"object.placeholder\" class='form-control'/>\n        </div>\n    </div>\n    <div class=\"form-group\">\n        <div class=\"col-md-10\">\n            <label class='control-label col-md-10'>\n            <input type='checkbox' ng-model=\"object.required\" />\n            Required</label>\n        </div>\n    </div>\n\n    <hr/>\n    <div class='form-group'>\n        <div class=\"col-md-10\">\n            <input type='submit' ng-click=\"popover.save($event)\" class='btn btn-primary' value='Save'/>\n            <input type='button' ng-click=\"popover.cancel($event)\" class='btn btn-default' value='Cancel'/>\n            <input type='button' ng-click=\"popover.remove($event)\" class='btn btn-danger' value='Delete'/>\n        </div>\n    </div>\n</form>"
+          html: component.popoverTemplate
         };
+        popover.html = $(popover.html).addClass(popoverId);
         scope.popover = {
           ngModel: null,
           save: function($event) {
+            /*
+            The save event of the popover.
+            */
+
             $event.preventDefault();
             $(element).popover('hide');
           },
           remove: function($event) {
+            /*
+            The delete event of the popover.
+            */
+
             $event.preventDefault();
             console.log('remove');
             $(element).popover('hide');
           },
           shown: function() {
+            /*
+            The shown event of the popover.
+            */
+
             var x;
             return this.ngModel = {
-              label: scope.object.label,
-              description: scope.object.description,
-              placeholder: scope.object.placeholder,
-              required: scope.object.required,
+              label: scope.label,
+              description: scope.description,
+              placeholder: scope.placeholder,
+              required: scope.required,
               options: (function() {
-                var _i, _len, _ref, _results;
-                _ref = scope.object.options;
+                var _i, _len, _ref1, _results;
+                _ref1 = scope.options;
                 _results = [];
-                for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-                  x = _ref[_i];
+                for (_i = 0, _len = _ref1.length; _i < _len; _i++) {
+                  x = _ref1[_i];
                   _results.push(x);
                 }
                 return _results;
@@ -175,17 +190,21 @@
             };
           },
           cancel: function($event) {
-            var x, _i, _len, _ref;
+            /*
+            The cancel event of the popover.
+            */
+
+            var x, _i, _len, _ref1;
             $event.preventDefault();
-            scope.object.label = this.ngModel.label;
-            scope.object.description = this.ngModel.description;
-            scope.object.placeholder = this.ngModel.placeholder;
-            scope.object.required = this.ngModel.required;
-            scope.object.options.length = 0;
-            _ref = this.ngModel;
-            for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-              x = _ref[_i];
-              scope.object.options.push(x);
+            scope.label = this.ngModel.label;
+            scope.description = this.ngModel.description;
+            scope.placeholder = this.ngModel.placeholder;
+            scope.required = this.ngModel.required;
+            scope.options.length = 0;
+            _ref1 = this.ngModel;
+            for (_i = 0, _len = _ref1.length; _i < _len; _i++) {
+              x = _ref1[_i];
+              scope.options.push(x);
             }
             $(element).popover('hide');
           }
@@ -651,7 +670,7 @@
       return $injector = injector;
     };
     this.convertComponent = function(name, component) {
-      var result, _ref, _ref1, _ref2, _ref3, _ref4, _ref5, _ref6, _ref7;
+      var result, _ref, _ref1, _ref2, _ref3, _ref4, _ref5, _ref6;
       result = {
         name: name,
         group: (_ref = component.group) != null ? _ref : 'Default',
@@ -661,8 +680,15 @@
         required: (_ref4 = component.required) != null ? _ref4 : false,
         validation: (_ref5 = component.validation) != null ? _ref5 : /.*/,
         options: (_ref6 = component.options) != null ? _ref6 : [],
-        template: (_ref7 = component.template) != null ? _ref7 : "<div class=\"form-group\">\n    <label for=\"{{name+label}}\" class=\"col-md-2 control-label\">{{label}}</label>\n    <div class=\"col-md-10\">\n        <input type=\"text\" class=\"form-control\" id=\"{{name+label}}\" placeholder=\"{{placeholder}}\"/>\n    </div>\n</div>"
+        template: component.template,
+        popoverTemplate: component.popoverTemplate
       };
+      if (!result.template) {
+        console.error("template is empty");
+      }
+      if (!result.popoverTemplate) {
+        console.error("popoverTemplate is empty");
+      }
       return result;
     };
     this.convertFormObject = function(formObject) {
@@ -704,6 +730,7 @@
           validation: RegExp
           options: []
           template: html template
+          popoverTemplate: html template
       */
 
       if (_this.components[name] == null) {

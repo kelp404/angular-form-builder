@@ -52,15 +52,10 @@ a.provider '$builder', ->
             required: component.required ? no
             validation: component.validation ? /.*/
             options: component.options ? []
-            template: component.template ?
-                """
-                <div class="form-group">
-                    <label for="{{name+label}}" class="col-md-2 control-label">{{label}}</label>
-                    <div class="col-md-10">
-                        <input type="text" class="form-control" id="{{name+label}}" placeholder="{{placeholder}}"/>
-                    </div>
-                </div>
-                """
+            template: component.template
+            popoverTemplate: component.popoverTemplate
+        if not result.template then console.error "template is empty"
+        if not result.popoverTemplate then console.error "popoverTemplate is empty"
         result
 
     @convertFormObject = (formObject={}) ->
@@ -95,6 +90,7 @@ a.provider '$builder', ->
             validation: RegExp
             options: []
             template: html template
+            popoverTemplate: html template
         ###
         if not @components[name]?
             # regist the new component

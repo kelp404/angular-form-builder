@@ -90,11 +90,16 @@ fbFormObject = ($injector) ->
 
         # valuables
         component = $builder.components[scope.object.component]
-        scope.$watch 'object', ->
-            for key, value of scope.object when key isnt '$$hashKey'
-                # ng-repeat="object in formObjects"
-                # copy scope.object.{} to scope.{}
-                scope[key] = value
+        for key, value of scope.object when key isnt '$$hashKey'
+            # ng-repeat="object in formObjects"
+            # copy scope.object.{} to scope.{}
+            scope[key] = value
+        scope.$watch '[label, description, placeholder, required, options]', ->
+            scope.object.label = scope.label
+            scope.object.description = scope.description
+            scope.object.placeholder = scope.placeholder
+            scope.object.required = scope.required
+            scope.object.options = scope.options
         , yes
 
         # draggable
@@ -116,72 +121,47 @@ fbFormObject = ($injector) ->
         popoverId = "fo-#{Math.random().toString().substr(2)}"
         popover =
             view: null
-            html:
-                """
-                <form class='#{popoverId}'>
-                    <div class="form-group">
-                        <label class='control-label col-md-10'>Label</label>
-                        <div class="col-md-10">
-                            <input type='text' ng-model="object.label" class='form-control'/>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label class='control-label col-md-10'>Description</label>
-                        <div class="col-md-10">
-                            <input type='text' ng-model="object.description" class='form-control'/>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label class='control-label col-md-10'>Placeholder</label>
-                        <div class="col-md-10">
-                            <input type='text' ng-model="object.placeholder" class='form-control'/>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <div class="col-md-10">
-                            <label class='control-label col-md-10'>
-                            <input type='checkbox' ng-model="object.required" />
-                            Required</label>
-                        </div>
-                    </div>
-
-                    <hr/>
-                    <div class='form-group'>
-                        <div class="col-md-10">
-                            <input type='submit' ng-click="popover.save($event)" class='btn btn-primary' value='Save'/>
-                            <input type='button' ng-click="popover.cancel($event)" class='btn btn-default' value='Cancel'/>
-                            <input type='button' ng-click="popover.remove($event)" class='btn btn-danger' value='Delete'/>
-                        </div>
-                    </div>
-                </form>
-                """
+            html: component.popoverTemplate
+        popover.html = $(popover.html).addClass popoverId
         scope.popover =
             ngModel: null
             save: ($event) ->
+                ###
+                The save event of the popover.
+                ###
                 $event.preventDefault()
                 $(element).popover 'hide'
                 return
             remove: ($event) ->
+                ###
+                The delete event of the popover.
+                ###
                 $event.preventDefault()
                 console.log 'remove'
                 $(element).popover 'hide'
                 return
             shown: ->
+                ###
+                The shown event of the popover.
+                ###
                 # copy model for revivification
                 @ngModel =
-                    label: scope.object.label
-                    description: scope.object.description
-                    placeholder: scope.object.placeholder
-                    required: scope.object.required
-                    options: (x for x in scope.object.options)
+                    label: scope.label
+                    description: scope.description
+                    placeholder: scope.placeholder
+                    required: scope.required
+                    options: (x for x in scope.options)
             cancel: ($event) ->
+                ###
+                The cancel event of the popover.
+                ###
                 $event.preventDefault()
-                scope.object.label = @ngModel.label
-                scope.object.description = @ngModel.description
-                scope.object.placeholder = @ngModel.placeholder
-                scope.object.required = @ngModel.required
-                scope.object.options.length = 0
-                scope.object.options.push(x) for x in @ngModel
+                scope.label = @ngModel.label
+                scope.description = @ngModel.description
+                scope.placeholder = @ngModel.placeholder
+                scope.required = @ngModel.required
+                scope.options.length = 0
+                scope.options.push(x) for x in @ngModel
                 $(element).popover 'hide'
                 return
         # compile popover
