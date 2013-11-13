@@ -75,6 +75,7 @@ a.provider '$builder', ->
             description: formObject.description ? component.description
             placeholder: formObject.placeholder ? component.placeholder
             options: formObject.options ? component.options
+            required: formObject.required ? component.required
         result
 
 

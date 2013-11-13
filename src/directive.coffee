@@ -122,7 +122,26 @@ fbFormObject = ($injector) ->
                     <div class="form-group">
                         <label class='control-label col-md-10'>Label</label>
                         <div class="col-md-10">
-                            <input type='text' ng-model="object.label" class='form-control '/>
+                            <input type='text' ng-model="object.label" class='form-control'/>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class='control-label col-md-10'>Description</label>
+                        <div class="col-md-10">
+                            <input type='text' ng-model="object.description" class='form-control'/>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class='control-label col-md-10'>Placeholder</label>
+                        <div class="col-md-10">
+                            <input type='text' ng-model="object.placeholder" class='form-control'/>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-10">
+                            <label class='control-label col-md-10'>
+                            <input type='checkbox' ng-model="object.required" />
+                            Required</label>
                         </div>
                     </div>
 

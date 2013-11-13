@@ -142,7 +142,7 @@
         popoverId = "fo-" + (Math.random().toString().substr(2));
         popover = {
           view: null,
-          html: "<form class='" + popoverId + "'>\n    <div class=\"form-group\">\n        <label class='control-label col-md-10'>Label</label>\n        <div class=\"col-md-10\">\n            <input type='text' ng-model=\"object.label\" class='form-control '/>\n        </div>\n    </div>\n\n    <hr/>\n    <div class='form-group'>\n        <div class=\"col-md-10\">\n            <input type='submit' ng-click=\"popover.save($event)\" class='btn btn-primary' value='Save'/>\n            <input type='button' ng-click=\"popover.cancel($event)\" class='btn btn-default' value='Cancel'/>\n            <input type='button' ng-click=\"popover.remove($event)\" class='btn btn-danger' value='Delete'/>\n        </div>\n    </div>\n</form>"
+          html: "<form class='" + popoverId + "'>\n    <div class=\"form-group\">\n        <label class='control-label col-md-10'>Label</label>\n        <div class=\"col-md-10\">\n            <input type='text' ng-model=\"object.label\" class='form-control'/>\n        </div>\n    </div>\n    <div class=\"form-group\">\n        <label class='control-label col-md-10'>Description</label>\n        <div class=\"col-md-10\">\n            <input type='text' ng-model=\"object.description\" class='form-control'/>\n        </div>\n    </div>\n    <div class=\"form-group\">\n        <label class='control-label col-md-10'>Placeholder</label>\n        <div class=\"col-md-10\">\n            <input type='text' ng-model=\"object.placeholder\" class='form-control'/>\n        </div>\n    </div>\n    <div class=\"form-group\">\n        <div class=\"col-md-10\">\n            <label class='control-label col-md-10'>\n            <input type='checkbox' ng-model=\"object.required\" />\n            Required</label>\n        </div>\n    </div>\n\n    <hr/>\n    <div class='form-group'>\n        <div class=\"col-md-10\">\n            <input type='submit' ng-click=\"popover.save($event)\" class='btn btn-primary' value='Save'/>\n            <input type='button' ng-click=\"popover.cancel($event)\" class='btn btn-default' value='Cancel'/>\n            <input type='button' ng-click=\"popover.remove($event)\" class='btn btn-danger' value='Delete'/>\n        </div>\n    </div>\n</form>"
         };
         scope.popover = {
           ngModel: null,
@@ -666,7 +666,7 @@
       return result;
     };
     this.convertFormObject = function(formObject) {
-      var component, result, _ref, _ref1, _ref2, _ref3, _ref4, _ref5, _ref6;
+      var component, result, _ref, _ref1, _ref2, _ref3, _ref4, _ref5, _ref6, _ref7;
       if (formObject == null) {
         formObject = {};
       }
@@ -682,7 +682,8 @@
         label: (_ref3 = formObject.label) != null ? _ref3 : component.label,
         description: (_ref4 = formObject.description) != null ? _ref4 : component.description,
         placeholder: (_ref5 = formObject.placeholder) != null ? _ref5 : component.placeholder,
-        options: (_ref6 = formObject.options) != null ? _ref6 : component.options
+        options: (_ref6 = formObject.options) != null ? _ref6 : component.options,
+        required: (_ref7 = formObject.required) != null ? _ref7 : component.required
       };
       return result;
     };
