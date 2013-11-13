@@ -72,6 +72,8 @@ fbBuilder = ($injector) ->
             out: (e, draggable) ->
                 $(element).find('.empty').remove()
             up: (e, draggable) ->
+                console.log 'up'
+                console.log draggable
                 $(element).find('.empty').remove()
 fbBuilder.$inject = ['$injector']
 a.directive 'fbBuilder', fbBuilder
@@ -118,7 +120,7 @@ fbFormObject = ($injector) ->
         # ----------------------------------------
         # bootstrap popover
         # ----------------------------------------
-        popoverId = "fo-#{Math.random().toString().substr(2)}"
+        popoverId = "fb-#{Math.random().toString().substr(2)}"
         popover =
             view: null
             html: component.popoverTemplate

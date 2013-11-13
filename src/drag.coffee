@@ -6,6 +6,7 @@ a.provider '$drag', ->
     # provider
     # ----------------------------------------
     $injector = null
+    $rootScope = null
 
 
     # ----------------------------------------
@@ -32,14 +33,14 @@ a.provider '$drag', ->
     $ =>
         $(document).on 'mousedown', (e) =>
             @mouseMoved = no
-            func?(e) for key, func of @hooks.down
+            func(e) for key, func of @hooks.down
             return
         $(document).on 'mousemove', (e) =>
             @mouseMoved = yes
-            func?(e) for key, func of @hooks.move
+            func(e) for key, func of @hooks.move
             return
         $(document).on 'mouseup', (e) =>
-            func?(e) for key, func of @hooks.up
+            func(e) for key, func of @hooks.up
             return
 
 
@@ -56,6 +57,7 @@ a.provider '$drag', ->
         Setup providers.
         ###
         $injector = injector
+        $rootScope = $injector.get '$rootScope'
 
 
     @isHover = ($elementA, $elementB) =>
@@ -185,9 +187,12 @@ a.provider '$drag', ->
             id: @getNewId()
             mode: 'custom'
             element: $element[0]
-            move: options.move
-            up: options.up
-            out: options.out
+            move: (e, draggable) ->
+                $rootScope.$apply -> options.move?(e, draggable)
+            up: (e, draggable) ->
+                $rootScope.$apply -> options.up?(e, draggable)
+            out: (e, draggable) ->
+                $rootScope.$apply -> options.out?(e, draggable)
         result
     # ----------------------------------------
     # public methods

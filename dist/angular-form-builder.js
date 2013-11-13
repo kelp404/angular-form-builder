@@ -98,6 +98,8 @@
             return $(element).find('.empty').remove();
           },
           up: function(e, draggable) {
+            console.log('up');
+            console.log(draggable);
             return $(element).find('.empty').remove();
           }
         });
@@ -141,7 +143,7 @@
           $("div.fb-form-object:not(." + popoverId + ")").popover('hide');
           return false;
         });
-        popoverId = "fo-" + (Math.random().toString().substr(2));
+        popoverId = "fb-" + (Math.random().toString().substr(2));
         popover = {
           view: null,
           html: component.popoverTemplate
@@ -317,9 +319,10 @@
   a = angular.module('builder.drag', []);
 
   a.provider('$drag', function() {
-    var $injector,
+    var $injector, $rootScope,
       _this = this;
     $injector = null;
+    $rootScope = null;
     this.data = {
       draggables: {},
       droppables: {}
@@ -342,9 +345,7 @@
         _ref = _this.hooks.down;
         for (key in _ref) {
           func = _ref[key];
-          if (typeof func === "function") {
-            func(e);
-          }
+          func(e);
         }
       });
       $(document).on('mousemove', function(e) {
@@ -353,9 +354,7 @@
         _ref = _this.hooks.move;
         for (key in _ref) {
           func = _ref[key];
-          if (typeof func === "function") {
-            func(e);
-          }
+          func(e);
         }
       });
       return $(document).on('mouseup', function(e) {
@@ -363,9 +362,7 @@
         _ref = _this.hooks.up;
         for (key in _ref) {
           func = _ref[key];
-          if (typeof func === "function") {
-            func(e);
-          }
+          func(e);
         }
       });
     });
@@ -378,7 +375,8 @@
       Setup providers.
       */
 
-      return $injector = injector;
+      $injector = injector;
+      return $rootScope = $injector.get('$rootScope');
     };
     this.isHover = function($elementA, $elementB) {
       /*
@@ -554,9 +552,21 @@
         id: _this.getNewId(),
         mode: 'custom',
         element: $element[0],
-        move: options.move,
-        up: options.up,
-        out: options.out
+        move: function(e, draggable) {
+          return $rootScope.$apply(function() {
+            return typeof options.move === "function" ? options.move(e, draggable) : void 0;
+          });
+        },
+        up: function(e, draggable) {
+          return $rootScope.$apply(function() {
+            return typeof options.up === "function" ? options.up(e, draggable) : void 0;
+          });
+        },
+        out: function(e, draggable) {
+          return $rootScope.$apply(function() {
+            return typeof options.out === "function" ? options.out(e, draggable) : void 0;
+          });
+        }
       };
       return result;
     };
