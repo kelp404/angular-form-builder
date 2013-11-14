@@ -101,7 +101,11 @@
             var fos;
             if (!isHover && draggable.mode === 'drag') {
               fos = draggable.object.scope;
-              $builder.removeFormObject(fos.object.formName, fos.$index);
+              $builder.removeFormObject(fos.object.name, fos.$index);
+            } else if (isHover && draggable.mode === 'mirror') {
+              $builder.insertFormObject(formName, $(element).find('.empty').index(), {
+                component: draggable.object.component
+              });
             }
             return $(element).find('.empty').remove();
           }
@@ -291,7 +295,10 @@
         $.extend(cs, component);
         $drag.draggable($(element), {
           mode: 'mirror',
-          defer: false
+          defer: false,
+          object: {
+            component: component.name
+          }
         });
         $template = $(component.template);
         view = $compile($template)(cs);
@@ -721,7 +728,7 @@
         console.error("component " + formObject.component + " was not registered.");
       }
       result = {
-        formName: name,
+        name: name,
         component: formObject.component,
         removable: (_ref = formObject.removable) != null ? _ref : true,
         draggable: (_ref1 = formObject.draggable) != null ? _ref1 : true,
@@ -771,7 +778,21 @@
         formObject = {};
       }
       /*
-      Add the form object into the form.
+      Insert the form Object into the form at last.
+      */
+
+      if ((_base = _this.forms)[name] == null) {
+        _base[name] = [];
+      }
+      return _this.insertFormObject(name, _this.forms[name].length, formObject);
+    };
+    this.insertFormObject = function(name, index, formObject) {
+      var _base;
+      if (formObject == null) {
+        formObject = {};
+      }
+      /*
+      Insert the form object into the form at {index}.
       @param name: The form name.
       @param form: The form object.
           component: The component name
@@ -788,7 +809,12 @@
       if ((_base = _this.forms)[name] == null) {
         _base[name] = [];
       }
-      return _this.forms[name].push(_this.convertFormObject(name, formObject));
+      if (index > _this.forms.length) {
+        index = _this.forms.length;
+      } else if (index < 0) {
+        index = 0;
+      }
+      return _this.forms[name].splice(index, 0, _this.convertFormObject(name, formObject));
     };
     this.removeFormObject = function(name, index) {
       /*
@@ -814,6 +840,7 @@
         forms: this.forms,
         registerComponent: this.registerComponent,
         addFormObject: this.addFormObject,
+        insertFormObject: this.insertFormObject,
         removeFormObject: this.removeFormObject
       };
     };

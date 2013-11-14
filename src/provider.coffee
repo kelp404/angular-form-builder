@@ -62,7 +62,7 @@ a.provider '$builder', ->
         component = @components[formObject.component]
         console.error "component #{formObject.component} was not registered." if not component?
         result =
-            formName: name
+            name: name
             component: formObject.component
             removable: formObject.removable ? yes
             draggable: formObject.draggable ? yes
@@ -106,7 +106,14 @@ a.provider '$builder', ->
 
     @addFormObject = (name, formObject={}) =>
         ###
-        Add the form object into the form.
+        Insert the form Object into the form at last.
+        ###
+        @forms[name] ?= []
+        @insertFormObject name, @forms[name].length, formObject
+
+    @insertFormObject = (name, index, formObject={}) =>
+        ###
+        Insert the form object into the form at {index}.
         @param name: The form name.
         @param form: The form object.
             component: The component name
@@ -120,7 +127,9 @@ a.provider '$builder', ->
             required:
         ###
         @forms[name] ?= []
-        @forms[name].push @convertFormObject(name, formObject)
+        if index > @forms.length then index = @forms.length
+        else if index < 0 then index = 0
+        @forms[name].splice index, 0, @convertFormObject(name, formObject)
 
     @removeFormObject = (name, index) =>
         ###
@@ -147,6 +156,7 @@ a.provider '$builder', ->
         forms: @forms
         registerComponent: @registerComponent
         addFormObject: @addFormObject
+        insertFormObject: @insertFormObject
         removeFormObject: @removeFormObject
     @get.$inject = ['$injector']
     @$get = @get

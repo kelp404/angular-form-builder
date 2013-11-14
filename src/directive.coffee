@@ -72,10 +72,13 @@ fbBuilder = ($injector) ->
             out: (e, draggable) ->
                 $(element).find('.empty').remove()
             up: (e, isHover, draggable) ->
-                # remove the form object by draggin out
                 if not isHover and draggable.mode is 'drag'
+                    # remove the form object by draggin out
                     fos = draggable.object.scope
-                    $builder.removeFormObject fos.object.formName, fos.$index
+                    $builder.removeFormObject fos.object.name, fos.$index
+                else if isHover and draggable.mode is 'mirror'
+                    $builder.insertFormObject formName, $(element).find('.empty').index(),
+                        component: draggable.object.component
                 $(element).find('.empty').remove()
 fbBuilder.$inject = ['$injector']
 a.directive 'fbBuilder', fbBuilder
@@ -258,6 +261,8 @@ fbComponent = ($injector) ->
         $drag.draggable $(element),
             mode: 'mirror'
             defer: no
+            object:
+                component: component.name
 
         $template = $(component.template)
         view = $compile($template) cs
