@@ -45,7 +45,7 @@
       template: "<div class='form-horizontal'>\n    <div class='fb-form-object' ng-repeat=\"object in formObjects\"\n        fb-form-object=\"object\"></div>\n</div>",
       controller: 'fbBuilderController',
       link: function(scope, element, attrs) {
-        var $builder, $drag, formName, _base;
+        var $builder, $drag, beginMove, formName, _base;
         $builder = $injector.get('$builder');
         $drag = $injector.get('$drag');
         formName = attrs.fbBuilder;
@@ -53,11 +53,16 @@
           _base[formName] = [];
         }
         scope.formObjects = $builder.forms[formName];
+        beginMove = true;
         $(element).addClass('fb-builder');
         return $drag.droppable($(element), {
           mode: 'custom',
           move: function(e, draggable) {
             var $empty, $formObject, $formObjects, height, index, offset, positions, _i, _j, _ref, _ref1;
+            if (beginMove) {
+              $("div.fb-form-object").popover('hide');
+              beginMove = false;
+            }
             $formObjects = $(element).find('.fb-form-object:not(.empty,.dragging)');
             if ($formObjects.length === 0) {
               if ($(element).find('.fb-form-object.empty').length === 0) {
@@ -95,10 +100,15 @@
             }
           },
           out: function(e, draggable) {
+            if (beginMove) {
+              $("div.fb-form-object").popover('hide');
+              beginMove = false;
+            }
             return $(element).find('.empty').remove();
           },
           up: function(e, isHover, draggable) {
             var formObject, newIndex, oldIndex;
+            beginMove = true;
             if (!$drag.isMouseMoved()) {
               return;
             }

@@ -31,11 +31,17 @@ fbBuilder = ($injector) ->
         formName = attrs.fbBuilder
         $builder.forms[formName] ?= []
         scope.formObjects = $builder.forms[formName]
+        beginMove = yes
 
         $(element).addClass 'fb-builder'
         $drag.droppable $(element),
             mode: 'custom'
             move: (e, draggable) ->
+                if beginMove
+                    # hide all popovers
+                    $("div.fb-form-object").popover 'hide'
+                    beginMove = no
+
                 $formObjects = $(element).find '.fb-form-object:not(.empty,.dragging)'
                 if $formObjects.length is 0
                     # there are no components in the builder.
@@ -70,8 +76,14 @@ fbBuilder = ($injector) ->
                         break
                 return
             out: (e, draggable) ->
+                if beginMove
+                    # hide all popovers
+                    $("div.fb-form-object").popover 'hide'
+                    beginMove = no
+
                 $(element).find('.empty').remove()
             up: (e, isHover, draggable) ->
+                beginMove = yes
                 # click event
                 return if not $drag.isMouseMoved()
 
