@@ -68,7 +68,7 @@
             positions = [];
             positions.push(-1000);
             positions.push($($formObjects[0]).offset().top + $($formObjects[0]).height() / 2);
-            for (index = _i = 0, _ref = $formObjects.length - 1; 0 <= _ref ? _i <= _ref : _i >= _ref; index = 0 <= _ref ? ++_i : --_i) {
+            for (index = _i = 0, _ref = $formObjects.length - 1; _i <= _ref; index = _i += 1) {
               if (index === 0) {
                 continue;
               }
@@ -78,7 +78,7 @@
               positions.push(offset.top + height / 2);
             }
             positions.push(positions[positions.length - 1] + 1000);
-            for (index = _j = 0, _ref1 = positions.length - 1; 0 <= _ref1 ? _j <= _ref1 : _j >= _ref1; index = 0 <= _ref1 ? ++_j : --_j) {
+            for (index = _j = 0, _ref1 = positions.length - 1; _j <= _ref1; index = _j += 1) {
               if (index === 0) {
                 continue;
               }
@@ -741,6 +741,13 @@
       };
       return result;
     };
+    this.reIndexFormObject = function(name) {
+      var formObjects, index, _i, _ref;
+      formObjects = _this.forms[name];
+      for (index = _i = 0, _ref = formObjects.length - 1; _i <= _ref; index = _i += 1) {
+        formObjects[index].index = index;
+      }
+    };
     this.registerComponent = function(name, component) {
       var newComponent, _ref;
       if (component == null) {
@@ -814,22 +821,18 @@
       } else if (index < 0) {
         index = 0;
       }
-      return _this.forms[name].splice(index, 0, _this.convertFormObject(name, formObject));
+      _this.forms[name].splice(index, 0, _this.convertFormObject(name, formObject));
+      return _this.reIndexFormObject(name);
     };
     this.removeFormObject = function(name, index) {
       /*
       Remove the form object by the index.
       */
 
-      var formObjects, _i, _ref;
+      var formObjects;
       formObjects = _this.forms[name];
       formObjects.splice(index, 1);
-      if (formObjects.length === 0) {
-        return;
-      }
-      for (index = _i = 0, _ref = formObjects.length - 1; 0 <= _ref ? _i <= _ref : _i >= _ref; index = 0 <= _ref ? ++_i : --_i) {
-        formObjects[index].index = index;
-      }
+      return _this.reIndexFormObject(name);
     };
     this.get = function($injector) {
       this.setupProviders($injector);

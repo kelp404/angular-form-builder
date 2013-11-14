@@ -48,7 +48,7 @@ fbBuilder = ($injector) ->
                 # first
                 positions.push -1000
                 positions.push $($formObjects[0]).offset().top + $($formObjects[0]).height() / 2
-                for index in [0..$formObjects.length - 1]
+                for index in [0..$formObjects.length - 1] by 1
                     continue if index is 0
                     $formObject = $($formObjects[index])
                     offset = $formObject.offset()
@@ -57,7 +57,7 @@ fbBuilder = ($injector) ->
                 positions.push positions[positions.length - 1] + 1000   # last
 
                 # search where should I insert the .empty
-                for index in [0..positions.length - 1]
+                for index in [0..positions.length - 1] by 1
                     continue if index is 0
                     if e.pageY > positions[index - 1] and e.pageY <= positions[index]
                         # this one

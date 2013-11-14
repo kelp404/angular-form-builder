@@ -74,6 +74,11 @@ a.provider '$builder', ->
             required: formObject.required ? component.required
         result
 
+    @reIndexFormObject = (name) =>
+        formObjects = @forms[name]
+        for index in [0..formObjects.length - 1] by 1
+            formObjects[index].index = index
+        return
 
     # ----------------------------------------
     # public functions
@@ -130,6 +135,7 @@ a.provider '$builder', ->
         if index > @forms.length then index = @forms.length
         else if index < 0 then index = 0
         @forms[name].splice index, 0, @convertFormObject(name, formObject)
+        @reIndexFormObject name
 
     @removeFormObject = (name, index) =>
         ###
@@ -137,12 +143,7 @@ a.provider '$builder', ->
         ###
         formObjects = @forms[name]
         formObjects.splice index, 1
-        return if formObjects.length is 0
-
-        # re-index
-        for index in [0..formObjects.length - 1]
-            formObjects[index].index = index
-        return
+        @reIndexFormObject name
 
     # ----------------------------------------
     # $get
