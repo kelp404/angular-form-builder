@@ -159,6 +159,7 @@
             scope[key] = value;
           }
         }
+        scope.optionsText = scope.object.options.join('\n');
         scope.$watch('[label, description, placeholder, required, options]', function() {
           scope.object.label = scope.label;
           scope.object.description = scope.description;
@@ -166,6 +167,22 @@
           scope.object.required = scope.required;
           return scope.object.options = scope.options;
         }, true);
+        scope.$watch('optionsText', function(text) {
+          var x;
+          scope.options = (function() {
+            var _i, _len, _ref1, _results;
+            _ref1 = text.split('\n');
+            _results = [];
+            for (_i = 0, _len = _ref1.length; _i < _len; _i++) {
+              x = _ref1[_i];
+              if (x.length > 0) {
+                _results.push(x);
+              }
+            }
+            return _results;
+          })();
+          return scope.selected = scope.options[0];
+        });
         $drag.draggable($(element), {
           object: {
             formObject: scope.object
@@ -210,22 +227,12 @@
             The shown event of the popover.
             */
 
-            var x;
             this.ngModel = {
               label: scope.label,
               description: scope.description,
               placeholder: scope.placeholder,
               required: scope.required,
-              options: (function() {
-                var _i, _len, _ref1, _results;
-                _ref1 = scope.options;
-                _results = [];
-                for (_i = 0, _len = _ref1.length; _i < _len; _i++) {
-                  x = _ref1[_i];
-                  _results.push(x);
-                }
-                return _results;
-              })()
+              optionsText: scope.optionsText
             };
             return popover.isClickedSave = false;
           },
@@ -234,18 +241,12 @@
             The cancel event of the popover.
             */
 
-            var x, _i, _len, _ref1;
             if (this.ngModel) {
               scope.label = this.ngModel.label;
               scope.description = this.ngModel.description;
               scope.placeholder = this.ngModel.placeholder;
               scope.required = this.ngModel.required;
-              scope.options.length = 0;
-              _ref1 = this.ngModel;
-              for (_i = 0, _len = _ref1.length; _i < _len; _i++) {
-                x = _ref1[_i];
-                scope.options.push(x);
-              }
+              scope.optionsText = this.ngModel.optionsText;
             }
             if ($event) {
               $event.preventDefault();
@@ -765,7 +766,7 @@
       return result;
     };
     this.convertFormObject = function(name, formObject) {
-      var component, result, _ref, _ref1, _ref2, _ref3, _ref4, _ref5, _ref6, _ref7;
+      var component, result, _ref, _ref1, _ref2, _ref3, _ref4, _ref5, _ref6;
       if (formObject == null) {
         formObject = {};
       }
@@ -776,14 +777,13 @@
       result = {
         name: name,
         component: formObject.component,
-        removable: (_ref = formObject.removable) != null ? _ref : true,
-        draggable: (_ref1 = formObject.draggable) != null ? _ref1 : true,
-        index: (_ref2 = formObject.index) != null ? _ref2 : 0,
-        label: (_ref3 = formObject.label) != null ? _ref3 : component.label,
-        description: (_ref4 = formObject.description) != null ? _ref4 : component.description,
-        placeholder: (_ref5 = formObject.placeholder) != null ? _ref5 : component.placeholder,
-        options: (_ref6 = formObject.options) != null ? _ref6 : component.options,
-        required: (_ref7 = formObject.required) != null ? _ref7 : component.required
+        draggable: (_ref = formObject.draggable) != null ? _ref : true,
+        index: (_ref1 = formObject.index) != null ? _ref1 : 0,
+        label: (_ref2 = formObject.label) != null ? _ref2 : component.label,
+        description: (_ref3 = formObject.description) != null ? _ref3 : component.description,
+        placeholder: (_ref4 = formObject.placeholder) != null ? _ref4 : component.placeholder,
+        options: (_ref5 = formObject.options) != null ? _ref5 : component.options,
+        required: (_ref6 = formObject.required) != null ? _ref6 : component.required
       };
       return result;
     };
@@ -849,8 +849,7 @@
       @param name: The form name.
       @param form: The form object.
           component: The component name
-          removable: true
-          draggable: true
+          draggable: yes
           index: 0
           label:
           description:

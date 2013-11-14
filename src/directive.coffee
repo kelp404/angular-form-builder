@@ -125,6 +125,7 @@ fbFormObject = ($injector) ->
             # ng-repeat="object in formObjects"
             # copy scope.object.{} to scope.{}
             scope[key] = value
+        scope.optionsText = scope.object.options.join '\n'
         scope.$watch '[label, description, placeholder, required, options]', ->
             scope.object.label = scope.label
             scope.object.description = scope.description
@@ -132,6 +133,9 @@ fbFormObject = ($injector) ->
             scope.object.required = scope.required
             scope.object.options = scope.options
         , yes
+        scope.$watch 'optionsText', (text) ->
+            scope.options = (x for x in text.split('\n') when x.length > 0)
+            scope.selected = scope.options[0]
 
         # draggable
         $drag.draggable $(element),
@@ -184,7 +188,7 @@ fbFormObject = ($injector) ->
                     description: scope.description
                     placeholder: scope.placeholder
                     required: scope.required
-                    options: (x for x in scope.options)
+                    optionsText: scope.optionsText
                 popover.isClickedSave = no
             cancel: ($event) ->
                 ###
@@ -195,8 +199,7 @@ fbFormObject = ($injector) ->
                     scope.description = @ngModel.description
                     scope.placeholder = @ngModel.placeholder
                     scope.required = @ngModel.required
-                    scope.options.length = 0
-                    scope.options.push(x) for x in @ngModel
+                    scope.optionsText = @ngModel.optionsText
                 if $event
                     # clicked cancel by user
                     $event.preventDefault()

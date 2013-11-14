@@ -27,7 +27,13 @@
                     <h3 class="panel-title">Builder</h3>
                 </div>
                 <div fb-builder="default"></div>
-                <div class="panel-footer">{{form}}</div>
+                <div class="panel-footer">
+                    <label class="form-label">
+                        <input type="checkbox" ng-model="isShowScope" />
+                        Show scope
+                    </label>
+                    <pre ng-if="isShowScope">{{form}}</pre>
+                </div>
             </div>
         </div>
 

@@ -64,7 +64,6 @@ a.provider '$builder', ->
         result =
             name: name
             component: formObject.component
-            removable: formObject.removable ? yes
             draggable: formObject.draggable ? yes
             index: formObject.index ? 0
             label: formObject.label ? component.label
@@ -122,8 +121,7 @@ a.provider '$builder', ->
         @param name: The form name.
         @param form: The form object.
             component: The component name
-            removable: true
-            draggable: true
+            draggable: yes
             index: 0
             label:
             description:

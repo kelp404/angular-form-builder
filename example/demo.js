@@ -6,13 +6,11 @@
   a.controller('BuilderController', function($scope, $builder) {
     $builder.addFormObject('default', {
       component: 'textInput',
-      label: 'label A',
-      description: 'your description'
-    });
-    $builder.addFormObject('default', {
-      component: 'textInput',
-      label: 'label B',
-      description: 'your description'
+      label: 'Name',
+      description: 'Your name',
+      placeholder: 'Your name',
+      required: true,
+      draggable: false
     });
     return $scope.form = $builder.forms['default'];
   });
