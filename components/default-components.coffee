@@ -27,7 +27,7 @@ config = ($builderProvider) ->
                 <div class="form-group">
                     <label class='control-label col-md-10'>Label</label>
                     <div class="col-md-10">
-                        <input type='text' ng-model="label" class='form-control'/>
+                        <input type='text' ng-model="label" validator="[required]" class='form-control'/>
                     </div>
                 </div>
                 <div class="form-group">

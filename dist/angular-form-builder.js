@@ -145,11 +145,12 @@
     return {
       restrict: 'A',
       link: function(scope, element, attrs) {
-        var $builder, $compile, $drag, $parse, $template, component, key, popover, popoverId, value, view, _ref;
+        var $builder, $compile, $drag, $parse, $template, $validator, component, key, popover, popoverId, value, view, _ref;
         $builder = $injector.get('$builder');
         $drag = $injector.get('$drag');
         $parse = $injector.get('$parse');
         $compile = $injector.get('$compile');
+        $validator = $injector.get('$validator');
         component = $builder.components[scope.object.component];
         _ref = scope.object;
         for (key in _ref) {
@@ -173,12 +174,9 @@
         $template = $(component.template);
         view = $compile($template)(scope);
         $(element).append(view);
-        $(element).on('click', function() {
-          $("div.fb-form-object:not(." + popoverId + ")").popover('hide');
-          return false;
-        });
         popoverId = "fb-" + (Math.random().toString().substr(2));
         popover = {
+          isClickedSave: false,
           view: null,
           html: component.popoverTemplate
         };
@@ -191,7 +189,10 @@
             */
 
             $event.preventDefault();
-            $(element).popover('hide');
+            $validator.validate(scope).success(function() {
+              popover.isClickedSave = true;
+              return $(element).popover('hide');
+            });
           },
           remove: function($event) {
             /*
@@ -210,7 +211,7 @@
             */
 
             var x;
-            return this.ngModel = {
+            this.ngModel = {
               label: scope.label,
               description: scope.description,
               placeholder: scope.placeholder,
@@ -226,6 +227,7 @@
                 return _results;
               })()
             };
+            return popover.isClickedSave = false;
           },
           cancel: function($event) {
             /*
@@ -233,18 +235,22 @@
             */
 
             var x, _i, _len, _ref1;
-            $event.preventDefault();
-            scope.label = this.ngModel.label;
-            scope.description = this.ngModel.description;
-            scope.placeholder = this.ngModel.placeholder;
-            scope.required = this.ngModel.required;
-            scope.options.length = 0;
-            _ref1 = this.ngModel;
-            for (_i = 0, _len = _ref1.length; _i < _len; _i++) {
-              x = _ref1[_i];
-              scope.options.push(x);
+            if (this.ngModel) {
+              scope.label = this.ngModel.label;
+              scope.description = this.ngModel.description;
+              scope.placeholder = this.ngModel.placeholder;
+              scope.required = this.ngModel.required;
+              scope.options.length = 0;
+              _ref1 = this.ngModel;
+              for (_i = 0, _len = _ref1.length; _i < _len; _i++) {
+                x = _ref1[_i];
+                scope.options.push(x);
+              }
             }
-            $(element).popover('hide');
+            if ($event) {
+              $event.preventDefault();
+              $(element).popover('hide');
+            }
           }
         };
         popover.view = $compile(popover.html)(scope);
@@ -259,6 +265,7 @@
           if ($drag.isMouseMoved()) {
             return false;
           }
+          $("div.fb-form-object:not(." + popoverId + ")").popover('hide');
           $popover = $("form." + popoverId).closest('.popover');
           if ($popover.length > 0) {
             elementOrigin = $(element).offset().top + $(element).height() / 2;
@@ -276,13 +283,22 @@
         });
         $(element).on('shown.bs.popover', function() {
           $(".popover ." + popoverId + " input:first").select();
-          return scope.$apply(function() {
+          scope.$apply(function() {
             return scope.popover.shown();
           });
         });
         return $(element).on('hide.bs.popover', function() {
           var $popover;
           $popover = $("form." + popoverId).closest('.popover');
+          if (!popover.isClickedSave) {
+            if (scope.$$phase) {
+              scope.popover.cancel();
+            } else {
+              scope.$apply(function() {
+                return scope.popover.cancel();
+              });
+            }
+          }
           $popover.removeClass('in');
           setTimeout(function() {
             return $popover.hide();

@@ -2,11 +2,17 @@
 @import "compass/css3";
 
 
-.fb-component, .fb-form-object {
+.fb-component {
     padding: 10px;
     cursor: move;
     input { cursor: move; }
     label { cursor: move; }
+}
+.fb-form-object {
+    padding: 10px;
+    cursor: move;
+    input { cursor: move; }
+    label { cursor: pointer; }
 }
 .fb-form-object.empty {
     cursor: default;

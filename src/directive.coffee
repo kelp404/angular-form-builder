@@ -117,6 +117,7 @@ fbFormObject = ($injector) ->
         $drag = $injector.get '$drag'
         $parse = $injector.get '$parse'
         $compile = $injector.get '$compile'
+        $validator = $injector.get '$validator'
 
         # valuables
         component = $builder.components[scope.object.component]
@@ -142,27 +143,25 @@ fbFormObject = ($injector) ->
         view = $compile($template) scope
         $(element).append view
 
-        $(element).on 'click', ->
-            # hide other popovers
-            $("div.fb-form-object:not(.#{popoverId})").popover 'hide'
-            return no
-
         # ----------------------------------------
         # bootstrap popover
         # ----------------------------------------
         popoverId = "fb-#{Math.random().toString().substr(2)}"
         popover =
+            isClickedSave: no # If didn't click save then rollback
             view: null
             html: component.popoverTemplate
         popover.html = $(popover.html).addClass popoverId
         scope.popover =
-            ngModel: null
+            ngModel: null   # data for rollback
             save: ($event) ->
                 ###
                 The save event of the popover.
                 ###
                 $event.preventDefault()
-                $(element).popover 'hide'
+                $validator.validate(scope).success ->
+                    popover.isClickedSave = yes
+                    $(element).popover 'hide'
                 return
             remove: ($event) ->
                 ###
@@ -186,18 +185,22 @@ fbFormObject = ($injector) ->
                     placeholder: scope.placeholder
                     required: scope.required
                     options: (x for x in scope.options)
+                popover.isClickedSave = no
             cancel: ($event) ->
                 ###
                 The cancel event of the popover.
                 ###
-                $event.preventDefault()
-                scope.label = @ngModel.label
-                scope.description = @ngModel.description
-                scope.placeholder = @ngModel.placeholder
-                scope.required = @ngModel.required
-                scope.options.length = 0
-                scope.options.push(x) for x in @ngModel
-                $(element).popover 'hide'
+                if @ngModel
+                    scope.label = @ngModel.label
+                    scope.description = @ngModel.description
+                    scope.placeholder = @ngModel.placeholder
+                    scope.required = @ngModel.required
+                    scope.options.length = 0
+                    scope.options.push(x) for x in @ngModel
+                if $event
+                    # clicked cancel by user
+                    $event.preventDefault()
+                    $(element).popover 'hide'
                 return
         # compile popover
         popover.view = $compile(popover.html) scope
@@ -211,6 +214,9 @@ fbFormObject = ($injector) ->
         # ----------------------------------------
         $(element).on 'show.bs.popover', ->
             return no if $drag.isMouseMoved()
+            # hide other popovers
+            $("div.fb-form-object:not(.#{popoverId})").popover 'hide'
+
             $popover = $("form.#{popoverId}").closest '.popover'
             if $popover.length > 0
                 # fixed offset
@@ -231,12 +237,19 @@ fbFormObject = ($injector) ->
             # select the first input
             $(".popover .#{popoverId} input:first").select()
             scope.$apply -> scope.popover.shown()
+            return
         # ----------------------------------------
         # hide
         # ----------------------------------------
         $(element).on 'hide.bs.popover', ->
             # do not remove the DOM
             $popover = $("form.#{popoverId}").closest '.popover'
+            if not popover.isClickedSave
+                # eval the cancel event
+                if scope.$$phase
+                    scope.popover.cancel()
+                else
+                    scope.$apply -> scope.popover.cancel()
             $popover.removeClass 'in'
             setTimeout ->
                 $popover.hide()
