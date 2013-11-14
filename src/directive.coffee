@@ -72,13 +72,24 @@ fbBuilder = ($injector) ->
             out: (e, draggable) ->
                 $(element).find('.empty').remove()
             up: (e, isHover, draggable) ->
+                # click event
+                return if not $drag.isMouseMoved()
+
                 if not isHover and draggable.mode is 'drag'
                     # remove the form object by draggin out
-                    fos = draggable.object.scope
-                    $builder.removeFormObject fos.object.name, fos.$index
-                else if isHover and draggable.mode is 'mirror'
-                    $builder.insertFormObject formName, $(element).find('.empty').index(),
-                        component: draggable.object.component
+                    formObject = draggable.object.formObject
+                    $builder.removeFormObject formObject.name, formObject.index
+                else if isHover
+                    if draggable.mode is 'mirror'
+                        # insert a form object
+                        $builder.insertFormObject formName, $(element).find('.empty').index('.fb-form-object'),
+                            component: draggable.object.componentName
+                    if draggable.mode is 'drag'
+                        # update the index of form objects
+                        oldIndex = draggable.object.formObject.index
+                        newIndex = $(element).find('.empty').index('.fb-form-object')
+                        newIndex-- if oldIndex < newIndex
+                        $builder.updateFormObjectIndex formName, oldIndex, newIndex
                 $(element).find('.empty').remove()
 fbBuilder.$inject = ['$injector']
 a.directive 'fbBuilder', fbBuilder
@@ -112,7 +123,7 @@ fbFormObject = ($injector) ->
         # draggable
         $drag.draggable $(element),
             object:
-                scope: scope
+                formObject: scope.object
 
         # compile formObject
         $template = $(component.template)
@@ -190,6 +201,11 @@ fbFormObject = ($injector) ->
             return no if $drag.isMouseMoved()
             $popover = $("form.#{popoverId}").closest '.popover'
             if $popover.length > 0
+                # fixed offset
+                elementOrigin = $(element).offset().top + $(element).height() / 2
+                popoverTop = elementOrigin - $popover.height() / 2 - 20
+                $popover.css top: popoverTop
+
                 $popover.show()
                 setTimeout ->
                     $popover.addClass 'in'
@@ -262,7 +278,7 @@ fbComponent = ($injector) ->
             mode: 'mirror'
             defer: no
             object:
-                component: component.name
+                componentName: component.name
 
         $template = $(component.template)
         view = $compile($template) cs

@@ -140,9 +140,24 @@ a.provider '$builder', ->
     @removeFormObject = (name, index) =>
         ###
         Remove the form object by the index.
+        @param name: The form name.
+        @param index: The form object index.
         ###
         formObjects = @forms[name]
         formObjects.splice index, 1
+        @reIndexFormObject name
+
+    @updateFormObjectIndex = (name, oldIndex, newIndex) =>
+        ###
+        Update the index of the form object.
+        @param name: The form name.
+        @param oldIndex: The old index.
+        @param newIndex: The new index.
+        ###
+        return if oldIndex is newIndex
+        formObjects = @forms[name]
+        formObject = formObjects.splice(oldIndex, 1)[0]
+        formObjects.splice newIndex, 0, formObject
         @reIndexFormObject name
 
     # ----------------------------------------
@@ -159,6 +174,7 @@ a.provider '$builder', ->
         addFormObject: @addFormObject
         insertFormObject: @insertFormObject
         removeFormObject: @removeFormObject
+        updateFormObjectIndex: @updateFormObjectIndex
     @get.$inject = ['$injector']
     @$get = @get
     return

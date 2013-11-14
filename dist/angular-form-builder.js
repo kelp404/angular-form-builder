@@ -98,14 +98,27 @@
             return $(element).find('.empty').remove();
           },
           up: function(e, isHover, draggable) {
-            var fos;
+            var formObject, newIndex, oldIndex;
+            if (!$drag.isMouseMoved()) {
+              return;
+            }
             if (!isHover && draggable.mode === 'drag') {
-              fos = draggable.object.scope;
-              $builder.removeFormObject(fos.object.name, fos.$index);
-            } else if (isHover && draggable.mode === 'mirror') {
-              $builder.insertFormObject(formName, $(element).find('.empty').index(), {
-                component: draggable.object.component
-              });
+              formObject = draggable.object.formObject;
+              $builder.removeFormObject(formObject.name, formObject.index);
+            } else if (isHover) {
+              if (draggable.mode === 'mirror') {
+                $builder.insertFormObject(formName, $(element).find('.empty').index('.fb-form-object'), {
+                  component: draggable.object.componentName
+                });
+              }
+              if (draggable.mode === 'drag') {
+                oldIndex = draggable.object.formObject.index;
+                newIndex = $(element).find('.empty').index('.fb-form-object');
+                if (oldIndex < newIndex) {
+                  newIndex--;
+                }
+                $builder.updateFormObjectIndex(formName, oldIndex, newIndex);
+              }
             }
             return $(element).find('.empty').remove();
           }
@@ -144,7 +157,7 @@
         }, true);
         $drag.draggable($(element), {
           object: {
-            scope: scope
+            formObject: scope.object
           }
         });
         $template = $(component.template);
@@ -232,12 +245,17 @@
           content: popover.view
         });
         $(element).on('show.bs.popover', function() {
-          var $popover;
+          var $popover, elementOrigin, popoverTop;
           if ($drag.isMouseMoved()) {
             return false;
           }
           $popover = $("form." + popoverId).closest('.popover');
           if ($popover.length > 0) {
+            elementOrigin = $(element).offset().top + $(element).height() / 2;
+            popoverTop = elementOrigin - $popover.height() / 2 - 20;
+            $popover.css({
+              top: popoverTop
+            });
             $popover.show();
             setTimeout(function() {
               $popover.addClass('in');
@@ -297,7 +315,7 @@
           mode: 'mirror',
           defer: false,
           object: {
-            component: component.name
+            componentName: component.name
           }
         });
         $template = $(component.template);
@@ -827,11 +845,30 @@
     this.removeFormObject = function(name, index) {
       /*
       Remove the form object by the index.
+      @param name: The form name.
+      @param index: The form object index.
       */
 
       var formObjects;
       formObjects = _this.forms[name];
       formObjects.splice(index, 1);
+      return _this.reIndexFormObject(name);
+    };
+    this.updateFormObjectIndex = function(name, oldIndex, newIndex) {
+      /*
+      Update the index of the form object.
+      @param name: The form name.
+      @param oldIndex: The old index.
+      @param newIndex: The new index.
+      */
+
+      var formObject, formObjects;
+      if (oldIndex === newIndex) {
+        return;
+      }
+      formObjects = _this.forms[name];
+      formObject = formObjects.splice(oldIndex, 1)[0];
+      formObjects.splice(newIndex, 0, formObject);
       return _this.reIndexFormObject(name);
     };
     this.get = function($injector) {
@@ -844,7 +881,8 @@
         registerComponent: this.registerComponent,
         addFormObject: this.addFormObject,
         insertFormObject: this.insertFormObject,
-        removeFormObject: this.removeFormObject
+        removeFormObject: this.removeFormObject,
+        updateFormObjectIndex: this.updateFormObjectIndex
       };
     };
     this.get.$inject = ['$injector'];
