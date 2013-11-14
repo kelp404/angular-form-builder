@@ -209,6 +209,7 @@ fbFormObject = ($injector) ->
             html: yes
             title: component.label
             content: popover.view
+            container: 'body'
         # ----------------------------------------
         # show
         # ----------------------------------------
@@ -221,8 +222,10 @@ fbFormObject = ($injector) ->
             if $popover.length > 0
                 # fixed offset
                 elementOrigin = $(element).offset().top + $(element).height() / 2
-                popoverTop = elementOrigin - $popover.height() / 2 - 20
-                $popover.css top: popoverTop
+                popoverTop = elementOrigin - $popover.height() / 2
+                $popover.css
+                    position: 'absolute'
+                    top: popoverTop
 
                 $popover.show()
                 setTimeout ->

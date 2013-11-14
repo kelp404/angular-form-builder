@@ -258,7 +258,8 @@
         $(element).popover({
           html: true,
           title: component.label,
-          content: popover.view
+          content: popover.view,
+          container: 'body'
         });
         $(element).on('show.bs.popover', function() {
           var $popover, elementOrigin, popoverTop;
@@ -269,8 +270,9 @@
           $popover = $("form." + popoverId).closest('.popover');
           if ($popover.length > 0) {
             elementOrigin = $(element).offset().top + $(element).height() / 2;
-            popoverTop = elementOrigin - $popover.height() / 2 - 20;
+            popoverTop = elementOrigin - $popover.height() / 2;
             $popover.css({
+              position: 'absolute',
               top: popoverTop
             });
             $popover.show();
