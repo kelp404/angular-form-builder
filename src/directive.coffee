@@ -28,9 +28,9 @@ fbBuilder = ($injector) ->
         # ----------------------------------------
         # valuables
         # ----------------------------------------
-        scope.formName = attrs.fbBuilder
-        $builder.forms[scope.formName] ?= []
-        scope.formObjects = $builder.forms[scope.formName]
+        formName = attrs.fbBuilder
+        $builder.forms[formName] ?= []
+        scope.formObjects = $builder.forms[formName]
 
         $(element).addClass 'fb-builder'
         $drag.droppable $(element),
@@ -39,8 +39,8 @@ fbBuilder = ($injector) ->
                 $formObjects = $(element).find '.fb-form-object:not(.empty,.dragging)'
                 if $formObjects.length is 0
                     # there are no components in the builder.
-                    if $(element).find('.fb-form-object.empty') is 0
-                        $(element).append $("<div class='fb-form-object empty'></div>")
+                    if $(element).find('.fb-form-object.empty').length is 0
+                        $(element).find('>div:first').append $("<div class='fb-form-object empty'></div>")
                     return
 
                 # the positions could added .empty div.
@@ -71,9 +71,11 @@ fbBuilder = ($injector) ->
                 return
             out: (e, draggable) ->
                 $(element).find('.empty').remove()
-            up: (e, draggable) ->
-                console.log 'up'
-                console.log draggable
+            up: (e, isHover, draggable) ->
+                # remove the form object by draggin out
+                if not isHover and draggable.mode is 'drag'
+                    fos = draggable.object.scope
+                    $builder.removeFormObject fos.object.formName, fos.$index
                 $(element).find('.empty').remove()
 fbBuilder.$inject = ['$injector']
 a.directive 'fbBuilder', fbBuilder
@@ -105,7 +107,9 @@ fbFormObject = ($injector) ->
         , yes
 
         # draggable
-        $drag.draggable $(element)
+        $drag.draggable $(element),
+            object:
+                scope: scope
 
         # compile formObject
         $template = $(component.template)
@@ -139,7 +143,10 @@ fbFormObject = ($injector) ->
                 The delete event of the popover.
                 ###
                 $event.preventDefault()
-                console.log 'remove'
+
+                # get the form name
+                formName = $(element).closest('[fb-builder]').attr 'fb-builder'
+                $builder.removeFormObject formName, scope.$index
                 $(element).popover 'hide'
                 return
             shown: ->

@@ -58,10 +58,11 @@ a.provider '$builder', ->
         if not result.popoverTemplate then console.error "popoverTemplate is empty"
         result
 
-    @convertFormObject = (formObject={}) ->
+    @convertFormObject = (name, formObject={}) ->
         component = @components[formObject.component]
         console.error "component #{formObject.component} was not registered." if not component?
         result =
+            formName: name
             component: formObject.component
             removable: formObject.removable ? yes
             draggable: formObject.draggable ? yes
@@ -119,8 +120,20 @@ a.provider '$builder', ->
             required:
         ###
         @forms[name] ?= []
-        @forms[name].push @convertFormObject(formObject)
+        @forms[name].push @convertFormObject(name, formObject)
 
+    @removeFormObject = (name, index) =>
+        ###
+        Remove the form object by the index.
+        ###
+        formObjects = @forms[name]
+        formObjects.splice index, 1
+        return if formObjects.length is 0
+
+        # re-index
+        for index in [0..formObjects.length - 1]
+            formObjects[index].index = index
+        return
 
     # ----------------------------------------
     # $get
@@ -134,6 +147,7 @@ a.provider '$builder', ->
         forms: @forms
         registerComponent: @registerComponent
         addFormObject: @addFormObject
+        removeFormObject: @removeFormObject
     @get.$inject = ['$injector']
     @$get = @get
     return

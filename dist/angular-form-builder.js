@@ -45,14 +45,14 @@
       template: "<div class='form-horizontal'>\n    <div class='fb-form-object' ng-repeat=\"object in formObjects\"\n        fb-form-object=\"object\"></div>\n</div>",
       controller: 'fbBuilderController',
       link: function(scope, element, attrs) {
-        var $builder, $drag, _base, _name;
+        var $builder, $drag, formName, _base;
         $builder = $injector.get('$builder');
         $drag = $injector.get('$drag');
-        scope.formName = attrs.fbBuilder;
-        if ((_base = $builder.forms)[_name = scope.formName] == null) {
-          _base[_name] = [];
+        formName = attrs.fbBuilder;
+        if ((_base = $builder.forms)[formName] == null) {
+          _base[formName] = [];
         }
-        scope.formObjects = $builder.forms[scope.formName];
+        scope.formObjects = $builder.forms[formName];
         $(element).addClass('fb-builder');
         return $drag.droppable($(element), {
           mode: 'custom',
@@ -60,8 +60,8 @@
             var $empty, $formObject, $formObjects, height, index, offset, positions, _i, _j, _ref, _ref1;
             $formObjects = $(element).find('.fb-form-object:not(.empty,.dragging)');
             if ($formObjects.length === 0) {
-              if ($(element).find('.fb-form-object.empty') === 0) {
-                $(element).append($("<div class='fb-form-object empty'></div>"));
+              if ($(element).find('.fb-form-object.empty').length === 0) {
+                $(element).find('>div:first').append($("<div class='fb-form-object empty'></div>"));
               }
               return;
             }
@@ -97,9 +97,12 @@
           out: function(e, draggable) {
             return $(element).find('.empty').remove();
           },
-          up: function(e, draggable) {
-            console.log('up');
-            console.log(draggable);
+          up: function(e, isHover, draggable) {
+            var fos;
+            if (!isHover && draggable.mode === 'drag') {
+              fos = draggable.object.scope;
+              $builder.removeFormObject(fos.object.formName, fos.$index);
+            }
             return $(element).find('.empty').remove();
           }
         });
@@ -135,7 +138,11 @@
           scope.object.required = scope.required;
           return scope.object.options = scope.options;
         }, true);
-        $drag.draggable($(element));
+        $drag.draggable($(element), {
+          object: {
+            scope: scope
+          }
+        });
         $template = $(component.template);
         view = $compile($template)(scope);
         $(element).append(view);
@@ -164,8 +171,10 @@
             The delete event of the popover.
             */
 
+            var formName;
             $event.preventDefault();
-            console.log('remove');
+            formName = $(element).closest('[fb-builder]').attr('fb-builder');
+            $builder.removeFormObject(formName, scope.$index);
             $(element).popover('hide');
           },
           shown: function() {
@@ -409,7 +418,7 @@
       isHover.y = isHover.y || offsetA.top + sizeA.height > offsetB.top && offsetA.top + sizeA.height < offsetB.top + sizeB.height;
       return isHover.x && isHover.y;
     };
-    this.dragMirrorMode = function($element, defer) {
+    this.dragMirrorMode = function($element, defer, object) {
       var result;
       if (defer == null) {
         defer = true;
@@ -418,7 +427,8 @@
         id: _this.getNewId(),
         mode: 'mirror',
         maternal: $element[0],
-        element: null
+        element: null,
+        object: object
       };
       $element.on('mousedown', function(e) {
         var $clone;
@@ -456,13 +466,12 @@
           return _results;
         };
         _this.hooks.up.drag = function(e) {
-          var droppable, id, _ref;
+          var droppable, id, isHover, _ref;
           _ref = _this.data.droppables;
           for (id in _ref) {
             droppable = _ref[id];
-            if (_this.isHover($clone, $(droppable.element))) {
-              droppable.up(e, result);
-            }
+            isHover = _this.isHover($clone, $(droppable.element));
+            droppable.up(e, isHover, result);
           }
           delete _this.hooks.move.drag;
           delete _this.hooks.up.drag;
@@ -476,7 +485,7 @@
       });
       return result;
     };
-    this.dragDragMode = function($element, defer) {
+    this.dragDragMode = function($element, defer, object) {
       var result;
       if (defer == null) {
         defer = true;
@@ -485,7 +494,8 @@
         id: _this.getNewId(),
         mode: 'drag',
         maternal: null,
-        element: $element[0]
+        element: $element[0],
+        object: object
       };
       $element.addClass('fb-draggable');
       $element.on('mousedown', function(e) {
@@ -522,13 +532,12 @@
           }
         };
         _this.hooks.up.drag = function(e) {
-          var droppable, id, _ref;
+          var droppable, id, isHover, _ref;
           _ref = _this.data.droppables;
           for (id in _ref) {
             droppable = _ref[id];
-            if (_this.isHover($element, $(droppable.element))) {
-              droppable.up(e, result);
-            }
+            isHover = _this.isHover($element, $(droppable.element));
+            droppable.up(e, isHover, result);
           }
           delete _this.hooks.move.drag;
           delete _this.hooks.up.drag;
@@ -557,9 +566,9 @@
             return typeof options.move === "function" ? options.move(e, draggable) : void 0;
           });
         },
-        up: function(e, draggable) {
+        up: function(e, isHover, draggable) {
           return $rootScope.$apply(function() {
-            return typeof options.up === "function" ? options.up(e, draggable) : void 0;
+            return typeof options.up === "function" ? options.up(e, isHover, draggable) : void 0;
           });
         },
         out: function(e, draggable) {
@@ -581,20 +590,21 @@
       @param options: Options
           mode: 'drag' [default], 'mirror'
           defer: yes/no. defer dragging
+          object: custom information
       */
 
       result = [];
       if (options.mode === 'mirror') {
         for (_i = 0, _len = $element.length; _i < _len; _i++) {
           element = $element[_i];
-          draggable = _this.dragMirrorMode($(element), options.defer);
+          draggable = _this.dragMirrorMode($(element), options.defer, options.object);
           result.push(draggable.id);
           _this.data.draggables[draggable.id] = draggable;
         }
       } else {
         for (_j = 0, _len1 = $element.length; _j < _len1; _j++) {
           element = $element[_j];
-          draggable = _this.dragDragMode($(element), options.defer);
+          draggable = _this.dragDragMode($(element), options.defer, options.object);
           result.push(draggable.id);
           _this.data.draggables[draggable.id] = draggable;
         }
@@ -612,7 +622,7 @@
       @param options: The droppable options.
           mode: 'default' [default], 'custom'
           move: The custom mouse move callback. (e, draggable)->
-          up: The custom mouse up callback. (e, draggable)->
+          up: The custom mouse up callback. (e, isHover, draggable)->
           out: The custom mouse out callback. (e, draggable)->
       */
 
@@ -701,7 +711,7 @@
       }
       return result;
     };
-    this.convertFormObject = function(formObject) {
+    this.convertFormObject = function(name, formObject) {
       var component, result, _ref, _ref1, _ref2, _ref3, _ref4, _ref5, _ref6, _ref7;
       if (formObject == null) {
         formObject = {};
@@ -711,6 +721,7 @@
         console.error("component " + formObject.component + " was not registered.");
       }
       result = {
+        formName: name,
         component: formObject.component,
         removable: (_ref = formObject.removable) != null ? _ref : true,
         draggable: (_ref1 = formObject.draggable) != null ? _ref1 : true,
@@ -777,7 +788,22 @@
       if ((_base = _this.forms)[name] == null) {
         _base[name] = [];
       }
-      return _this.forms[name].push(_this.convertFormObject(formObject));
+      return _this.forms[name].push(_this.convertFormObject(name, formObject));
+    };
+    this.removeFormObject = function(name, index) {
+      /*
+      Remove the form object by the index.
+      */
+
+      var formObjects, _i, _ref;
+      formObjects = _this.forms[name];
+      formObjects.splice(index, 1);
+      if (formObjects.length === 0) {
+        return;
+      }
+      for (index = _i = 0, _ref = formObjects.length - 1; 0 <= _ref ? _i <= _ref : _i >= _ref; index = 0 <= _ref ? ++_i : --_i) {
+        formObjects[index].index = index;
+      }
     };
     this.get = function($injector) {
       this.setupProviders($injector);
@@ -787,7 +813,8 @@
         groups: this.groups,
         forms: this.forms,
         registerComponent: this.registerComponent,
-        addFormObject: this.addFormObject
+        addFormObject: this.addFormObject,
+        removeFormObject: this.removeFormObject
       };
     };
     this.get.$inject = ['$injector'];

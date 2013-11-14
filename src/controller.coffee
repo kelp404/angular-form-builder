@@ -8,9 +8,6 @@ fbBuilderController = ($scope, $injector) ->
     # providers
     $builder = $injector.get '$builder'
 
-    # data
-    # $scope.formName
-
 fbBuilderController.$inject = ['$scope', '$injector']
 a.controller 'fbBuilderController', fbBuilderController
 

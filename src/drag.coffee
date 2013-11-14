@@ -87,12 +87,13 @@ a.provider '$drag', ->
         isHover.x and isHover.y
 
 
-    @dragMirrorMode = ($element, defer=yes) =>
+    @dragMirrorMode = ($element, defer=yes, object) =>
         result =
             id: @getNewId()
             mode: 'mirror'
             maternal: $element[0]
             element: null
+            object: object
 
         $element.on 'mousedown', (e) =>
             e.preventDefault()
@@ -121,8 +122,9 @@ a.provider '$drag', ->
                         droppable.out e, result
             @hooks.up.drag = (e) =>
                 # execute callback for droppables
-                for id, droppable of @data.droppables when @isHover $clone, $(droppable.element)
-                    droppable.up e, result
+                for id, droppable of @data.droppables
+                    isHover = @isHover $clone, $(droppable.element)
+                    droppable.up e, isHover, result
                 delete @hooks.move.drag
                 delete @hooks.up.drag
                 result.element = null
@@ -133,12 +135,13 @@ a.provider '$drag', ->
         result
 
 
-    @dragDragMode = ($element, defer=yes) =>
+    @dragDragMode = ($element, defer=yes, object) =>
         result =
             id: @getNewId()
             mode: 'drag'
             maternal: null
             element: $element[0]
+            object: object
 
         $element.addClass 'fb-draggable'
         $element.on 'mousedown', (e) =>
@@ -168,8 +171,9 @@ a.provider '$drag', ->
                 return
             @hooks.up.drag = (e) =>
                 # execute callback for droppables
-                for id, droppable of @data.droppables when @isHover $element, $(droppable.element)
-                    droppable.up e, result
+                for id, droppable of @data.droppables
+                    isHover = @isHover $element, $(droppable.element)
+                    droppable.up e, isHover, result
 
                 delete @hooks.move.drag
                 delete @hooks.up.drag
@@ -189,8 +193,8 @@ a.provider '$drag', ->
             element: $element[0]
             move: (e, draggable) ->
                 $rootScope.$apply -> options.move?(e, draggable)
-            up: (e, draggable) ->
-                $rootScope.$apply -> options.up?(e, draggable)
+            up: (e, isHover, draggable) ->
+                $rootScope.$apply -> options.up?(e, isHover, draggable)
             out: (e, draggable) ->
                 $rootScope.$apply -> options.out?(e, draggable)
         result
@@ -204,16 +208,17 @@ a.provider '$drag', ->
         @param options: Options
             mode: 'drag' [default], 'mirror'
             defer: yes/no. defer dragging
+            object: custom information
         ###
         result = []
         if options.mode is 'mirror'
             for element in $element
-                draggable = @dragMirrorMode $(element), options.defer
+                draggable = @dragMirrorMode $(element), options.defer, options.object
                 result.push draggable.id
                 @data.draggables[draggable.id] = draggable
         else
             for element in $element
-                draggable = @dragDragMode $(element), options.defer
+                draggable = @dragDragMode $(element), options.defer, options.object
                 result.push draggable.id
                 @data.draggables[draggable.id] = draggable
         result
@@ -226,7 +231,7 @@ a.provider '$drag', ->
         @param options: The droppable options.
             mode: 'default' [default], 'custom'
             move: The custom mouse move callback. (e, draggable)->
-            up: The custom mouse up callback. (e, draggable)->
+            up: The custom mouse up callback. (e, isHover, draggable)->
             out: The custom mouse out callback. (e, draggable)->
         ###
         result = []
