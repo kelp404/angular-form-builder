@@ -18,7 +18,7 @@
 </head>
 <body class="container">
     <div class="row" ng-controller="BuilderController">
-        <h2>angular-form-builder</h2>
+        <h1>angular-form-builder</h1>
         <hr/>
 
         <div class="col-md-6">
@@ -28,10 +28,11 @@
                 </div>
                 <div fb-builder="default"></div>
                 <div class="panel-footer">
-                    <label class="form-label">
-                        <input type="checkbox" ng-model="isShowScope" />
-                        Show scope
-                    </label>
+                    <div class="checkbox">
+                        <label><input type="checkbox" ng-model="isShowScope" />
+                            Show scope
+                        </label>
+                    </div>
                     <pre ng-if="isShowScope">{{form}}</pre>
                 </div>
             </div>
@@ -40,6 +41,22 @@
         <div class="col-md-6">
             <div fb-components></div>
         </div>
+    </div>
+
+    <div class="row" ng-controller="FormController">
+        <h2>Form</h2>
+        <hr/>
+        <div ng-model="input" fb-form="default"></div>
+        <div class="checkbox">
+            <label><input type="checkbox" ng-model="isShowScope" />
+                Show scope
+            </label>
+        </div>
+        <pre ng-if="isShowScope">{{input}}</pre>
+    </div>
+
+    <div class="row">
+        <div class="col-md-12 footer"></div>
     </div>
 
     <a href="https://github.com/kelp404/angular-form-builder" target="_blank"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_gray_6d6d6d.png" alt="Fork me on GitHub"></a>

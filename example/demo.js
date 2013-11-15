@@ -15,4 +15,8 @@
     return $scope.form = $builder.forms['default'];
   });
 
+  a.controller('FormController', function($scope, $builder) {
+    return $scope.input = [];
+  });
+
 }).call(this);

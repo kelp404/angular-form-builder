@@ -328,7 +328,8 @@ fbForm = ($injector) ->
     restrict: 'A'
     require: 'ngModel'  # form data (user input value)
     link: (scope, element, attrs) ->
-        name = attrs.fbForm
+        # form name
+        formName = attrs.fbForm
         console.log 'form'
 
 fbForm.$inject = ['$injector']

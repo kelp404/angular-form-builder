@@ -9,4 +9,9 @@ a.controller 'BuilderController', ($scope, $builder) ->
         placeholder: 'Your name'
         required: yes
         draggable: no
+    # formObjects
     $scope.form = $builder.forms['default']
+
+a.controller 'FormController', ($scope, $builder) ->
+    # user input
+    $scope.input = []

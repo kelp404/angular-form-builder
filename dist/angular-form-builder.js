@@ -366,8 +366,8 @@
       restrict: 'A',
       require: 'ngModel',
       link: function(scope, element, attrs) {
-        var name;
-        name = attrs.fbForm;
+        var formName;
+        formName = attrs.fbForm;
         return console.log('form');
       }
     };
