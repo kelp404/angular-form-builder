@@ -50,7 +50,8 @@ a.provider '$builder', ->
             description: component.description ? ''
             placeholder: component.placeholder ? ''
             required: component.required ? no
-            validation: component.validation ? /.*/
+            validation: component.validation ? '/.*/'
+            errorMessage: component.errorMessage ? ''
             options: component.options ? []
             template: component.template
             popoverTemplate: component.popoverTemplate
@@ -71,6 +72,8 @@ a.provider '$builder', ->
             placeholder: formObject.placeholder ? component.placeholder
             options: formObject.options ? component.options
             required: formObject.required ? component.required
+            validation: formObject.validation ? component.validation
+            errorMessage: formObject.errorMessage ? component.errorMessage
         result
 
     @reIndexFormObject = (name) =>
@@ -92,7 +95,8 @@ a.provider '$builder', ->
             descriptiont: The description of the input.
             placeholder: The placeholder of the input.
             required: yes / no
-            validation: RegExp
+            validation: angular-validator
+            errorMessage: validator error message
             options: []
             template: html template
             popoverTemplate: html template
@@ -128,6 +132,7 @@ a.provider '$builder', ->
             placeholder:
             options:
             required:
+            validation: RegExp
         ###
         @forms[name] ?= []
         if index > @forms.length then index = @forms.length

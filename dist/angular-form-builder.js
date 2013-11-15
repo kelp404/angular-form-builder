@@ -744,7 +744,7 @@
       return $injector = injector;
     };
     this.convertComponent = function(name, component) {
-      var result, _ref, _ref1, _ref2, _ref3, _ref4, _ref5, _ref6;
+      var result, _ref, _ref1, _ref2, _ref3, _ref4, _ref5, _ref6, _ref7;
       result = {
         name: name,
         group: (_ref = component.group) != null ? _ref : 'Default',
@@ -752,8 +752,9 @@
         description: (_ref2 = component.description) != null ? _ref2 : '',
         placeholder: (_ref3 = component.placeholder) != null ? _ref3 : '',
         required: (_ref4 = component.required) != null ? _ref4 : false,
-        validation: (_ref5 = component.validation) != null ? _ref5 : /.*/,
-        options: (_ref6 = component.options) != null ? _ref6 : [],
+        validation: (_ref5 = component.validation) != null ? _ref5 : '/.*/',
+        errorMessage: (_ref6 = component.errorMessage) != null ? _ref6 : '',
+        options: (_ref7 = component.options) != null ? _ref7 : [],
         template: component.template,
         popoverTemplate: component.popoverTemplate
       };
@@ -766,7 +767,7 @@
       return result;
     };
     this.convertFormObject = function(name, formObject) {
-      var component, result, _ref, _ref1, _ref2, _ref3, _ref4, _ref5, _ref6;
+      var component, result, _ref, _ref1, _ref2, _ref3, _ref4, _ref5, _ref6, _ref7, _ref8;
       if (formObject == null) {
         formObject = {};
       }
@@ -783,7 +784,9 @@
         description: (_ref3 = formObject.description) != null ? _ref3 : component.description,
         placeholder: (_ref4 = formObject.placeholder) != null ? _ref4 : component.placeholder,
         options: (_ref5 = formObject.options) != null ? _ref5 : component.options,
-        required: (_ref6 = formObject.required) != null ? _ref6 : component.required
+        required: (_ref6 = formObject.required) != null ? _ref6 : component.required,
+        validation: (_ref7 = formObject.validation) != null ? _ref7 : component.validation,
+        errorMessage: (_ref8 = formObject.errorMessage) != null ? _ref8 : component.errorMessage
       };
       return result;
     };
@@ -808,7 +811,8 @@
           descriptiont: The description of the input.
           placeholder: The placeholder of the input.
           required: yes / no
-          validation: RegExp
+          validation: angular-validator
+          errorMessage: validator error message
           options: []
           template: html template
           popoverTemplate: html template
@@ -856,6 +860,7 @@
           placeholder:
           options:
           required:
+          validation: RegExp
       */
 
       if ((_base = _this.forms)[name] == null) {

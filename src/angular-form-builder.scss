@@ -7,12 +7,14 @@
     cursor: move;
     input { cursor: move; }
     label { cursor: move; }
+    select { cursor: move; }
 }
 .fb-form-object {
     padding: 10px;
     cursor: move;
     input { cursor: move; }
     label { cursor: pointer; }
+    select { cursor: move; }
 }
 .fb-form-object.empty {
     cursor: default;
