@@ -8,6 +8,7 @@
     input { cursor: move; }
     label { cursor: move; }
     select { cursor: move; }
+    textarea { cursor: move; }
 }
 .fb-form-object {
     padding: 10px;
@@ -15,6 +16,7 @@
     input { cursor: move; }
     label { cursor: pointer; }
     select { cursor: move; }
+    textarea { cursor: move; }
 }
 .fb-form-object.empty {
     cursor: default;
@@ -29,6 +31,11 @@
     position: absolute;
     z-index: 800;
     @include box-shadow(#666 0 0 20px);
+}
+
+.fb-required:after {
+    color: #b94a48;
+    content: ' *';
 }
 
 .fb-builder {

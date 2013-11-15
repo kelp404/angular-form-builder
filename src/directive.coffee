@@ -147,6 +147,9 @@ fbFormObject = ($injector) ->
         view = $compile($template) scope
         $(element).append view
 
+        # disable click event
+        $(element). on 'click', -> no
+
         # ----------------------------------------
         # bootstrap popover
         # ----------------------------------------

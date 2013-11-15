@@ -191,6 +191,9 @@
         $template = $(component.template);
         view = $compile($template)(scope);
         $(element).append(view);
+        $(element).on('click', function() {
+          return false;
+        });
         popoverId = "fb-" + (Math.random().toString().substr(2));
         popover = {
           isClickedSave: false,
