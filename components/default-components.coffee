@@ -56,7 +56,7 @@ config = ($builderProvider) ->
     # ----------------------------------------
     $builderProvider.registerComponent 'textArea',
         group: 'Default'
-        label: 'Text area'
+        label: 'Text Area'
         description: 'description'
         placeholder: 'placeholder'
         required: no
@@ -117,6 +117,61 @@ config = ($builderProvider) ->
                 <div class="col-md-8">
                     <div class='checkbox' ng-repeat="item in options track by $index">
                         <label><input type='checkbox'/>
+                            {{item}}
+                        </label>
+                    </div>
+                    <p class='help-block'>{{description}}</p>
+                </div>
+            </div>
+            """
+        popoverTemplate:
+            """
+            <form>
+                <div class="form-group">
+                    <label class='control-label'>Label</label>
+                    <input type='text' ng-model="label" validator="[required]" class='form-control'/>
+                </div>
+                <div class="form-group">
+                    <label class='control-label'>Description</label>
+                    <input type='text' ng-model="description" class='form-control'/>
+                </div>
+                <div class="form-group">
+                    <label class='control-label'>Options</label>
+                    <textarea class="form-control" rows="3" ng-model="optionsText"/>
+                </div>
+                <div class="checkbox">
+                    <label>
+                        <input type='checkbox' ng-model="required" />
+                        Required
+                    </label>
+                </div>
+
+                <hr/>
+                <div class='form-group'>
+                    <input type='submit' ng-click="popover.save($event)" class='btn btn-primary' value='Save'/>
+                    <input type='button' ng-click="popover.cancel($event)" class='btn btn-default' value='Cancel'/>
+                    <input type='button' ng-click="popover.remove($event)" class='btn btn-danger' value='Delete'/>
+                </div>
+            </form>
+            """
+
+    # ----------------------------------------
+    # radio
+    # ----------------------------------------
+    $builderProvider.registerComponent 'radio',
+        group: 'Default'
+        label: 'Radio'
+        description: 'description'
+        placeholder: 'placeholder'
+        required: no
+        options: ['value one', 'value two']
+        template:
+            """
+            <div class="form-group">
+                <label for="{{name+label}}" class="col-md-4 control-label" ng-class="{'fb-required':required}">{{label}}</label>
+                <div class="col-md-8">
+                    <div class='radio' ng-repeat="item in options track by $index">
+                        <label><input name='{{name+label}}' type='radio'/>
                             {{item}}
                         </label>
                     </div>
