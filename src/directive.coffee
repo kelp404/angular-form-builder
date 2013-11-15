@@ -6,15 +6,15 @@ a = angular.module 'builder.directive', ['builder.provider', 'builder.controller
 
 
 # ----------------------------------------
-# fb-builder, fb-droppable
+# fb-builder
 # ----------------------------------------
 fbBuilder = ($injector) ->
     restrict: 'A'
     template:
         """
         <div class='form-horizontal'>
-            <div class='fb-form-object' ng-repeat="object in formObjects"
-                fb-form-object="object"></div>
+            <div class='fb-form-object-editable' ng-repeat="object in formObjects"
+                fb-form-object-editable="object"></div>
         </div>
         """
     controller: 'fbBuilderController'
@@ -39,14 +39,14 @@ fbBuilder = ($injector) ->
             move: (e, draggable) ->
                 if beginMove
                     # hide all popovers
-                    $("div.fb-form-object").popover 'hide'
+                    $("div.fb-form-object-editable").popover 'hide'
                     beginMove = no
 
-                $formObjects = $(element).find '.fb-form-object:not(.empty,.dragging)'
+                $formObjects = $(element).find '.fb-form-object-editable:not(.empty,.dragging)'
                 if $formObjects.length is 0
                     # there are no components in the builder.
-                    if $(element).find('.fb-form-object.empty').length is 0
-                        $(element).find('>div:first').append $("<div class='fb-form-object empty'></div>")
+                    if $(element).find('.fb-form-object-editable.empty').length is 0
+                        $(element).find('>div:first').append $("<div class='fb-form-object-editable empty'></div>")
                     return
 
                 # the positions could added .empty div.
@@ -68,7 +68,7 @@ fbBuilder = ($injector) ->
                     if e.pageY > positions[index - 1] and e.pageY <= positions[index]
                         # this one
                         $(element).find('.empty').remove()
-                        $empty = $ "<div class='fb-form-object empty'></div>"
+                        $empty = $ "<div class='fb-form-object-editable empty'></div>"
                         if index - 1 < $formObjects.length
                             $empty.insertBefore $($formObjects[index - 1])
                         else
@@ -78,7 +78,7 @@ fbBuilder = ($injector) ->
             out: (e, draggable) ->
                 if beginMove
                     # hide all popovers
-                    $("div.fb-form-object").popover 'hide'
+                    $("div.fb-form-object-editable").popover 'hide'
                     beginMove = no
 
                 $(element).find('.empty').remove()
@@ -94,12 +94,12 @@ fbBuilder = ($injector) ->
                 else if isHover
                     if draggable.mode is 'mirror'
                         # insert a form object
-                        $builder.insertFormObject formName, $(element).find('.empty').index('.fb-form-object'),
+                        $builder.insertFormObject formName, $(element).find('.empty').index('.fb-form-object-editable'),
                             component: draggable.object.componentName
                     if draggable.mode is 'drag'
                         # update the index of form objects
                         oldIndex = draggable.object.formObject.index
-                        newIndex = $(element).find('.empty').index('.fb-form-object')
+                        newIndex = $(element).find('.empty').index('.fb-form-object-editable')
                         newIndex-- if oldIndex < newIndex
                         $builder.updateFormObjectIndex formName, oldIndex, newIndex
                 $(element).find('.empty').remove()
@@ -107,7 +107,7 @@ fbBuilder.$inject = ['$injector']
 a.directive 'fbBuilder', fbBuilder
 
 # ----------------------------------------
-# fb-form-object
+# fb-form-object-editable
 # ----------------------------------------
 fbFormObject = ($injector) ->
     restrict: 'A'
@@ -119,7 +119,6 @@ fbFormObject = ($injector) ->
         $compile = $injector.get '$compile'
         $validator = $injector.get '$validator'
 
-        # valuables
         component = $builder.components[scope.object.component]
         for key, value of scope.object when key isnt '$$hashKey'
             # ng-repeat="object in formObjects"
@@ -148,7 +147,7 @@ fbFormObject = ($injector) ->
         $(element).append view
 
         # disable click event
-        $(element). on 'click', -> no
+        $(element).on 'click', -> no
 
         # ----------------------------------------
         # bootstrap popover
@@ -222,7 +221,7 @@ fbFormObject = ($injector) ->
         $(element).on 'show.bs.popover', ->
             return no if $drag.isMouseMoved()
             # hide other popovers
-            $("div.fb-form-object:not(.#{popoverId})").popover 'hide'
+            $("div.fb-form-object-editable:not(.#{popoverId})").popover 'hide'
 
             $popover = $("form.#{popoverId}").closest '.popover'
             if $popover.length > 0
@@ -326,11 +325,21 @@ a.directive 'fbComponent', fbComponent
 # ----------------------------------------
 fbForm = ($injector) ->
     restrict: 'A'
-    require: 'ngModel'  # form data (user input value)
+    require: 'ngModel'  # form data (end-user input value)
+    template:
+        """
+        <div class='fb-form-object' ng-repeat="item in form">
+            xx
+        </div>
+        """
+    controller: 'fbFormController'
     link: (scope, element, attrs) ->
+        # providers
+        $builder = $injector.get '$builder'
+
         # form name
         formName = attrs.fbForm
-        console.log 'form'
+        scope.form = $builder.forms[formName]
 
 fbForm.$inject = ['$injector']
 a.directive 'fbForm', fbForm

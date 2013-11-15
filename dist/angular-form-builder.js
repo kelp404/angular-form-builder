@@ -1,5 +1,5 @@
 (function() {
-  var a, fbBuilderController, fbComponentsController;
+  var a, fbBuilderController, fbComponentsController, fbFormController;
 
   a = angular.module('builder.controller', ['builder.provider']);
 
@@ -32,6 +32,15 @@
 
   a.controller('fbComponentsController', fbComponentsController);
 
+  fbFormController = function($scope, $injector) {
+    var $builder;
+    return $builder = $injector.get('$builder');
+  };
+
+  fbBuilderController.$inject = ['$scope', '$injector'];
+
+  a.controller('fbFormController', fbFormController);
+
 }).call(this);
 
 (function() {
@@ -42,7 +51,7 @@
   fbBuilder = function($injector) {
     return {
       restrict: 'A',
-      template: "<div class='form-horizontal'>\n    <div class='fb-form-object' ng-repeat=\"object in formObjects\"\n        fb-form-object=\"object\"></div>\n</div>",
+      template: "<div class='form-horizontal'>\n    <div class='fb-form-object-editable' ng-repeat=\"object in formObjects\"\n        fb-form-object-editable=\"object\"></div>\n</div>",
       controller: 'fbBuilderController',
       link: function(scope, element, attrs) {
         var $builder, $drag, beginMove, formName, _base;
@@ -60,13 +69,13 @@
           move: function(e, draggable) {
             var $empty, $formObject, $formObjects, height, index, offset, positions, _i, _j, _ref, _ref1;
             if (beginMove) {
-              $("div.fb-form-object").popover('hide');
+              $("div.fb-form-object-editable").popover('hide');
               beginMove = false;
             }
-            $formObjects = $(element).find('.fb-form-object:not(.empty,.dragging)');
+            $formObjects = $(element).find('.fb-form-object-editable:not(.empty,.dragging)');
             if ($formObjects.length === 0) {
-              if ($(element).find('.fb-form-object.empty').length === 0) {
-                $(element).find('>div:first').append($("<div class='fb-form-object empty'></div>"));
+              if ($(element).find('.fb-form-object-editable.empty').length === 0) {
+                $(element).find('>div:first').append($("<div class='fb-form-object-editable empty'></div>"));
               }
               return;
             }
@@ -89,7 +98,7 @@
               }
               if (e.pageY > positions[index - 1] && e.pageY <= positions[index]) {
                 $(element).find('.empty').remove();
-                $empty = $("<div class='fb-form-object empty'></div>");
+                $empty = $("<div class='fb-form-object-editable empty'></div>");
                 if (index - 1 < $formObjects.length) {
                   $empty.insertBefore($($formObjects[index - 1]));
                 } else {
@@ -101,7 +110,7 @@
           },
           out: function(e, draggable) {
             if (beginMove) {
-              $("div.fb-form-object").popover('hide');
+              $("div.fb-form-object-editable").popover('hide');
               beginMove = false;
             }
             return $(element).find('.empty').remove();
@@ -117,13 +126,13 @@
               $builder.removeFormObject(formObject.name, formObject.index);
             } else if (isHover) {
               if (draggable.mode === 'mirror') {
-                $builder.insertFormObject(formName, $(element).find('.empty').index('.fb-form-object'), {
+                $builder.insertFormObject(formName, $(element).find('.empty').index('.fb-form-object-editable'), {
                   component: draggable.object.componentName
                 });
               }
               if (draggable.mode === 'drag') {
                 oldIndex = draggable.object.formObject.index;
-                newIndex = $(element).find('.empty').index('.fb-form-object');
+                newIndex = $(element).find('.empty').index('.fb-form-object-editable');
                 if (oldIndex < newIndex) {
                   newIndex--;
                 }
@@ -270,7 +279,7 @@
           if ($drag.isMouseMoved()) {
             return false;
           }
-          $("div.fb-form-object:not(." + popoverId + ")").popover('hide');
+          $("div.fb-form-object-editable:not(." + popoverId + ")").popover('hide');
           $popover = $("form." + popoverId).closest('.popover');
           if ($popover.length > 0) {
             elementOrigin = $(element).offset().top + $(element).height() / 2;
@@ -365,10 +374,13 @@
     return {
       restrict: 'A',
       require: 'ngModel',
+      template: "<div class='fb-form-object' ng-repeat=\"item in form\">\n    xx\n</div>",
+      controller: 'fbFormController',
       link: function(scope, element, attrs) {
-        var formName;
+        var $builder, formName;
+        $builder = $injector.get('$builder');
         formName = attrs.fbForm;
-        return console.log('form');
+        return scope.form = $builder.forms[formName];
       }
     };
   };

@@ -2,7 +2,7 @@
 a = angular.module 'builder.controller', ['builder.provider']
 
 # ----------------------------------------
-# FormBuilderBuilderController
+# fbBuilderController
 # ----------------------------------------
 fbBuilderController = ($scope, $injector) ->
     # providers
@@ -12,7 +12,7 @@ fbBuilderController.$inject = ['$scope', '$injector']
 a.controller 'fbBuilderController', fbBuilderController
 
 # ----------------------------------------
-# FormBuilderComponentsController
+# fbComponentsController
 # ----------------------------------------
 fbComponentsController = ($scope, $injector) ->
     # providers
@@ -34,3 +34,13 @@ fbComponentsController = ($scope, $injector) ->
 
 fbComponentsController.$inject = ['$scope', '$injector']
 a.controller 'fbComponentsController', fbComponentsController
+
+# ----------------------------------------
+# fbFormController
+# ----------------------------------------
+fbFormController = ($scope, $injector) ->
+    # providers
+    $builder = $injector.get '$builder'
+
+fbBuilderController.$inject = ['$scope', '$injector']
+a.controller 'fbFormController', fbFormController

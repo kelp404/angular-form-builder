@@ -10,7 +10,7 @@
     select { cursor: move; }
     textarea { cursor: move; }
 }
-.fb-form-object {
+.fb-form-object-editable {
     padding: 10px;
     cursor: move;
     input { cursor: move; }
@@ -18,7 +18,7 @@
     select { cursor: move; }
     textarea { cursor: move; }
 }
-.fb-form-object.empty {
+.fb-form-object-editable.empty {
     cursor: default;
     margin: 6px;
     height: 80px;
