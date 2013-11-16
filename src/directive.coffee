@@ -137,7 +137,7 @@ fbFormObjectEditable = ($injector) ->
         , yes
         scope.$watch 'optionsText', (text) ->
             scope.options = (x for x in text.split('\n') when x.length > 0)
-            scope.selected = scope.options[0]
+            scope.inputText = scope.options[0]
 
         # draggable
         $drag.draggable $(element),

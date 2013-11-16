@@ -225,7 +225,7 @@ config = ($builderProvider) ->
             <div class="form-group">
                 <label for="{{name+label}}" class="col-md-4 control-label">{{label}}</label>
                 <div class="col-md-8">
-                    <select id="{{name+label}}" class="form-control" ng-model="selected" ng-options="value for value in options" ng-init="selected = options[0]"/>
+                    <select id="{{name+label}}" class="form-control" ng-model="inputText" ng-options="value for value in options" ng-init="inputText = options[0]"/>
                     <p class='help-block'>{{description}}</p>
                 </div>
             </div>

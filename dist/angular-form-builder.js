@@ -190,7 +190,7 @@
             }
             return _results;
           })();
-          return scope.selected = scope.options[0];
+          return scope.inputText = scope.options[0];
         });
         $drag.draggable($(element), {
           object: {
