@@ -16,7 +16,7 @@ config = ($builderProvider) ->
             <div class="form-group">
                 <label for="{{name+label}}" class="col-md-4 control-label" ng-class="{'fb-required':required}">{{label}}</label>
                 <div class="col-md-8">
-                    <input type="text" id="{{name+label}}" class="form-control" placeholder="{{placeholder}}"/>
+                    <input type="text" ng-model="inputText" id="{{name+label}}" class="form-control" placeholder="{{placeholder}}"/>
                     <p class='help-block'>{{description}}</p>
                 </div>
             </div>
@@ -65,7 +65,7 @@ config = ($builderProvider) ->
             <div class="form-group">
                 <label for="{{name+label}}" class="col-md-4 control-label" ng-class="{'fb-required':required}">{{label}}</label>
                 <div class="col-md-8">
-                    <textarea type="text" id="{{name+label}}" class="form-control" rows='6' placeholder="{{placeholder}}"/>
+                    <textarea type="text" ng-model="inputText" id="{{name+label}}" class="form-control" rows='6' placeholder="{{placeholder}}"/>
                     <p class='help-block'>{{description}}</p>
                 </div>
             </div>

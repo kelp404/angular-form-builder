@@ -28,6 +28,8 @@ a.provider '$builder', ->
     @componentsArray = []
     # all groups of components
     @groups = []
+    @broadcastChannel =
+        updateInput: '$updateInput'
 
     # forms
     #   builder mode: `fb-builder` you could drag and drop to build the form.
@@ -173,6 +175,7 @@ a.provider '$builder', ->
         componentsArray: @componentsArray
         groups: @groups
         forms: @forms
+        broadcastChannel: @broadcastChannel
         registerComponent: @registerComponent
         addFormObject: @addFormObject
         insertFormObject: @insertFormObject

@@ -109,7 +109,7 @@ a.directive 'fbBuilder', fbBuilder
 # ----------------------------------------
 # fb-form-object-editable
 # ----------------------------------------
-fbFormObject = ($injector) ->
+fbFormObjectEditable = ($injector) ->
     restrict: 'A'
     link: (scope, element, attrs) ->
         # providers
@@ -119,18 +119,21 @@ fbFormObject = ($injector) ->
         $compile = $injector.get '$compile'
         $validator = $injector.get '$validator'
 
-        component = $builder.components[scope.object.component]
-        for key, value of scope.object when key isnt '$$hashKey'
+        # get formObject
+        formObject = $parse(attrs.fbFormObjectEditable) scope
+        # get component
+        component = $builder.components[formObject.component]
+        for key, value of formObject when key isnt '$$hashKey'
             # ng-repeat="object in formObjects"
-            # copy scope.object.{} to scope.{}
+            # copy formObject.{} to scope.{}
             scope[key] = value
-        scope.optionsText = scope.object.options.join '\n'
+        scope.optionsText = formObject.options.join '\n'
         scope.$watch '[label, description, placeholder, required, options]', ->
-            scope.object.label = scope.label
-            scope.object.description = scope.description
-            scope.object.placeholder = scope.placeholder
-            scope.object.required = scope.required
-            scope.object.options = scope.options
+            formObject.label = scope.label
+            formObject.description = scope.description
+            formObject.placeholder = scope.placeholder
+            formObject.required = scope.required
+            formObject.options = scope.options
         , yes
         scope.$watch 'optionsText', (text) ->
             scope.options = (x for x in text.split('\n') when x.length > 0)
@@ -139,7 +142,7 @@ fbFormObject = ($injector) ->
         # draggable
         $drag.draggable $(element),
             object:
-                formObject: scope.object
+                formObject: formObject
 
         # compile formObject
         $template = $(component.template)
@@ -263,14 +266,14 @@ fbFormObject = ($injector) ->
                 $popover.hide()
             , 300
             no
-fbFormObject.$inject = ['$injector']
-a.directive 'fbFormObject', fbFormObject
+fbFormObjectEditable.$inject = ['$injector']
+a.directive 'fbFormObjectEditable', fbFormObjectEditable
 
 
 # ----------------------------------------
 # fb-components
 # ----------------------------------------
-fbComponents = ($injector) ->
+fbComponents = ->
     restrict: 'A'
     template:
         """
@@ -287,7 +290,6 @@ fbComponents = ($injector) ->
         """
     controller: 'fbComponentsController'
 
-fbComponents.$inject = ['$injector']
 a.directive 'fbComponents', fbComponents
 
 # ----------------------------------------
@@ -328,19 +330,78 @@ fbForm = ($injector) ->
     require: 'ngModel'  # form data (end-user input value)
     template:
         """
-        <div class='fb-form-object' ng-repeat="item in form">
-            xx
+        <div class='form-horizontal'>
+            <div class='fb-form-object' ng-repeat="object in form" fb-form-object="object">
+            </div>
         </div>
         """
     controller: 'fbFormController'
     link: (scope, element, attrs) ->
         # providers
         $builder = $injector.get '$builder'
+        $parse = $injector.get '$parse'
 
         # form name
         formName = attrs.fbForm
         scope.form = $builder.forms[formName]
 
+        # input model for scops in ng-repeat
+        scope.input = $parse(attrs.ngModel) scope
+
+        scope.$watch 'form', ->
+            # remove superfluous input
+            if scope.input.length > scope.form.length
+                scope.input.splice scope.form.length
+            # tell children to update input value
+            scope.$broadcast $builder.broadcastChannel.updateInput
+        , yes
+
 fbForm.$inject = ['$injector']
 a.directive 'fbForm', fbForm
+
+# ----------------------------------------
+# fb-form-object
+# ----------------------------------------
+fbFormObject = ($injector) ->
+    restrict: 'A'
+    link: (scope, element, attrs) ->
+        # providers
+        $builder = $injector.get '$builder'
+        $parse = $injector.get '$parse'
+        $compile = $injector.get '$compile'
+
+        # get formObject
+        formObject = $parse(attrs.fbFormObject) scope
+        # get component
+        component = $builder.components[formObject.component]
+
+        # copy current scope.input[X] to $parent.input
+        updateInput = ->
+            input =
+                label: formObject.label
+                value: ''
+            input.value = scope.inputText if scope.inputText
+            scope.$parent.input.splice scope.$index, 1, input
+
+        for key, value of formObject when key isnt '$$hashKey'
+            # ng-repeat="object in form"
+            # copy formObject.{} to scope.{}
+            scope[key] = value
+
+        # listen (formObject updated
+        scope.$on $builder.broadcastChannel.updateInput, -> updateInput()
+        # watch (end-user updated form
+        scope.$watch '[inputText]', ->
+            updateInput()
+        , yes
+
+        # compile
+        view = $compile(component.template) scope
+        $(element).append view
+
+        # execute updateInput() for set-up
+        updateInput()
+
+fbFormObject.$inject = ['$injector']
+a.directive 'fbFormObject', fbFormObject
 

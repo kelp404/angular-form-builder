@@ -44,7 +44,7 @@
 }).call(this);
 
 (function() {
-  var a, fbBuilder, fbComponent, fbComponents, fbForm, fbFormObject;
+  var a, fbBuilder, fbComponent, fbComponents, fbForm, fbFormObject, fbFormObjectEditable;
 
   a = angular.module('builder.directive', ['builder.provider', 'builder.controller', 'builder.drag']);
 
@@ -150,40 +150,40 @@
 
   a.directive('fbBuilder', fbBuilder);
 
-  fbFormObject = function($injector) {
+  fbFormObjectEditable = function($injector) {
     return {
       restrict: 'A',
       link: function(scope, element, attrs) {
-        var $builder, $compile, $drag, $parse, $template, $validator, component, key, popover, popoverId, value, view, _ref;
+        var $builder, $compile, $drag, $parse, $template, $validator, component, formObject, key, popover, popoverId, value, view;
         $builder = $injector.get('$builder');
         $drag = $injector.get('$drag');
         $parse = $injector.get('$parse');
         $compile = $injector.get('$compile');
         $validator = $injector.get('$validator');
-        component = $builder.components[scope.object.component];
-        _ref = scope.object;
-        for (key in _ref) {
-          value = _ref[key];
+        formObject = $parse(attrs.fbFormObjectEditable)(scope);
+        component = $builder.components[formObject.component];
+        for (key in formObject) {
+          value = formObject[key];
           if (key !== '$$hashKey') {
             scope[key] = value;
           }
         }
-        scope.optionsText = scope.object.options.join('\n');
+        scope.optionsText = formObject.options.join('\n');
         scope.$watch('[label, description, placeholder, required, options]', function() {
-          scope.object.label = scope.label;
-          scope.object.description = scope.description;
-          scope.object.placeholder = scope.placeholder;
-          scope.object.required = scope.required;
-          return scope.object.options = scope.options;
+          formObject.label = scope.label;
+          formObject.description = scope.description;
+          formObject.placeholder = scope.placeholder;
+          formObject.required = scope.required;
+          return formObject.options = scope.options;
         }, true);
         scope.$watch('optionsText', function(text) {
           var x;
           scope.options = (function() {
-            var _i, _len, _ref1, _results;
-            _ref1 = text.split('\n');
+            var _i, _len, _ref, _results;
+            _ref = text.split('\n');
             _results = [];
-            for (_i = 0, _len = _ref1.length; _i < _len; _i++) {
-              x = _ref1[_i];
+            for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+              x = _ref[_i];
               if (x.length > 0) {
                 _results.push(x);
               }
@@ -194,7 +194,7 @@
         });
         $drag.draggable($(element), {
           object: {
-            formObject: scope.object
+            formObject: formObject
           }
         });
         $template = $(component.template);
@@ -324,19 +324,17 @@
     };
   };
 
-  fbFormObject.$inject = ['$injector'];
+  fbFormObjectEditable.$inject = ['$injector'];
 
-  a.directive('fbFormObject', fbFormObject);
+  a.directive('fbFormObjectEditable', fbFormObjectEditable);
 
-  fbComponents = function($injector) {
+  fbComponents = function() {
     return {
       restrict: 'A',
       template: "<ul ng-if=\"groups.length > 1\" class=\"nav nav-tabs nav-justified\">\n    <li ng-repeat=\"group in groups\" ng-class=\"{active:status.activeGroup==group}\">\n        <a href='#' ng-click=\"action.selectGroup($event, group)\">{{group}}</a>\n    </li>\n</ul>\n<div class='form-horizontal'>\n    <div class='fb-component'\n        ng-repeat=\"component in components|filter:{group:status.activeGroup}\"\n        fb-component=\"component\"></div>\n</div>",
       controller: 'fbComponentsController'
     };
   };
-
-  fbComponents.$inject = ['$injector'];
 
   a.directive('fbComponents', fbComponents);
 
@@ -374,13 +372,21 @@
     return {
       restrict: 'A',
       require: 'ngModel',
-      template: "<div class='fb-form-object' ng-repeat=\"item in form\">\n    xx\n</div>",
+      template: "<div class='form-horizontal'>\n    <div class='fb-form-object' ng-repeat=\"object in form\" fb-form-object=\"object\">\n    </div>\n</div>",
       controller: 'fbFormController',
       link: function(scope, element, attrs) {
-        var $builder, formName;
+        var $builder, $parse, formName;
         $builder = $injector.get('$builder');
+        $parse = $injector.get('$parse');
         formName = attrs.fbForm;
-        return scope.form = $builder.forms[formName];
+        scope.form = $builder.forms[formName];
+        scope.input = $parse(attrs.ngModel)(scope);
+        return scope.$watch('form', function() {
+          if (scope.input.length > scope.form.length) {
+            scope.input.splice(scope.form.length);
+          }
+          return scope.$broadcast($builder.broadcastChannel.updateInput);
+        }, true);
       }
     };
   };
@@ -388,6 +394,50 @@
   fbForm.$inject = ['$injector'];
 
   a.directive('fbForm', fbForm);
+
+  fbFormObject = function($injector) {
+    return {
+      restrict: 'A',
+      link: function(scope, element, attrs) {
+        var $builder, $compile, $parse, component, formObject, key, updateInput, value, view;
+        $builder = $injector.get('$builder');
+        $parse = $injector.get('$parse');
+        $compile = $injector.get('$compile');
+        formObject = $parse(attrs.fbFormObject)(scope);
+        component = $builder.components[formObject.component];
+        updateInput = function() {
+          var input;
+          input = {
+            label: formObject.label,
+            value: ''
+          };
+          if (scope.inputText) {
+            input.value = scope.inputText;
+          }
+          return scope.$parent.input.splice(scope.$index, 1, input);
+        };
+        for (key in formObject) {
+          value = formObject[key];
+          if (key !== '$$hashKey') {
+            scope[key] = value;
+          }
+        }
+        scope.$on($builder.broadcastChannel.updateInput, function() {
+          return updateInput();
+        });
+        scope.$watch('[inputText]', function() {
+          return updateInput();
+        }, true);
+        view = $compile(component.template)(scope);
+        $(element).append(view);
+        return updateInput();
+      }
+    };
+  };
+
+  fbFormObject.$inject = ['$injector'];
+
+  a.directive('fbFormObject', fbFormObject);
 
 }).call(this);
 
@@ -753,6 +803,9 @@
     this.components = {};
     this.componentsArray = [];
     this.groups = [];
+    this.broadcastChannel = {
+      updateInput: '$updateInput'
+    };
     this.forms = {};
     this.forms['default'] = [];
     this.setupProviders = function(injector) {
@@ -925,6 +978,7 @@
         componentsArray: this.componentsArray,
         groups: this.groups,
         forms: this.forms,
+        broadcastChannel: this.broadcastChannel,
         registerComponent: this.registerComponent,
         addFormObject: this.addFormObject,
         insertFormObject: this.insertFormObject,
