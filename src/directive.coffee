@@ -362,6 +362,7 @@ a.directive 'fbForm', fbForm
 fbFormObject = ($injector) ->
     restrict: 'A'
     scope:
+        index: '&'
         formObject: '=fbFormObject'
     link: (scope, element, attrs) ->
         # providers
@@ -377,7 +378,7 @@ fbFormObject = ($injector) ->
                 label: scope.formObject.label
                 value: ''
             input.value = scope.inputText if scope.inputText
-            scope.$parent.input.splice scope.$index, 1, input
+            scope.$parent.input.splice scope.index, 1, input
 
         for key, value of scope.formObject when key isnt '$$hashKey'
             # ng-repeat="object in form"

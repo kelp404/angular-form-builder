@@ -400,6 +400,7 @@
     return {
       restrict: 'A',
       scope: {
+        index: '&',
         formObject: '=fbFormObject'
       },
       link: function(scope, element, attrs) {
@@ -416,7 +417,7 @@
           if (scope.inputText) {
             input.value = scope.inputText;
           }
-          return scope.$parent.input.splice(scope.$index, 1, input);
+          return scope.$parent.input.splice(scope.index, 1, input);
         };
         _ref = scope.formObject;
         for (key in _ref) {
