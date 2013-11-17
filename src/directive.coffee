@@ -328,6 +328,9 @@ a.directive 'fbComponent', fbComponent
 fbForm = ($injector) ->
     restrict: 'A'
     require: 'ngModel'  # form data (end-user input value)
+    scope:
+        # input model for scops in ng-repeat
+        input: '=ngModel'
     template:
         """
         <div class='form-horizontal'>
@@ -339,14 +342,10 @@ fbForm = ($injector) ->
     link: (scope, element, attrs) ->
         # providers
         $builder = $injector.get '$builder'
-        $parse = $injector.get '$parse'
 
         # form name
         formName = attrs.fbForm
         scope.form = $builder.forms[formName]
-
-        # input model for scops in ng-repeat
-        scope.input = $parse(attrs.ngModel) scope
 
         scope.$watch 'form', ->
             # remove superfluous input
@@ -364,26 +363,25 @@ a.directive 'fbForm', fbForm
 # ----------------------------------------
 fbFormObject = ($injector) ->
     restrict: 'A'
+    scope:
+        formObject: '=fbFormObject'
     link: (scope, element, attrs) ->
         # providers
         $builder = $injector.get '$builder'
-        $parse = $injector.get '$parse'
         $compile = $injector.get '$compile'
 
-        # get formObject
-        formObject = $parse(attrs.fbFormObject) scope
         # get component
-        component = $builder.components[formObject.component]
+        component = $builder.components[scope.formObject.component]
 
         # copy current scope.input[X] to $parent.input
         updateInput = ->
             input =
-                label: formObject.label
+                label: scope.formObject.label
                 value: ''
             input.value = scope.inputText if scope.inputText
             scope.$parent.input.splice scope.$index, 1, input
 
-        for key, value of formObject when key isnt '$$hashKey'
+        for key, value of scope.formObject when key isnt '$$hashKey'
             # ng-repeat="object in form"
             # copy formObject.{} to scope.{}
             scope[key] = value

@@ -372,15 +372,16 @@
     return {
       restrict: 'A',
       require: 'ngModel',
+      scope: {
+        input: '=ngModel'
+      },
       template: "<div class='form-horizontal'>\n    <div class='fb-form-object' ng-repeat=\"object in form\" fb-form-object=\"object\">\n    </div>\n</div>",
       controller: 'fbFormController',
       link: function(scope, element, attrs) {
-        var $builder, $parse, formName;
+        var $builder, formName;
         $builder = $injector.get('$builder');
-        $parse = $injector.get('$parse');
         formName = attrs.fbForm;
         scope.form = $builder.forms[formName];
-        scope.input = $parse(attrs.ngModel)(scope);
         return scope.$watch('form', function() {
           if (scope.input.length > scope.form.length) {
             scope.input.splice(scope.form.length);
@@ -398,17 +399,18 @@
   fbFormObject = function($injector) {
     return {
       restrict: 'A',
+      scope: {
+        formObject: '=fbFormObject'
+      },
       link: function(scope, element, attrs) {
-        var $builder, $compile, $parse, component, formObject, key, updateInput, value, view;
+        var $builder, $compile, component, key, updateInput, value, view, _ref;
         $builder = $injector.get('$builder');
-        $parse = $injector.get('$parse');
         $compile = $injector.get('$compile');
-        formObject = $parse(attrs.fbFormObject)(scope);
-        component = $builder.components[formObject.component];
+        component = $builder.components[scope.formObject.component];
         updateInput = function() {
           var input;
           input = {
-            label: formObject.label,
+            label: scope.formObject.label,
             value: ''
           };
           if (scope.inputText) {
@@ -416,8 +418,9 @@
           }
           return scope.$parent.input.splice(scope.$index, 1, input);
         };
-        for (key in formObject) {
-          value = formObject[key];
+        _ref = scope.formObject;
+        for (key in _ref) {
+          value = _ref[key];
           if (key !== '$$hashKey') {
             scope[key] = value;
           }
