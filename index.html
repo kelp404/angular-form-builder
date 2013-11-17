@@ -46,7 +46,14 @@
     <div class="row" ng-controller="FormController">
         <h2>Form</h2>
         <hr/>
-        <div ng-model="input" fb-form="default"></div>
+        <form class="form-horizontal">
+            <div ng-model="input" fb-form="default"></div>
+            <div class="form-group">
+                <div class="col-md-8 col-md-offset-4">
+                    <input type="submit" ng-click="submit()" class="btn btn-default"/>
+                </div>
+            </div>
+        </form>
         <div class="checkbox">
             <label><input type="checkbox" ng-model="isShowScope" ng-init="isShowScope=true" />
                 Show scope

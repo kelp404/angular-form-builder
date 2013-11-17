@@ -333,9 +333,7 @@ fbForm = ($injector) ->
         input: '=ngModel'
     template:
         """
-        <div class='form-horizontal'>
-            <div class='fb-form-object' ng-repeat="object in form" fb-form-object="object">
-            </div>
+        <div class='fb-form-object' ng-repeat="object in form" fb-form-object="object">
         </div>
         """
     controller: 'fbFormController'

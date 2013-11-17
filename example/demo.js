@@ -15,8 +15,18 @@
     return $scope.form = $builder.forms['default'];
   });
 
-  a.controller('FormController', function($scope, $builder) {
-    return $scope.input = [];
+  a.controller('FormController', function($scope, $validator) {
+    $scope.input = [];
+    return $scope.submit = function() {
+      var v;
+      v = $validator.validate($scope);
+      v.success(function() {
+        return console.log('success');
+      });
+      return v.error(function() {
+        return console.log('error');
+      });
+    };
   });
 
 }).call(this);

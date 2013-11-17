@@ -12,6 +12,11 @@ a.controller 'BuilderController', ($scope, $builder) ->
     # formObjects
     $scope.form = $builder.forms['default']
 
-a.controller 'FormController', ($scope, $builder) ->
-    # user input
+a.controller 'FormController', ($scope, $validator) ->
+    # user input value
     $scope.input = []
+
+    $scope.submit = ->
+        v = $validator.validate $scope
+        v.success -> console.log 'success'
+        v.error -> console.log 'error'

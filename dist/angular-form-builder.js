@@ -375,7 +375,7 @@
       scope: {
         input: '=ngModel'
       },
-      template: "<div class='form-horizontal'>\n    <div class='fb-form-object' ng-repeat=\"object in form\" fb-form-object=\"object\">\n    </div>\n</div>",
+      template: "<div class='fb-form-object' ng-repeat=\"object in form\" fb-form-object=\"object\">\n</div>",
       controller: 'fbFormController',
       link: function(scope, element, attrs) {
         var $builder, formName;
