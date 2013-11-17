@@ -373,11 +373,10 @@ fbFormObject = ($injector) ->
         component = $builder.components[scope.formObject.component]
 
         # copy current scope.input[X] to $parent.input
-        updateInput = ->
+        updateInput = (value) ->
             input =
                 label: scope.formObject.label
-                value: ''
-            input.value = scope.inputText if scope.inputText
+                value: value ? ''
             scope.$parent.input.splice scope.index, 1, input
 
         for key, value of scope.formObject when key isnt '$$hashKey'
@@ -385,12 +384,18 @@ fbFormObject = ($injector) ->
             # copy formObject.{} to scope.{}
             scope[key] = value
 
+        scope.inputArray = []
         # listen (formObject updated
         scope.$on $builder.broadcastChannel.updateInput, -> updateInput()
         # watch (end-user updated form
-        scope.$watch '[inputText]', ->
-            updateInput()
+        scope.$watch 'inputArray', (newValue, oldValue) ->
+            return if newValue is oldValue
+            checked = []
+            for index of scope.inputArray when scope.inputArray[index]
+                checked.push scope.options[index]
+            updateInput checked.join(', ')
         , yes
+        scope.$watch 'inputText', -> updateInput scope.inputText
 
         # compile
         view = $compile(component.template) scope

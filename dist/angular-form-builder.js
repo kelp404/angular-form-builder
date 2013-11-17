@@ -408,15 +408,12 @@
         $builder = $injector.get('$builder');
         $compile = $injector.get('$compile');
         component = $builder.components[scope.formObject.component];
-        updateInput = function() {
+        updateInput = function(value) {
           var input;
           input = {
             label: scope.formObject.label,
-            value: ''
+            value: value != null ? value : ''
           };
-          if (scope.inputText) {
-            input.value = scope.inputText;
-          }
           return scope.$parent.input.splice(scope.index, 1, input);
         };
         _ref = scope.formObject;
@@ -426,12 +423,26 @@
             scope[key] = value;
           }
         }
+        scope.inputArray = [];
         scope.$on($builder.broadcastChannel.updateInput, function() {
           return updateInput();
         });
-        scope.$watch('[inputText]', function() {
-          return updateInput();
+        scope.$watch('inputArray', function(newValue, oldValue) {
+          var checked, index;
+          if (newValue === oldValue) {
+            return;
+          }
+          checked = [];
+          for (index in scope.inputArray) {
+            if (scope.inputArray[index]) {
+              checked.push(scope.options[index]);
+            }
+          }
+          return updateInput(checked.join(', '));
         }, true);
+        scope.$watch('inputText', function() {
+          return updateInput(scope.inputText);
+        });
         view = $compile(component.template)(scope);
         $(element).append(view);
         return updateInput();
