@@ -465,17 +465,7 @@
 
         } else {
           $input = $template.find("[ng-model='inputText']");
-          if (formObject.required) {
-            $input.attr('required', '');
-          }
-          if (formObject.validation) {
-            $input.attr({
-              validator: formObject.validation,
-              'validator-error': formObject.errorMessage
-            });
-          } else {
-            $input.attr('validator', '');
-          }
+          $input.attr('validator', '{{validation}}');
         }
         view = $compile($template)(scope);
         $(element).append(view);

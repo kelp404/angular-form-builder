@@ -424,13 +424,7 @@ fbFormObject = ($injector) ->
             # like checkbox
         else
             $input = $template.find "[ng-model='inputText']"
-            $input.attr 'required', '' if formObject.required
-            if formObject.validation
-                $input.attr
-                    validator: formObject.validation
-                    'validator-error': formObject.errorMessage
-            else
-                $input.attr 'validator', ''
+            $input.attr 'validator', '{{validation}}'
 
         # compile
         view = $compile($template) scope
