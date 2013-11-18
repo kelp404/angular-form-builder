@@ -31,12 +31,12 @@ module.exports = (grunt) ->
                 files: ['./example/*.scss', './src/*.scss']
                 tasks: ['compass']
                 options:
-                    spawn: false
+                    spawn: no
             coffee:
                 files: ['./src/*.coffee', './components/*.coffee', './example/*.coffee']
                 tasks: ['coffee']
                 options:
-                    spawn: false
+                    spawn: no
 
         connect:
             server:

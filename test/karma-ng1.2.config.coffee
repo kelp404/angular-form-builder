@@ -28,7 +28,7 @@ module.exports = (config) ->
 
         # enable / disable colors in the output (reporters and logs)
         # CLI --colors --no-colors
-        colors: true
+        colors: yes
 
         # level of logging
         # possible values: config.LOG_DISABLE || config.LOG_ERROR || config.LOG_WARN || config.LOG_INFO || config.LOG_DEBUG
@@ -37,7 +37,7 @@ module.exports = (config) ->
 
         # enable / disable watching file and executing tests whenever any file changes
         # CLI --auto-watch --no-auto-watch
-        autoWatch: false
+        autoWatch: no
 
         # Start these browsers, currently available:
         # - Chrome
@@ -56,7 +56,7 @@ module.exports = (config) ->
 
         # Auto run tests on start (when browsers are captured) and exit
         # CLI --single-run --no-single-run
-        singleRun: true
+        singleRun: yes
 
         # report which specs are slower than 500ms
         # CLI --report-slower-than 500
