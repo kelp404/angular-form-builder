@@ -136,7 +136,8 @@ a.provider '$builder', ->
             placeholder:
             options:
             required:
-            validation: RegExp
+            validation: {string} RegExp ex: "/[0-9]/"
+            errorMessage:
         ###
         @forms[name] ?= []
         if index > @forms.length then index = @forms.length

@@ -400,7 +400,7 @@
     return {
       restrict: 'A',
       link: function(scope, element, attrs) {
-        var $builder, $compile, $parse, component, copyValueFormFormObject, formObject, updateInput, view;
+        var $builder, $compile, $input, $parse, $template, component, copyValueFormFormObject, formObject, updateInput, view;
         $builder = $injector.get('$builder');
         $compile = $injector.get('$compile');
         $parse = $injector.get('$parse');
@@ -460,7 +460,24 @@
         scope.$watch(attrs.fbFormObject, function() {
           return copyValueFormFormObject();
         }, true);
-        view = $compile(component.template)(scope);
+        $template = $(component.template);
+        if (component.arrayToText) {
+
+        } else {
+          $input = $template.find("[ng-model='inputText']");
+          if (formObject.required) {
+            $input.attr('required', '');
+          }
+          if (formObject.validation) {
+            $input.attr({
+              validator: formObject.validation,
+              'validator-error': formObject.errorMessage
+            });
+          } else {
+            $input.attr('validator', '');
+          }
+        }
+        view = $compile($template)(scope);
         $(element).append(view);
         if (!component.arrayToText && formObject.options.length > 0) {
           return scope.inputText = formObject.options[0];
@@ -964,7 +981,8 @@
           placeholder:
           options:
           required:
-          validation: RegExp
+          validation: {string} RegExp ex: "/[0-9]/"
+          errorMessage:
       */
 
       if ((_base = _this.forms)[name] == null) {

@@ -418,8 +418,22 @@ fbFormObject = ($injector) ->
             copyValueFormFormObject()
         , yes
 
+        $template = $ component.template
+        # add validator
+        if component.arrayToText
+            # like checkbox
+        else
+            $input = $template.find "[ng-model='inputText']"
+            $input.attr 'required', '' if formObject.required
+            if formObject.validation
+                $input.attr
+                    validator: formObject.validation
+                    'validator-error': formObject.errorMessage
+            else
+                $input.attr 'validator', ''
+
         # compile
-        view = $compile(component.template) scope
+        view = $compile($template) scope
         $(element).append view
 
         if not component.arrayToText and formObject.options.length > 0
