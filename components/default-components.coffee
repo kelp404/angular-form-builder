@@ -110,6 +110,7 @@ config = ($builderProvider) ->
         placeholder: 'placeholder'
         required: no
         options: ['value one', 'value two']
+        arrayToText: yes
         template:
             """
             <div class="form-group">

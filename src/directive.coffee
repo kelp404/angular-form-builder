@@ -399,18 +399,19 @@ fbFormObject = ($injector) ->
         # ----------------------------------------
         # scope
         # ----------------------------------------
-        scope.inputArray = []
         # listen (formObject updated
         scope.$on $builder.broadcastChannel.updateInput, -> updateInput()
-        # watch (end-user updated input of the form
-        scope.$watch 'inputArray', (newValue, oldValue) ->
-            # array input, like checkbox
-            return if newValue is oldValue
-            checked = []
-            for index of scope.inputArray when scope.inputArray[index]
-                checked.push scope.options[index]
-            updateInput checked.join(', ')
-        , yes
+        if component.arrayToText
+            scope.inputArray = []
+            # watch (end-user updated input of the form
+            scope.$watch 'inputArray', (newValue, oldValue) ->
+                # array input, like checkbox
+                return if newValue is oldValue
+                checked = []
+                for index of scope.inputArray when scope.inputArray[index]
+                    checked.push scope.options[index]
+                updateInput checked.join(', ')
+            , yes
         scope.$watch 'inputText', -> updateInput scope.inputText
         # watch (management updated form objects
         scope.$watch attrs.fbFormObject, ->
@@ -421,8 +422,8 @@ fbFormObject = ($injector) ->
         view = $compile(component.template) scope
         $(element).append view
 
-        # execute updateInput() for set-up
-        updateInput()
+        if not component.arrayToText and formObject.options.length > 0
+            scope.inputText = formObject.options[0]
 
 fbFormObject.$inject = ['$injector']
 a.directive 'fbFormObject', fbFormObject

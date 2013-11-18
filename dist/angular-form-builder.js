@@ -435,23 +435,25 @@
           }
           return _results;
         };
-        scope.inputArray = [];
         scope.$on($builder.broadcastChannel.updateInput, function() {
           return updateInput();
         });
-        scope.$watch('inputArray', function(newValue, oldValue) {
-          var checked, index;
-          if (newValue === oldValue) {
-            return;
-          }
-          checked = [];
-          for (index in scope.inputArray) {
-            if (scope.inputArray[index]) {
-              checked.push(scope.options[index]);
+        if (component.arrayToText) {
+          scope.inputArray = [];
+          scope.$watch('inputArray', function(newValue, oldValue) {
+            var checked, index;
+            if (newValue === oldValue) {
+              return;
             }
-          }
-          return updateInput(checked.join(', '));
-        }, true);
+            checked = [];
+            for (index in scope.inputArray) {
+              if (scope.inputArray[index]) {
+                checked.push(scope.options[index]);
+              }
+            }
+            return updateInput(checked.join(', '));
+          }, true);
+        }
         scope.$watch('inputText', function() {
           return updateInput(scope.inputText);
         });
@@ -460,7 +462,9 @@
         }, true);
         view = $compile(component.template)(scope);
         $(element).append(view);
-        return updateInput();
+        if (!component.arrayToText && formObject.options.length > 0) {
+          return scope.inputText = formObject.options[0];
+        }
       }
     };
   };
@@ -842,7 +846,7 @@
       return $injector = injector;
     };
     this.convertComponent = function(name, component) {
-      var result, _ref, _ref1, _ref2, _ref3, _ref4, _ref5, _ref6, _ref7;
+      var result, _ref, _ref1, _ref2, _ref3, _ref4, _ref5, _ref6, _ref7, _ref8;
       result = {
         name: name,
         group: (_ref = component.group) != null ? _ref : 'Default',
@@ -853,6 +857,7 @@
         validation: (_ref5 = component.validation) != null ? _ref5 : '/.*/',
         errorMessage: (_ref6 = component.errorMessage) != null ? _ref6 : '',
         options: (_ref7 = component.options) != null ? _ref7 : [],
+        arrayToText: (_ref8 = component.arrayToText) != null ? _ref8 : false,
         template: component.template,
         popoverTemplate: component.popoverTemplate
       };
@@ -912,6 +917,7 @@
           validation: angular-validator
           errorMessage: validator error message
           options: []
+          arrayToText: yes / no (checkbox could use this to convert input
           template: html template
           popoverTemplate: html template
       */

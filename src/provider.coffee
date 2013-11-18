@@ -55,6 +55,7 @@ a.provider '$builder', ->
             validation: component.validation ? '/.*/'
             errorMessage: component.errorMessage ? ''
             options: component.options ? []
+            arrayToText: component.arrayToText ? no
             template: component.template
             popoverTemplate: component.popoverTemplate
         if not result.template then console.error "template is empty"
@@ -100,6 +101,7 @@ a.provider '$builder', ->
             validation: angular-validator
             errorMessage: validator error message
             options: []
+            arrayToText: yes / no (checkbox could use this to convert input
             template: html template
             popoverTemplate: html template
         ###
