@@ -410,7 +410,7 @@ fbFormObject = ($injector) ->
                 checked = []
                 for index of scope.inputArray when scope.inputArray[index]
                     checked.push scope.options[index]
-                updateInput checked.join(', ')
+                scope.inputText = checked.join ', '
             , yes
         scope.$watch 'inputText', -> updateInput scope.inputText
         # watch (management updated form objects
@@ -420,13 +420,10 @@ fbFormObject = ($injector) ->
 
         $template = $ component.template
         # add validator
-        if component.arrayToText
-            # like checkbox
-        else
-            $input = $template.find "[ng-model='inputText']"
-            $input.attr
-                validator: '{{validation}}'
-                'validator-error': formObject.errorMessage
+        $input = $template.find "[ng-model='inputText']"
+        $input.attr
+            validator: '{{validation}}'
+            'validator-error': formObject.errorMessage
 
         # compile
         view = $compile($template) scope

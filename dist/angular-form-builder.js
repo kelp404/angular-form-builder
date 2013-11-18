@@ -451,7 +451,7 @@
                 checked.push(scope.options[index]);
               }
             }
-            return updateInput(checked.join(', '));
+            return scope.inputText = checked.join(', ');
           }, true);
         }
         scope.$watch('inputText', function() {
@@ -461,15 +461,11 @@
           return copyValueFormFormObject();
         }, true);
         $template = $(component.template);
-        if (component.arrayToText) {
-
-        } else {
-          $input = $template.find("[ng-model='inputText']");
-          $input.attr({
-            validator: '{{validation}}',
-            'validator-error': formObject.errorMessage
-          });
-        }
+        $input = $template.find("[ng-model='inputText']");
+        $input.attr({
+          validator: '{{validation}}',
+          'validator-error': formObject.errorMessage
+        });
         view = $compile($template)(scope);
         $(element).append(view);
         if (!component.arrayToText && formObject.options.length > 0) {

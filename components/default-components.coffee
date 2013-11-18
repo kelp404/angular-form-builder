@@ -116,6 +116,7 @@ config = ($builderProvider) ->
             <div class="form-group">
                 <label for="{{name+index}}" class="col-md-4 control-label" ng-class="{'fb-required':required}">{{label}}</label>
                 <div class="col-md-8">
+                    <input type='hidden' ng-model="inputText" validator-required="{{required}}"/>
                     <div class='checkbox' ng-repeat="item in options track by $index">
                         <label><input type='checkbox' ng-model="$parent.inputArray[$index]" value='item'/>
                             {{item}}
