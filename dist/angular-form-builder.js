@@ -399,26 +399,23 @@
   fbFormObject = function($injector) {
     return {
       restrict: 'A',
-      scope: {
-        index: '&',
-        formObject: '=fbFormObject'
-      },
       link: function(scope, element, attrs) {
-        var $builder, $compile, component, key, updateInput, value, view, _ref;
+        var $builder, $compile, $parse, component, formObject, key, updateInput, value, view;
         $builder = $injector.get('$builder');
         $compile = $injector.get('$compile');
-        component = $builder.components[scope.formObject.component];
+        $parse = $injector.get('$parse');
+        formObject = $parse(attrs.fbFormObject)(scope);
+        component = $builder.components[formObject.component];
         updateInput = function(value) {
           var input;
           input = {
-            label: scope.formObject.label,
+            label: formObject.label,
             value: value != null ? value : ''
           };
-          return scope.$parent.input.splice(scope.index, 1, input);
+          return scope.$parent.input.splice(scope.$index, 1, input);
         };
-        _ref = scope.formObject;
-        for (key in _ref) {
-          value = _ref[key];
+        for (key in formObject) {
+          value = formObject[key];
           if (key !== '$$hashKey') {
             scope[key] = value;
           }

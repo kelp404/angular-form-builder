@@ -361,25 +361,25 @@ a.directive 'fbForm', fbForm
 # ----------------------------------------
 fbFormObject = ($injector) ->
     restrict: 'A'
-    scope:
-        index: '&'
-        formObject: '=fbFormObject'
     link: (scope, element, attrs) ->
         # providers
         $builder = $injector.get '$builder'
         $compile = $injector.get '$compile'
+        $parse = $injector.get '$parse'
 
+        # get form object
+        formObject = $parse(attrs.fbFormObject) scope
         # get component
-        component = $builder.components[scope.formObject.component]
+        component = $builder.components[formObject.component]
 
         # copy current scope.input[X] to $parent.input
         updateInput = (value) ->
             input =
-                label: scope.formObject.label
+                label: formObject.label
                 value: value ? ''
-            scope.$parent.input.splice scope.index, 1, input
+            scope.$parent.input.splice scope.$index, 1, input
 
-        for key, value of scope.formObject when key isnt '$$hashKey'
+        for key, value of formObject when key isnt '$$hashKey'
             # ng-repeat="object in form"
             # copy formObject.{} to scope.{}
             scope[key] = value
