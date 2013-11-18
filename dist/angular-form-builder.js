@@ -400,13 +400,18 @@
     return {
       restrict: 'A',
       link: function(scope, element, attrs) {
-        var $builder, $compile, $parse, component, formObject, key, updateInput, value, view;
+        var $builder, $compile, $parse, component, copyValueFormFormObject, formObject, updateInput, view;
         $builder = $injector.get('$builder');
         $compile = $injector.get('$compile');
         $parse = $injector.get('$parse');
         formObject = $parse(attrs.fbFormObject)(scope);
         component = $builder.components[formObject.component];
         updateInput = function(value) {
+          /*
+          Copy current scope.input[X] to $parent.input.
+          @param value: The input value.
+          */
+
           var input;
           input = {
             label: formObject.label,
@@ -414,12 +419,22 @@
           };
           return scope.$parent.input.splice(scope.$index, 1, input);
         };
-        for (key in formObject) {
-          value = formObject[key];
-          if (key !== '$$hashKey') {
-            scope[key] = value;
+        copyValueFormFormObject = function() {
+          /*
+          Copy formObject.{} to scope.{}.
+          `ng-repeat="object in form"`
+          */
+
+          var key, value, _results;
+          _results = [];
+          for (key in formObject) {
+            value = formObject[key];
+            if (key !== '$$hashKey') {
+              _results.push(scope[key] = value);
+            }
           }
-        }
+          return _results;
+        };
         scope.inputArray = [];
         scope.$on($builder.broadcastChannel.updateInput, function() {
           return updateInput();
@@ -440,6 +455,9 @@
         scope.$watch('inputText', function() {
           return updateInput(scope.inputText);
         });
+        scope.$watch(attrs.fbFormObject, function() {
+          return copyValueFormFormObject();
+        }, true);
         view = $compile(component.template)(scope);
         $(element).append(view);
         return updateInput();

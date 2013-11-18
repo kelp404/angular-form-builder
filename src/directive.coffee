@@ -362,33 +362,49 @@ a.directive 'fbForm', fbForm
 fbFormObject = ($injector) ->
     restrict: 'A'
     link: (scope, element, attrs) ->
+        # ----------------------------------------
         # providers
+        # ----------------------------------------
         $builder = $injector.get '$builder'
         $compile = $injector.get '$compile'
         $parse = $injector.get '$parse'
 
-        # get form object
+        # ----------------------------------------
+        # variables
+        # ----------------------------------------
         formObject = $parse(attrs.fbFormObject) scope
-        # get component
         component = $builder.components[formObject.component]
 
-        # copy current scope.input[X] to $parent.input
+        # ----------------------------------------
+        # methods
+        # ----------------------------------------
         updateInput = (value) ->
+            ###
+            Copy current scope.input[X] to $parent.input.
+            @param value: The input value.
+            ###
             input =
                 label: formObject.label
                 value: value ? ''
             scope.$parent.input.splice scope.$index, 1, input
 
-        for key, value of formObject when key isnt '$$hashKey'
-            # ng-repeat="object in form"
-            # copy formObject.{} to scope.{}
-            scope[key] = value
+        copyValueFormFormObject = ->
+            ###
+            Copy formObject.{} to scope.{}.
+            `ng-repeat="object in form"`
+            ###
+            for key, value of formObject when key isnt '$$hashKey'
+                scope[key] = value
 
+        # ----------------------------------------
+        # scope
+        # ----------------------------------------
         scope.inputArray = []
         # listen (formObject updated
         scope.$on $builder.broadcastChannel.updateInput, -> updateInput()
-        # watch (end-user updated form
+        # watch (end-user updated input of the form
         scope.$watch 'inputArray', (newValue, oldValue) ->
+            # array input, like checkbox
             return if newValue is oldValue
             checked = []
             for index of scope.inputArray when scope.inputArray[index]
@@ -396,6 +412,10 @@ fbFormObject = ($injector) ->
             updateInput checked.join(', ')
         , yes
         scope.$watch 'inputText', -> updateInput scope.inputText
+        # watch (management updated form objects
+        scope.$watch attrs.fbFormObject, ->
+            copyValueFormFormObject()
+        , yes
 
         # compile
         view = $compile(component.template) scope
