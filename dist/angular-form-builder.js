@@ -464,7 +464,7 @@
         $input = $template.find("[ng-model='inputText']");
         $input.attr({
           validator: '{{validation}}',
-          'validator-error': formObject.errorMessage
+          'validator-error': '{{errorMessage}}'
         });
         view = $compile($template)(scope);
         $(element).append(view);
