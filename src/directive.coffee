@@ -85,8 +85,10 @@ fbBuilder = ($injector) ->
                 $(element).find('.empty').remove()
             up: (e, isHover, draggable) ->
                 beginMove = yes
-                # click event
-                return if not $drag.isMouseMoved()
+                if not $drag.isMouseMoved()
+                    # click event
+                    $(element).find('.empty').remove()
+                    return
 
                 if not isHover and draggable.mode is 'drag'
                     # remove the form object by draggin out

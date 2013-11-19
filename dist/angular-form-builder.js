@@ -131,6 +131,7 @@
             var formObject, newIndex, oldIndex;
             beginMove = true;
             if (!$drag.isMouseMoved()) {
+              $(element).find('.empty').remove();
               return;
             }
             if (!isHover && draggable.mode === 'drag') {
