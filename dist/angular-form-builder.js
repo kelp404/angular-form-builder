@@ -123,7 +123,7 @@
             }
             if (!isHover && draggable.mode === 'drag') {
               formObject = draggable.object.formObject;
-              $builder.removeFormObject(formObject.name, formObject.index);
+              $builder.removeFormObject(attrs.fbBuilder, formObject.index);
             } else if (isHover) {
               if (draggable.mode === 'mirror') {
                 $builder.insertFormObject(formName, $(element).find('.empty').index('.fb-form-object-editable'), {
@@ -885,7 +885,6 @@
         console.error("component " + formObject.component + " was not registered.");
       }
       result = {
-        name: name,
         component: formObject.component,
         draggable: (_ref = formObject.draggable) != null ? _ref : true,
         index: (_ref1 = formObject.index) != null ? _ref1 : 0,

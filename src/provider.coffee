@@ -66,7 +66,6 @@ a.provider '$builder', ->
         component = @components[formObject.component]
         console.error "component #{formObject.component} was not registered." if not component?
         result =
-            name: name
             component: formObject.component
             draggable: formObject.draggable ? yes
             index: formObject.index ? 0

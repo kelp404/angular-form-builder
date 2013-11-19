@@ -90,7 +90,7 @@ fbBuilder = ($injector) ->
                 if not isHover and draggable.mode is 'drag'
                     # remove the form object by draggin out
                     formObject = draggable.object.formObject
-                    $builder.removeFormObject formObject.name, formObject.index
+                    $builder.removeFormObject attrs.fbBuilder, formObject.index
                 else if isHover
                     if draggable.mode is 'mirror'
                         # insert a form object
