@@ -51,6 +51,11 @@ a.provider '$drag', ->
     @getNewId = => "#{@currentId++}"
 
 
+    @setupEasing = ->
+        jQuery.extend jQuery.easing,
+            easeOutQuad: (x, t, b, c, d) -> -c * (t /= d) * (t - 2) + b
+
+
     @setupProviders = (injector) ->
         ###
         Setup providers.
@@ -86,6 +91,44 @@ a.provider '$drag', ->
         isHover.x and isHover.y
 
 
+    delay = (ms, func) ->
+        setTimeout ->
+            func()
+        , ms
+    @autoScroll =
+        up: no
+        down: no
+        scrolling: no
+        scroll: =>
+            @autoScroll.scrolling = yes
+            if @autoScroll.up
+                $('html, body').dequeue().animate
+                    scrollTop: $(window).scrollTop() - 50
+                , 100, 'easeOutQuad'
+                delay 100, => @autoScroll.scroll()
+            else if @autoScroll.down
+                $('html, body').dequeue().animate
+                    scrollTop: $(window).scrollTop() + 50
+                , 100, 'easeOutQuad'
+                delay 100, => @autoScroll.scroll()
+            else
+                @autoScroll.scrolling = no
+        start: (e) =>
+            if e.clientY < 50
+                # up
+                @autoScroll.up = yes
+                @autoScroll.down = no
+                @autoScroll.scroll() if not @autoScroll.scrolling
+            else if e.clientY > $(window).innerHeight() - 50
+                # down
+                @autoScroll.up = no
+                @autoScroll.down = yes
+                @autoScroll.scroll() if not @autoScroll.scrolling
+            else
+                @autoScroll.up = no
+                @autoScroll.down = no
+
+
     @dragMirrorMode = ($element, defer=yes, object) =>
         result =
             id: @getNewId()
@@ -112,6 +155,8 @@ a.provider '$drag', ->
                 $clone.offset
                     left: e.pageX - $clone.width() / 2
                     top: e.pageY - $clone.height() / 2
+
+                @autoScroll.start e
 
                 # execute callback for droppables
                 for id, droppable of @data.droppables
@@ -160,6 +205,8 @@ a.provider '$drag', ->
                 $element.offset
                     left: e.pageX - $element.width() / 2
                     top: e.pageY - $element.height() / 2
+
+                @autoScroll.start e
 
                 # execute callback for droppables
                 for id, droppable of @data.droppables
@@ -246,6 +293,7 @@ a.provider '$drag', ->
     # $get
     # ----------------------------------------
     @get = ($injector) ->
+        @setupEasing()
         @setupProviders $injector
 
         isMouseMoved: @isMouseMoved

@@ -504,7 +504,7 @@
   a = angular.module('builder.drag', []);
 
   a.provider('$drag', function() {
-    var $injector, $rootScope,
+    var $injector, $rootScope, delay,
       _this = this;
     $injector = null;
     $rootScope = null;
@@ -555,6 +555,13 @@
     this.getNewId = function() {
       return "" + (_this.currentId++);
     };
+    this.setupEasing = function() {
+      return jQuery.extend(jQuery.easing, {
+        easeOutQuad: function(x, t, b, c, d) {
+          return -c * (t /= d) * (t - 2) + b;
+        }
+      });
+    };
     this.setupProviders = function(injector) {
       /*
       Setup providers.
@@ -594,6 +601,54 @@
       isHover.y = isHover.y || offsetA.top + sizeA.height > offsetB.top && offsetA.top + sizeA.height < offsetB.top + sizeB.height;
       return isHover.x && isHover.y;
     };
+    delay = function(ms, func) {
+      return setTimeout(function() {
+        return func();
+      }, ms);
+    };
+    this.autoScroll = {
+      up: false,
+      down: false,
+      scrolling: false,
+      scroll: function() {
+        _this.autoScroll.scrolling = true;
+        if (_this.autoScroll.up) {
+          $('html, body').dequeue().animate({
+            scrollTop: $(window).scrollTop() - 50
+          }, 100, 'easeOutQuad');
+          return delay(100, function() {
+            return _this.autoScroll.scroll();
+          });
+        } else if (_this.autoScroll.down) {
+          $('html, body').dequeue().animate({
+            scrollTop: $(window).scrollTop() + 50
+          }, 100, 'easeOutQuad');
+          return delay(100, function() {
+            return _this.autoScroll.scroll();
+          });
+        } else {
+          return _this.autoScroll.scrolling = false;
+        }
+      },
+      start: function(e) {
+        if (e.clientY < 50) {
+          _this.autoScroll.up = true;
+          _this.autoScroll.down = false;
+          if (!_this.autoScroll.scrolling) {
+            return _this.autoScroll.scroll();
+          }
+        } else if (e.clientY > $(window).innerHeight() - 50) {
+          _this.autoScroll.up = false;
+          _this.autoScroll.down = true;
+          if (!_this.autoScroll.scrolling) {
+            return _this.autoScroll.scroll();
+          }
+        } else {
+          _this.autoScroll.up = false;
+          return _this.autoScroll.down = false;
+        }
+      }
+    };
     this.dragMirrorMode = function($element, defer, object) {
       var result;
       if (defer == null) {
@@ -629,6 +684,7 @@
             left: e.pageX - $clone.width() / 2,
             top: e.pageY - $clone.height() / 2
           });
+          _this.autoScroll.start(e);
           _ref = _this.data.droppables;
           _results = [];
           for (id in _ref) {
@@ -697,6 +753,7 @@
             left: e.pageX - $element.width() / 2,
             top: e.pageY - $element.height() / 2
           });
+          _this.autoScroll.start(e);
           _ref = _this.data.droppables;
           for (id in _ref) {
             droppable = _ref[id];
@@ -814,6 +871,7 @@
       return result;
     };
     this.get = function($injector) {
+      this.setupEasing();
       this.setupProviders($injector);
       return {
         isMouseMoved: this.isMouseMoved,
