@@ -36,7 +36,6 @@ fbBuilder = ($injector) ->
 
         $(element).addClass 'fb-builder'
         $drag.droppable $(element),
-            mode: 'custom'
             move: (e, draggable) ->
                 if beginMove
                     # hide all popovers

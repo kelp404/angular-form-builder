@@ -232,10 +232,9 @@ a.provider '$drag', ->
         result
 
 
-    @dropCustomMode = ($element, options) =>
+    @dropMode = ($element, options) =>
         result =
             id: @getNewId()
-            mode: 'custom'
             element: $element[0]
             move: (e, draggable) ->
                 $rootScope.$apply -> options.move?(e, draggable)
@@ -275,17 +274,15 @@ a.provider '$drag', ->
         Make the element coulde be drop.
         @param $element: The jQuery element.
         @param options: The droppable options.
-            mode: 'default' [default], 'custom'
             move: The custom mouse move callback. (e, draggable)->
             up: The custom mouse up callback. (e, isHover, draggable)->
             out: The custom mouse out callback. (e, draggable)->
         ###
         result = []
-        if options.mode is 'custom'
-            for element in $element
-                droppable = @dropCustomMode $(element), options
-                result.push droppable
-                @data.droppables[droppable.id] = droppable
+        for element in $element
+            droppable = @dropMode $(element), options
+            result.push droppable
+            @data.droppables[droppable.id] = droppable
         result
 
 

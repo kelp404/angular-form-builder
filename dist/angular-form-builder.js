@@ -77,7 +77,6 @@
         beginMove = true;
         $(element).addClass('fb-builder');
         return $drag.droppable($(element), {
-          mode: 'custom',
           move: function(e, draggable) {
             var $empty, $formObject, $formObjects, height, index, offset, positions, _i, _j, _ref, _ref1;
             if (beginMove) {
@@ -788,11 +787,10 @@
       });
       return result;
     };
-    this.dropCustomMode = function($element, options) {
+    this.dropMode = function($element, options) {
       var result;
       result = {
         id: _this.getNewId(),
-        mode: 'custom',
         element: $element[0],
         move: function(e, draggable) {
           return $rootScope.$apply(function() {
@@ -853,20 +851,17 @@
       Make the element coulde be drop.
       @param $element: The jQuery element.
       @param options: The droppable options.
-          mode: 'default' [default], 'custom'
           move: The custom mouse move callback. (e, draggable)->
           up: The custom mouse up callback. (e, isHover, draggable)->
           out: The custom mouse out callback. (e, draggable)->
       */
 
       result = [];
-      if (options.mode === 'custom') {
-        for (_i = 0, _len = $element.length; _i < _len; _i++) {
-          element = $element[_i];
-          droppable = _this.dropCustomMode($(element), options);
-          result.push(droppable);
-          _this.data.droppables[droppable.id] = droppable;
-        }
+      for (_i = 0, _len = $element.length; _i < _len; _i++) {
+        element = $element[_i];
+        droppable = _this.dropMode($(element), options);
+        result.push(droppable);
+        _this.data.droppables[droppable.id] = droppable;
       }
       return result;
     };
