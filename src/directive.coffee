@@ -341,6 +341,7 @@ fbForm = ($injector) ->
     link: (scope, element, attrs) ->
         # providers
         $builder = $injector.get '$builder'
+        $timeout = $injector.get '$timeout'
 
         # form name
         formName = attrs.fbForm
@@ -351,7 +352,7 @@ fbForm = ($injector) ->
             if scope.input.length > scope.form.length
                 scope.input.splice scope.form.length
             # tell children to update input value
-            scope.$broadcast $builder.broadcastChannel.updateInput
+            $timeout -> scope.$broadcast $builder.broadcastChannel.updateInput
         , yes
 
 fbForm.$inject = ['$injector']
@@ -402,7 +403,7 @@ fbFormObject = ($injector) ->
         # scope
         # ----------------------------------------
         # listen (formObject updated
-        scope.$on $builder.broadcastChannel.updateInput, -> updateInput()
+        scope.$on $builder.broadcastChannel.updateInput, -> updateInput scope.inputText
         if component.arrayToText
             scope.inputArray = []
             # watch (end-user updated input of the form

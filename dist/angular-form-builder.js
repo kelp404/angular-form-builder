@@ -391,15 +391,18 @@
       template: "<div class='fb-form-object' ng-repeat=\"object in form\" fb-form-object=\"object\">\n</div>",
       controller: 'fbFormController',
       link: function(scope, element, attrs) {
-        var $builder, formName;
+        var $builder, $timeout, formName;
         $builder = $injector.get('$builder');
+        $timeout = $injector.get('$timeout');
         formName = attrs.fbForm;
         scope.form = $builder.forms[formName];
         return scope.$watch('form', function() {
           if (scope.input.length > scope.form.length) {
             scope.input.splice(scope.form.length);
           }
-          return scope.$broadcast($builder.broadcastChannel.updateInput);
+          return $timeout(function() {
+            return scope.$broadcast($builder.broadcastChannel.updateInput);
+          });
         }, true);
       }
     };
@@ -450,7 +453,7 @@
           return _results;
         };
         scope.$on($builder.broadcastChannel.updateInput, function() {
-          return updateInput();
+          return updateInput(scope.inputText);
         });
         if (component.arrayToText) {
           scope.inputArray = [];
