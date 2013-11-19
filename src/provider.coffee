@@ -92,9 +92,9 @@ a.provider '$builder', ->
         Register the component for form-builder.
         @param name: The component name.
         @param component: The component object.
-            group: The compoent group.
+            group: The component group.
             label: The label of the input.
-            descriptiont: The description of the input.
+            description: The description of the input.
             placeholder: The placeholder of the input.
             required: yes / no
             validation: angular-validator
