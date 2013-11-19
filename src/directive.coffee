@@ -279,18 +279,16 @@ fbComponents = ->
     template:
         """
         <ul ng-if="groups.length > 1" class="nav nav-tabs nav-justified">
-            <li ng-repeat="group in groups" ng-class="{active:status.activeGroup==group}">
-                <a href='#' ng-click="action.selectGroup($event, group)">{{group}}</a>
+            <li ng-repeat="group in groups" ng-class="{active:activeGroup==group}">
+                <a href='#' ng-click="selectGroup($event, group)">{{group}}</a>
             </li>
         </ul>
         <div class='form-horizontal'>
-            <div class='fb-component'
-                ng-repeat="component in components|filter:{group:status.activeGroup}"
+            <div class='fb-component' ng-repeat="component in components"
                 fb-component="component"></div>
         </div>
         """
     controller: 'fbComponentsController'
-
 a.directive 'fbComponents', fbComponents
 
 # ----------------------------------------

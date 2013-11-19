@@ -15,17 +15,29 @@
   fbComponentsController = function($scope, $injector) {
     var $builder;
     $builder = $injector.get('$builder');
-    $scope.groups = $builder.groups;
-    $scope.components = $builder.componentsArray;
-    $scope.status = {
-      activeGroup: $scope.groups[0]
-    };
-    return $scope.action = {
-      selectGroup: function($event, group) {
+    $scope.selectGroup = function($event, group) {
+      var component, name, _ref, _results;
+      if ($event != null) {
         $event.preventDefault();
-        return $scope.status.activeGroup = group;
       }
+      $scope.activeGroup = group;
+      $scope.components = [];
+      _ref = $builder.components;
+      _results = [];
+      for (name in _ref) {
+        component = _ref[name];
+        if (component.group === group) {
+          _results.push($scope.components.push(component));
+        }
+      }
+      return _results;
     };
+    $scope.groups = $builder.groups;
+    $scope.activeGroup = $scope.groups[0];
+    $scope.allComponents = $builder.components;
+    return $scope.$watch('allComponents', function() {
+      return $scope.selectGroup(null, $scope.activeGroup);
+    });
   };
 
   fbComponentsController.$inject = ['$scope', '$injector'];
@@ -331,7 +343,7 @@
   fbComponents = function() {
     return {
       restrict: 'A',
-      template: "<ul ng-if=\"groups.length > 1\" class=\"nav nav-tabs nav-justified\">\n    <li ng-repeat=\"group in groups\" ng-class=\"{active:status.activeGroup==group}\">\n        <a href='#' ng-click=\"action.selectGroup($event, group)\">{{group}}</a>\n    </li>\n</ul>\n<div class='form-horizontal'>\n    <div class='fb-component'\n        ng-repeat=\"component in components|filter:{group:status.activeGroup}\"\n        fb-component=\"component\"></div>\n</div>",
+      template: "<ul ng-if=\"groups.length > 1\" class=\"nav nav-tabs nav-justified\">\n    <li ng-repeat=\"group in groups\" ng-class=\"{active:activeGroup==group}\">\n        <a href='#' ng-click=\"selectGroup($event, group)\">{{group}}</a>\n    </li>\n</ul>\n<div class='form-horizontal'>\n    <div class='fb-component' ng-repeat=\"component in components\"\n        fb-component=\"component\"></div>\n</div>",
       controller: 'fbComponentsController'
     };
   };
@@ -841,7 +853,6 @@
       _this = this;
     $injector = null;
     this.components = {};
-    this.componentsArray = [];
     this.groups = [];
     this.broadcastChannel = {
       updateInput: '$updateInput'
@@ -930,7 +941,6 @@
       if (_this.components[name] == null) {
         newComponent = _this.convertComponent(name, component);
         _this.components[name] = newComponent;
-        _this.componentsArray.push(newComponent);
         if (_ref = newComponent.group, __indexOf.call(_this.groups, _ref) < 0) {
           _this.groups.push(newComponent.group);
         }
@@ -1017,7 +1027,6 @@
       this.setupProviders($injector);
       return {
         components: this.components,
-        componentsArray: this.componentsArray,
         groups: this.groups,
         forms: this.forms,
         broadcastChannel: this.broadcastChannel,

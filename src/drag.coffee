@@ -48,8 +48,7 @@ a.provider '$drag', ->
     # private methods
     # ----------------------------------------
     @currentId = 0
-    @getNewId = =>
-        return "#{@currentId++}"
+    @getNewId = => "#{@currentId++}"
 
 
     @setupProviders = (injector) ->

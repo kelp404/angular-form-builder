@@ -25,7 +25,6 @@ a.provider '$builder', ->
     # ----------------------------------------
     # all components
     @components = {}
-    @componentsArray = []
     # all groups of components
     @groups = []
     @broadcastChannel =
@@ -108,7 +107,6 @@ a.provider '$builder', ->
             # regist the new component
             newComponent = @convertComponent name, component
             @components[name] = newComponent
-            @componentsArray.push newComponent
             if newComponent.group not in @groups
                 @groups.push newComponent.group
         else
@@ -174,7 +172,6 @@ a.provider '$builder', ->
         @setupProviders $injector
 
         components: @components
-        componentsArray: @componentsArray
         groups: @groups
         forms: @forms
         broadcastChannel: @broadcastChannel
