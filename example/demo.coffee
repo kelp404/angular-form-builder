@@ -1,5 +1,5 @@
 
-a = angular.module 'app', ['builder', 'builder.components']
+a = angular.module 'app', ['builder', 'builder.components', 'validator.rules']
 
 a.controller 'BuilderController', ($scope, $builder) ->
     $builder.addFormObject 'default',

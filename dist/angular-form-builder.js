@@ -46,7 +46,7 @@
 (function() {
   var a, fbBuilder, fbComponent, fbComponents, fbForm, fbFormObject, fbFormObjectEditable;
 
-  a = angular.module('builder.directive', ['builder.provider', 'builder.controller', 'builder.drag']);
+  a = angular.module('builder.directive', ['builder.provider', 'builder.controller', 'builder.drag', 'validator.rules']);
 
   fbBuilder = function($injector) {
     return {
@@ -812,7 +812,7 @@
 }).call(this);
 
 (function() {
-  angular.module('builder', ['builder.directive', 'validator.rules']);
+  angular.module('builder', ['builder.directive']);
 
 }).call(this);
 
