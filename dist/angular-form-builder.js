@@ -426,6 +426,7 @@
 
           var input;
           input = {
+            id: formObject.id,
             label: formObject.label,
             value: value != null ? value : ''
           };
@@ -857,8 +858,12 @@
     this.broadcastChannel = {
       updateInput: '$updateInput'
     };
-    this.forms = {};
-    this.forms['default'] = [];
+    this.forms = {
+      "default": []
+    };
+    this.formsId = {
+      "default": 0
+    };
     this.setupProviders = function(injector) {
       return $injector = injector;
     };
@@ -887,7 +892,7 @@
       return result;
     };
     this.convertFormObject = function(name, formObject) {
-      var component, result, _ref, _ref1, _ref2, _ref3, _ref4, _ref5, _ref6, _ref7, _ref8;
+      var component, exist, form, result, _i, _len, _ref, _ref1, _ref10, _ref2, _ref3, _ref4, _ref5, _ref6, _ref7, _ref8, _ref9;
       if (formObject == null) {
         formObject = {};
       }
@@ -895,17 +900,34 @@
       if (component == null) {
         console.error("component " + formObject.component + " was not registered.");
       }
+      if (formObject.id) {
+        exist = false;
+        _ref = this.forms[name];
+        for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+          form = _ref[_i];
+          if (!(formObject.id <= form.id)) {
+            continue;
+          }
+          formObject.id = this.formsId[name]++;
+          exist = true;
+          break;
+        }
+        if (!exist) {
+          this.formsId[name] = formObject.id + 1;
+        }
+      }
       result = {
+        id: (_ref1 = formObject.id) != null ? _ref1 : this.formsId[name]++,
         component: formObject.component,
-        draggable: (_ref = formObject.draggable) != null ? _ref : true,
-        index: (_ref1 = formObject.index) != null ? _ref1 : 0,
-        label: (_ref2 = formObject.label) != null ? _ref2 : component.label,
-        description: (_ref3 = formObject.description) != null ? _ref3 : component.description,
-        placeholder: (_ref4 = formObject.placeholder) != null ? _ref4 : component.placeholder,
-        options: (_ref5 = formObject.options) != null ? _ref5 : component.options,
-        required: (_ref6 = formObject.required) != null ? _ref6 : component.required,
-        validation: (_ref7 = formObject.validation) != null ? _ref7 : component.validation,
-        errorMessage: (_ref8 = formObject.errorMessage) != null ? _ref8 : component.errorMessage
+        draggable: (_ref2 = formObject.draggable) != null ? _ref2 : true,
+        index: (_ref3 = formObject.index) != null ? _ref3 : 0,
+        label: (_ref4 = formObject.label) != null ? _ref4 : component.label,
+        description: (_ref5 = formObject.description) != null ? _ref5 : component.description,
+        placeholder: (_ref6 = formObject.placeholder) != null ? _ref6 : component.placeholder,
+        options: (_ref7 = formObject.options) != null ? _ref7 : component.options,
+        required: (_ref8 = formObject.required) != null ? _ref8 : component.required,
+        validation: (_ref9 = formObject.validation) != null ? _ref9 : component.validation,
+        errorMessage: (_ref10 = formObject.errorMessage) != null ? _ref10 : component.errorMessage
       };
       return result;
     };
@@ -949,7 +971,7 @@
       }
     };
     this.addFormObject = function(name, formObject) {
-      var _base;
+      var _base, _base1;
       if (formObject == null) {
         formObject = {};
       }
@@ -960,10 +982,13 @@
       if ((_base = _this.forms)[name] == null) {
         _base[name] = [];
       }
+      if ((_base1 = _this.formsId)[name] == null) {
+        _base1[name] = 0;
+      }
       return _this.insertFormObject(name, _this.forms[name].length, formObject);
     };
     this.insertFormObject = function(name, index, formObject) {
-      var _base;
+      var _base, _base1;
       if (formObject == null) {
         formObject = {};
       }
@@ -971,6 +996,7 @@
       Insert the form object into the form at {index}.
       @param name: The form name.
       @param form: The form object.
+          id: {string}
           component: The component name
           draggable: yes
           index: 0
@@ -985,6 +1011,9 @@
 
       if ((_base = _this.forms)[name] == null) {
         _base[name] = [];
+      }
+      if ((_base1 = _this.formsId)[name] == null) {
+        _base1[name] = 0;
       }
       if (index > _this.forms.length) {
         index = _this.forms.length;

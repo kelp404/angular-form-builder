@@ -383,6 +383,7 @@ fbFormObject = ($injector) ->
             @param value: The input value.
             ###
             input =
+                id: formObject.id
                 label: formObject.label
                 value: value ? ''
             scope.$parent.input.splice scope.$index, 1, input

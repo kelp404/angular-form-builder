@@ -33,8 +33,10 @@ a.provider '$builder', ->
     # forms
     #   builder mode: `fb-builder` you could drag and drop to build the form.
     #   form mode: `fb-form` this is the form for user to input value.
-    @forms = {}
-    @forms['default'] = []
+    @forms =
+        default: []
+    @formsId =
+        default: 0
 
 
     # ----------------------------------------
@@ -64,7 +66,15 @@ a.provider '$builder', ->
     @convertFormObject = (name, formObject={}) ->
         component = @components[formObject.component]
         console.error "component #{formObject.component} was not registered." if not component?
+        if formObject.id
+            exist = no
+            for form in @forms[name] when formObject.id <= form.id # less and equal
+                formObject.id = @formsId[name]++
+                exist = yes
+                break
+            @formsId[name] = formObject.id + 1 if not exist
         result =
+            id: formObject.id ? @formsId[name]++
             component: formObject.component
             draggable: formObject.draggable ? yes
             index: formObject.index ? 0
@@ -118,6 +128,7 @@ a.provider '$builder', ->
         Insert the form Object into the form at last.
         ###
         @forms[name] ?= []
+        @formsId[name] ?= 0
         @insertFormObject name, @forms[name].length, formObject
 
     @insertFormObject = (name, index, formObject={}) =>
@@ -125,6 +136,7 @@ a.provider '$builder', ->
         Insert the form object into the form at {index}.
         @param name: The form name.
         @param form: The form object.
+            id: {string}
             component: The component name
             draggable: yes
             index: 0
@@ -137,6 +149,7 @@ a.provider '$builder', ->
             errorMessage:
         ###
         @forms[name] ?= []
+        @formsId[name] ?= 0
         if index > @forms.length then index = @forms.length
         else if index < 0 then index = 0
         @forms[name].splice index, 0, @convertFormObject(name, formObject)
