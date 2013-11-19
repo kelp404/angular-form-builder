@@ -42,5 +42,5 @@ fbFormController = ($scope, $injector) ->
     # providers
     $builder = $injector.get '$builder'
 
-fbBuilderController.$inject = ['$scope', '$injector']
+fbFormController.$inject = ['$scope', '$injector']
 a.controller 'fbFormController', fbFormController

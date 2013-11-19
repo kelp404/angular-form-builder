@@ -37,7 +37,7 @@
     return $builder = $injector.get('$builder');
   };
 
-  fbBuilderController.$inject = ['$scope', '$injector'];
+  fbFormController.$inject = ['$scope', '$injector'];
 
   a.controller('fbFormController', fbFormController);
 
@@ -805,7 +805,7 @@
         droppable: this.droppable
       };
     };
-    this.get.inject = ['$injector'];
+    this.get.$inject = ['$injector'];
     this.$get = this.get;
   });
 

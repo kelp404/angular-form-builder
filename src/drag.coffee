@@ -253,6 +253,6 @@ a.provider '$drag', ->
         data: @data
         draggable: @draggable
         droppable: @droppable
-    @get.inject = ['$injector']
+    @get.$inject = ['$injector']
     @$get = @get
     return
