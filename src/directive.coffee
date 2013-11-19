@@ -141,11 +141,6 @@ fbFormObjectEditable = ($injector) ->
             scope.options = (x for x in text.split('\n') when x.length > 0)
             scope.inputText = scope.options[0]
 
-        # draggable
-        $drag.draggable $(element),
-            object:
-                formObject: formObject
-
         # compile formObject
         $template = $(component.template)
         view = $compile($template) scope
@@ -153,6 +148,15 @@ fbFormObjectEditable = ($injector) ->
 
         # disable click event
         $(element).on 'click', -> no
+
+        if formObject.editable
+            # draggable
+            $drag.draggable $(element),
+                object:
+                    formObject: formObject
+        else
+            # do not setup bootstrap popover
+            return
 
         # ----------------------------------------
         # bootstrap popover

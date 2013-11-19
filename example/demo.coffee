@@ -8,7 +8,7 @@ a.controller 'BuilderController', ($scope, $builder) ->
         description: 'Your name'
         placeholder: 'Your name'
         required: yes
-        draggable: no
+        editable: no
     # formObjects
     $scope.form = $builder.forms['default']
 

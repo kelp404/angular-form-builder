@@ -52,6 +52,7 @@ a.provider '$builder', ->
             label: component.label ? ''
             description: component.description ? ''
             placeholder: component.placeholder ? ''
+            editable: component.editable ? yes
             required: component.required ? no
             validation: component.validation ? '/.*/'
             errorMessage: component.errorMessage ? ''
@@ -76,7 +77,7 @@ a.provider '$builder', ->
         result =
             id: formObject.id ? @formsId[name]++
             component: formObject.component
-            draggable: formObject.draggable ? yes
+            editable: formObject.editable ? component.editable
             index: formObject.index ? 0
             label: formObject.label ? component.label
             description: formObject.description ? component.description
@@ -105,6 +106,7 @@ a.provider '$builder', ->
             label: The label of the input.
             description: The description of the input.
             placeholder: The placeholder of the input.
+            editable: Is the form object editable?
             required: yes / no
             validation: angular-validator
             errorMessage: validator error message
@@ -138,7 +140,7 @@ a.provider '$builder', ->
         @param form: The form object.
             id: {string}
             component: The component name
-            draggable: yes
+            editable: yes
             index: 0
             label:
             description:

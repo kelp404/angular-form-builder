@@ -204,17 +204,21 @@
           })();
           return scope.inputText = scope.options[0];
         });
-        $drag.draggable($(element), {
-          object: {
-            formObject: formObject
-          }
-        });
         $template = $(component.template);
         view = $compile($template)(scope);
         $(element).append(view);
         $(element).on('click', function() {
           return false;
         });
+        if (formObject.editable) {
+          $drag.draggable($(element), {
+            object: {
+              formObject: formObject
+            }
+          });
+        } else {
+          return;
+        }
         popoverId = "fb-" + (Math.random().toString().substr(2));
         popover = {
           isClickedSave: false,
@@ -925,18 +929,19 @@
       return $injector = injector;
     };
     this.convertComponent = function(name, component) {
-      var result, _ref, _ref1, _ref2, _ref3, _ref4, _ref5, _ref6, _ref7, _ref8;
+      var result, _ref, _ref1, _ref2, _ref3, _ref4, _ref5, _ref6, _ref7, _ref8, _ref9;
       result = {
         name: name,
         group: (_ref = component.group) != null ? _ref : 'Default',
         label: (_ref1 = component.label) != null ? _ref1 : '',
         description: (_ref2 = component.description) != null ? _ref2 : '',
         placeholder: (_ref3 = component.placeholder) != null ? _ref3 : '',
-        required: (_ref4 = component.required) != null ? _ref4 : false,
-        validation: (_ref5 = component.validation) != null ? _ref5 : '/.*/',
-        errorMessage: (_ref6 = component.errorMessage) != null ? _ref6 : '',
-        options: (_ref7 = component.options) != null ? _ref7 : [],
-        arrayToText: (_ref8 = component.arrayToText) != null ? _ref8 : false,
+        editable: (_ref4 = component.editable) != null ? _ref4 : true,
+        required: (_ref5 = component.required) != null ? _ref5 : false,
+        validation: (_ref6 = component.validation) != null ? _ref6 : '/.*/',
+        errorMessage: (_ref7 = component.errorMessage) != null ? _ref7 : '',
+        options: (_ref8 = component.options) != null ? _ref8 : [],
+        arrayToText: (_ref9 = component.arrayToText) != null ? _ref9 : false,
         template: component.template,
         popoverTemplate: component.popoverTemplate
       };
@@ -976,7 +981,7 @@
       result = {
         id: (_ref1 = formObject.id) != null ? _ref1 : this.formsId[name]++,
         component: formObject.component,
-        draggable: (_ref2 = formObject.draggable) != null ? _ref2 : true,
+        editable: (_ref2 = formObject.editable) != null ? _ref2 : component.editable,
         index: (_ref3 = formObject.index) != null ? _ref3 : 0,
         label: (_ref4 = formObject.label) != null ? _ref4 : component.label,
         description: (_ref5 = formObject.description) != null ? _ref5 : component.description,
@@ -1008,6 +1013,7 @@
           label: The label of the input.
           description: The description of the input.
           placeholder: The placeholder of the input.
+          editable: Is the form object editable?
           required: yes / no
           validation: angular-validator
           errorMessage: validator error message
@@ -1055,7 +1061,7 @@
       @param form: The form object.
           id: {string}
           component: The component name
-          draggable: yes
+          editable: yes
           index: 0
           label:
           description:

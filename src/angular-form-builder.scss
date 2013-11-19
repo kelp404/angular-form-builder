@@ -12,6 +12,8 @@
 }
 .fb-form-object-editable {
     padding: 10px;
+}
+.fb-form-object-editable.fb-draggable {
     cursor: move;
     input { cursor: move; }
     label { cursor: pointer; }

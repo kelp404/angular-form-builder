@@ -10,7 +10,7 @@
       description: 'Your name',
       placeholder: 'Your name',
       required: true,
-      draggable: false
+      editable: false
     });
     return $scope.form = $builder.forms['default'];
   });
