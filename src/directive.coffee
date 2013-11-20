@@ -3,7 +3,7 @@
 # builder.directive
 # ----------------------------------------
 a = angular.module 'builder.directive', ['builder.provider', 'builder.controller', 'builder.drag',
-                                                    'validator.rules']
+                                                    'validator']
 
 
 # ----------------------------------------

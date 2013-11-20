@@ -1,7 +1,7 @@
 (function() {
   var a, config;
 
-  a = angular.module('builder.components', ['builder']);
+  a = angular.module('builder.components', ['builder', 'validator.rules']);
 
   config = function($builderProvider) {
     $builderProvider.registerComponent('textInput', {

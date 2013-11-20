@@ -1,5 +1,5 @@
 
-a = angular.module 'builder.components', ['builder']
+a = angular.module 'builder.components', ['builder', 'validator.rules']
 
 config = ($builderProvider) ->
     # ----------------------------------------
