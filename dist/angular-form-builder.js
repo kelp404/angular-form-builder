@@ -78,7 +78,7 @@
         $(element).addClass('fb-builder');
         return $drag.droppable($(element), {
           move: function(e, draggable) {
-            var $empty, $formObject, $formObjects, height, index, offset, positions, _i, _j, _ref, _ref1;
+            var $empty, $formObject, $formObjects, height, index, offset, positionStart, positions, uneditableIndex, _i, _j, _k, _ref, _ref1, _ref2;
             if (beginMove) {
               $("div.fb-form-object-editable").popover('hide');
               beginMove = false;
@@ -92,21 +92,23 @@
             }
             positions = [];
             positions.push(-1000);
-            positions.push($($formObjects[0]).offset().top + $($formObjects[0]).height() / 2);
             for (index = _i = 0, _ref = $formObjects.length - 1; _i <= _ref; index = _i += 1) {
-              if (index === 0) {
-                continue;
-              }
               $formObject = $($formObjects[index]);
               offset = $formObject.offset();
               height = $formObject.height();
               positions.push(offset.top + height / 2);
             }
             positions.push(positions[positions.length - 1] + 1000);
-            for (index = _j = 0, _ref1 = positions.length - 1; _j <= _ref1; index = _j += 1) {
-              if (index === 0) {
+            uneditableIndex = -1;
+            for (index = _j = _ref1 = scope.formObjects.length - 1; _j >= 0; index = _j += -1) {
+              if (!(!scope.formObjects[index].editable)) {
                 continue;
               }
+              uneditableIndex = index;
+              break;
+            }
+            positionStart = uneditableIndex >= 0 ? uneditableIndex + 2 : 1;
+            for (index = _k = positionStart, _ref2 = positions.length - 1; _k <= _ref2; index = _k += 1) {
               if (e.pageY > positions[index - 1] && e.pageY <= positions[index]) {
                 $(element).find('.empty').remove();
                 $empty = $("<div class='fb-form-object-editable empty'></div>");

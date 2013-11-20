@@ -53,9 +53,7 @@ fbBuilder = ($injector) ->
                 positions = []
                 # first
                 positions.push -1000
-                positions.push $($formObjects[0]).offset().top + $($formObjects[0]).height() / 2
                 for index in [0..$formObjects.length - 1] by 1
-                    continue if index is 0
                     $formObject = $($formObjects[index])
                     offset = $formObject.offset()
                     height = $formObject.height()
@@ -63,10 +61,14 @@ fbBuilder = ($injector) ->
                 positions.push positions[positions.length - 1] + 1000   # last
 
                 # search where should I insert the .empty
-                for index in [0..positions.length - 1] by 1
-                    continue if index is 0
+                uneditableIndex = -1
+                for index in [(scope.formObjects.length - 1)..0] by -1 when not scope.formObjects[index].editable
+                    uneditableIndex = index
+                    break
+                positionStart = if uneditableIndex >= 0 then uneditableIndex + 2 else 1
+                for index in [positionStart..positions.length - 1] by 1
                     if e.pageY > positions[index - 1] and e.pageY <= positions[index]
-                        # this one
+                        # you known, this one
                         $(element).find('.empty').remove()
                         $empty = $ "<div class='fb-form-object-editable empty'></div>"
                         if index - 1 < $formObjects.length
