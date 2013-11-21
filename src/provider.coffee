@@ -146,7 +146,7 @@ a.provider '$builder', ->
             placeholder: {string} The form object placeholder.
             options: {array} The form object options.
             required: {bool} Is the form object required? (default is no)
-            validation: {string} RegExp ex: "/[0-9]/"
+            validation: {string} angular-validator. "/regex/" or "[rule1, rule2]".
             errorMessage: {string} The validation error message.
             [id]: {int} The form object id. It will be generate by $builder.
             [index]: {int} The form object index. It will be updated by $builder.
