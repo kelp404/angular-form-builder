@@ -359,7 +359,6 @@ fbForm = ($injector) ->
             # tell children to update input value
             $timeout -> scope.$broadcast $builder.broadcastChannel.updateInput
         , yes
-
 fbForm.$inject = ['$injector']
 a.directive 'fbForm', fbForm
 

@@ -32,7 +32,7 @@ a.provider '$builder', ->
 
     # forms
     #   builder mode: `fb-builder` you could drag and drop to build the form.
-    #   form mode: `fb-form` this is the form for user to input value.
+    #   form mode: `fb-form` this is the form for end-user to input value.
     @forms =
         default: []
     @formsId =
@@ -102,18 +102,18 @@ a.provider '$builder', ->
         Register the component for form-builder.
         @param name: The component name.
         @param component: The component object.
-            group: The component group.
-            label: The label of the input.
-            description: The description of the input.
-            placeholder: The placeholder of the input.
-            editable: Is the form object editable?
-            required: yes / no
-            validation: angular-validator
-            errorMessage: validator error message
-            options: []
-            arrayToText: yes / no (checkbox could use this to convert input
-            template: html template
-            popoverTemplate: html template
+            group: {string} The component group.
+            label: {string} The label of the input.
+            description: {string} The description of the input.
+            placeholder: {string} The placeholder of the input.
+            editable: {bool} Is the form object editable?
+            required: {bool} Is the form object required?
+            validation: {string} angular-validator. "/regex/" or "[rule1, rule2]". (default is RegExp(.*))
+            errorMessage: {string} The validator error message
+            options: {array} The input options.
+            arrayToText: {bool} checkbox could use this to convert input (default is no)
+            template: {string} html template
+            popoverTemplate: {string} html template
         ###
         if not @components[name]?
             # regist the new component
@@ -127,7 +127,7 @@ a.provider '$builder', ->
 
     @addFormObject = (name, formObject={}) =>
         ###
-        Insert the form Object into the form at last.
+        Insert the form object into the form at last.
         ###
         @forms[name] ?= []
         @formsId[name] ?= 0
@@ -137,18 +137,19 @@ a.provider '$builder', ->
         ###
         Insert the form object into the form at {index}.
         @param name: The form name.
+        @param index: The form object index.
         @param form: The form object.
-            id: {string}
-            component: The component name
-            editable: yes
-            index: 0
-            label:
-            description:
-            placeholder:
-            options:
-            required:
+            component: {string} The component name
+            editable: {bool} Is the form object editable? (default is yes)
+            label: {string} The form object label.
+            description: {string} The form object description.
+            placeholder: {string} The form object placeholder.
+            options: {array} The form object options.
+            required: {bool} Is the form object required? (default is no)
             validation: {string} RegExp ex: "/[0-9]/"
-            errorMessage:
+            errorMessage: {string} The validation error message.
+            [id]: {int} The form object id. It will be generate by $builder.
+            [index]: {int} The form object index. It will be updated by $builder.
         ###
         @forms[name] ?= []
         @formsId[name] ?= 0
