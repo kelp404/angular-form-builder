@@ -125,13 +125,13 @@ $builder.addFormObject = (name, formObject={}) =>
 
 
 ##builder.directive
-####bf-components
+####fb-components
 >
 ```coffee
 a = angular.module 'builder.directive', ['builder.provider', 'builder.controller', 'builder.drag', 'validator']
 fbComponents = ->
     ###
-    You could use `bf-components` to render the components view.
+    You could use `fb-components` to render the components view.
     ###
     restrict: 'A'
     template:
@@ -157,7 +157,7 @@ a.directive 'fbComponents', fbComponents
 a = angular.module 'builder.directive', ['builder.provider', 'builder.controller', 'builder.drag', 'validator']
 fbBuilder = ($injector) ->
     ###
-    You could use `bf-builder="formName"` to render the builder view.
+    You could use `fb-builder="formName"` to render the builder view.
     ###
     restrict: 'A'
     template:
@@ -180,7 +180,7 @@ a.directive 'fbBuilder', fbBuilder
 a = angular.module 'builder.directive', ['builder.provider', 'builder.controller', 'builder.drag', 'validator']
 fbForm = ($injector) ->
     ###
-    You could use `bf-form="formName"` to render the form view for end-users.
+    You could use `fb-form="formName"` to render the form view for end-users.
     ###
     restrict: 'A'
     require: 'ngModel'  # form data (end-user input value)
