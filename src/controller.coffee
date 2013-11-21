@@ -1,6 +1,15 @@
 
 a = angular.module 'builder.controller', ['builder.provider']
 
+copyObjectToScope = (object, scope) ->
+    ###
+    Copy object (ng-repeat="object in objects") to scope without `hashKey`.
+    ###
+    for key, value of object when key isnt '$$hashKey'
+        # copy object.{} to scope.{}
+        scope[key] = value
+    return
+
 
 # ----------------------------------------
 # fbFormObjectEditableController
@@ -13,9 +22,7 @@ fbFormObjectEditableController = ($scope) ->
         3. Watch scope.label, .description, .placeholder, .required, .options then copy to origin formObject.
         4. Watch scope.optionsText then convert to scope.options.
         ###
-        for key, value of formObject when key isnt '$$hashKey'
-            # copy formObject.{} to scope.{}
-            $scope[key] = value
+        copyObjectToScope formObject, $scope
 
         $scope.optionsText = formObject.options.join '\n'
 
@@ -86,13 +93,7 @@ a.controller 'fbComponentsController', fbComponentsController
 # fbComponentController
 # ----------------------------------------
 fbComponentController = ($scope) ->
-    $scope.copyObjectToScope = (object) ->
-        ###
-        Copy object (ng-repeat="object in components") to scope without `hashKey`.
-        ###
-        for key, value of object when key isnt '$$hashKey'
-            # copy object.{} to scope.{}
-            $scope[key] = value
+    $scope.copyObjectToScope = (object) -> copyObjectToScope object, $scope
 
 fbComponentController.$inject = ['$scope']
 a.controller 'fbComponentController', fbComponentController
@@ -125,13 +126,7 @@ fbFormObjectController = ($scope, $injector) ->
     # providers
     $builder = $injector.get '$builder'
 
-    $scope.copyObjectToScope = (object) ->
-        ###
-        Copy object (ng-repeat="object in form") to scope without `hashKey`.
-        ###
-        for key, value of object when key isnt '$$hashKey'
-            # copy object.{} to scope.{}
-            $scope[key] = value
+    $scope.copyObjectToScope = (object) -> copyObjectToScope object, $scope
 
     $scope.updateInput = (value) ->
         ###

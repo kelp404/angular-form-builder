@@ -1,7 +1,21 @@
 (function() {
-  var a, fbComponentController, fbComponentsController, fbFormController, fbFormObjectController, fbFormObjectEditableController;
+  var a, copyObjectToScope, fbComponentController, fbComponentsController, fbFormController, fbFormObjectController, fbFormObjectEditableController;
 
   a = angular.module('builder.controller', ['builder.provider']);
+
+  copyObjectToScope = function(object, scope) {
+    /*
+    Copy object (ng-repeat="object in objects") to scope without `hashKey`.
+    */
+
+    var key, value;
+    for (key in object) {
+      value = object[key];
+      if (key !== '$$hashKey') {
+        scope[key] = value;
+      }
+    }
+  };
 
   fbFormObjectEditableController = function($scope) {
     $scope.setupScope = function(formObject) {
@@ -12,13 +26,7 @@
       4. Watch scope.optionsText then convert to scope.options.
       */
 
-      var key, value;
-      for (key in formObject) {
-        value = formObject[key];
-        if (key !== '$$hashKey') {
-          $scope[key] = value;
-        }
-      }
+      copyObjectToScope(formObject, $scope);
       $scope.optionsText = formObject.options.join('\n');
       $scope.$watch('[label, description, placeholder, required, options]', function() {
         formObject.label = $scope.label;
@@ -114,19 +122,7 @@
 
   fbComponentController = function($scope) {
     return $scope.copyObjectToScope = function(object) {
-      /*
-      Copy object (ng-repeat="object in components") to scope without `hashKey`.
-      */
-
-      var key, value, _results;
-      _results = [];
-      for (key in object) {
-        value = object[key];
-        if (key !== '$$hashKey') {
-          _results.push($scope[key] = value);
-        }
-      }
-      return _results;
+      return copyObjectToScope(object, $scope);
     };
   };
 
@@ -156,19 +152,7 @@
     var $builder;
     $builder = $injector.get('$builder');
     $scope.copyObjectToScope = function(object) {
-      /*
-      Copy object (ng-repeat="object in form") to scope without `hashKey`.
-      */
-
-      var key, value, _results;
-      _results = [];
-      for (key in object) {
-        value = object[key];
-        if (key !== '$$hashKey') {
-          _results.push($scope[key] = value);
-        }
-      }
-      return _results;
+      return copyObjectToScope(object, $scope);
     };
     return $scope.updateInput = function(value) {
       /*
