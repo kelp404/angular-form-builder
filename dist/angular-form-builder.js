@@ -1,16 +1,84 @@
 (function() {
-  var a, fbBuilderController, fbComponentsController, fbFormController;
+  var a, fbComponentController, fbComponentsController, fbFormController, fbFormObjectController, fbFormObjectEditableController;
 
   a = angular.module('builder.controller', ['builder.provider']);
 
-  fbBuilderController = function($scope, $injector) {
-    var $builder;
-    return $builder = $injector.get('$builder');
+  fbFormObjectEditableController = function($scope) {
+    $scope.setupScope = function(formObject) {
+      /*
+      1. Copy origin formObject (ng-repeat="object in formObjects") to scope.
+      2. Setup optionsText with formObject.options.
+      3. Watch scope.label, .description, .placeholder, .required, .options then copy to origin formObject.
+      4. Watch scope.optionsText then convert to scope.options.
+      */
+
+      var key, value;
+      for (key in formObject) {
+        value = formObject[key];
+        if (key !== '$$hashKey') {
+          $scope[key] = value;
+        }
+      }
+      $scope.optionsText = formObject.options.join('\n');
+      $scope.$watch('[label, description, placeholder, required, options]', function() {
+        formObject.label = $scope.label;
+        formObject.description = $scope.description;
+        formObject.placeholder = $scope.placeholder;
+        formObject.required = $scope.required;
+        return formObject.options = $scope.options;
+      }, true);
+      return $scope.$watch('optionsText', function(text) {
+        var x;
+        $scope.options = (function() {
+          var _i, _len, _ref, _results;
+          _ref = text.split('\n');
+          _results = [];
+          for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+            x = _ref[_i];
+            if (x.length > 0) {
+              _results.push(x);
+            }
+          }
+          return _results;
+        })();
+        return $scope.inputText = $scope.options[0];
+      });
+    };
+    return $scope.data = {
+      model: null,
+      backup: function() {
+        /*
+        Backup input value.
+        */
+
+        return this.model = {
+          label: $scope.label,
+          description: $scope.description,
+          placeholder: $scope.placeholder,
+          required: $scope.required,
+          optionsText: $scope.optionsText
+        };
+      },
+      rollback: function() {
+        /*
+        Rollback input value.
+        */
+
+        if (!this.model) {
+          return;
+        }
+        $scope.label = this.model.label;
+        $scope.description = this.model.description;
+        $scope.placeholder = this.model.placeholder;
+        $scope.required = this.model.required;
+        return $scope.optionsText = this.model.optionsText;
+      }
+    };
   };
 
-  fbBuilderController.$inject = ['$scope', '$injector'];
+  fbFormObjectEditableController.$inject = ['$scope'];
 
-  a.controller('fbBuilderController', fbBuilderController);
+  a.controller('fbFormObjectEditableController', fbFormObjectEditableController);
 
   fbComponentsController = function($scope, $injector) {
     var $builder;
@@ -44,14 +112,83 @@
 
   a.controller('fbComponentsController', fbComponentsController);
 
+  fbComponentController = function($scope) {
+    return $scope.copyObjectToScope = function(object) {
+      /*
+      Copy object (ng-repeat="object in components") to scope without `hashKey`.
+      */
+
+      var key, value, _results;
+      _results = [];
+      for (key in object) {
+        value = object[key];
+        if (key !== '$$hashKey') {
+          _results.push($scope[key] = value);
+        }
+      }
+      return _results;
+    };
+  };
+
+  fbComponentController.$inject = ['$scope'];
+
+  a.controller('fbComponentController', fbComponentController);
+
   fbFormController = function($scope, $injector) {
-    var $builder;
-    return $builder = $injector.get('$builder');
+    var $builder, $timeout;
+    $builder = $injector.get('$builder');
+    $timeout = $injector.get('$timeout');
+    return $scope.$watch('form', function() {
+      if ($scope.input.length > $scope.form.length) {
+        $scope.input.splice($scope.form.length);
+      }
+      return $timeout(function() {
+        return $scope.$broadcast($builder.broadcastChannel.updateInput);
+      });
+    }, true);
   };
 
   fbFormController.$inject = ['$scope', '$injector'];
 
   a.controller('fbFormController', fbFormController);
+
+  fbFormObjectController = function($scope, $injector) {
+    var $builder;
+    $builder = $injector.get('$builder');
+    $scope.copyObjectToScope = function(object) {
+      /*
+      Copy object (ng-repeat="object in form") to scope without `hashKey`.
+      */
+
+      var key, value, _results;
+      _results = [];
+      for (key in object) {
+        value = object[key];
+        if (key !== '$$hashKey') {
+          _results.push($scope[key] = value);
+        }
+      }
+      return _results;
+    };
+    return $scope.updateInput = function(value) {
+      /*
+      Copy current scope.input[X] to $parent.input.
+      @param value: The input value.
+      */
+
+      var input;
+      input = {
+        id: $scope.formObject.id,
+        label: $scope.formObject.label,
+        value: value != null ? value : ''
+      };
+      return $scope.$parent.input.splice($scope.$index, 1, input);
+    };
+  };
+
+  fbFormObjectController.$inject = ['$scope', '$injector'];
+
+  a.controller('fbFormObjectController', fbFormObjectController);
 
 }).call(this);
 
@@ -64,20 +201,19 @@
     return {
       restrict: 'A',
       template: "<div class='form-horizontal'>\n    <div class='fb-form-object-editable' ng-repeat=\"object in formObjects\"\n        fb-form-object-editable=\"object\"></div>\n</div>",
-      controller: 'fbBuilderController',
       link: function(scope, element, attrs) {
-        var $builder, $drag, beginMove, formName, _base;
+        var $builder, $drag, beginMove, _base, _name;
         $builder = $injector.get('$builder');
         $drag = $injector.get('$drag');
-        formName = attrs.fbBuilder;
-        if ((_base = $builder.forms)[formName] == null) {
-          _base[formName] = [];
+        scope.formName = attrs.fbBuilder;
+        if ((_base = $builder.forms)[_name = scope.formName] == null) {
+          _base[_name] = [];
         }
-        scope.formObjects = $builder.forms[formName];
+        scope.formObjects = $builder.forms[scope.formName];
         beginMove = true;
         $(element).addClass('fb-builder');
         return $drag.droppable($(element), {
-          move: function(e, draggable) {
+          move: function(e) {
             var $empty, $formObject, $formObjects, height, index, offset, positionStart, positions, uneditableIndex, _i, _j, _k, _ref, _ref1, _ref2;
             if (beginMove) {
               $("div.fb-form-object-editable").popover('hide');
@@ -121,7 +257,7 @@
               }
             }
           },
-          out: function(e, draggable) {
+          out: function() {
             if (beginMove) {
               $("div.fb-form-object-editable").popover('hide');
               beginMove = false;
@@ -140,7 +276,7 @@
               $builder.removeFormObject(attrs.fbBuilder, formObject.index);
             } else if (isHover) {
               if (draggable.mode === 'mirror') {
-                $builder.insertFormObject(formName, $(element).find('.empty').index('.fb-form-object-editable'), {
+                $builder.insertFormObject(scope.formName, $(element).find('.empty').index('.fb-form-object-editable'), {
                   component: draggable.object.componentName
                 });
               }
@@ -150,7 +286,7 @@
                 if (oldIndex < newIndex) {
                   newIndex--;
                 }
-                $builder.updateFormObjectIndex(formName, oldIndex, newIndex);
+                $builder.updateFormObjectIndex(scope.formName, oldIndex, newIndex);
               }
             }
             return $(element).find('.empty').remove();
@@ -167,8 +303,9 @@
   fbFormObjectEditable = function($injector) {
     return {
       restrict: 'A',
+      controller: 'fbFormObjectEditableController',
       link: function(scope, element, attrs) {
-        var $builder, $compile, $drag, $parse, $template, $validator, component, formObject, key, popover, popoverId, value, view;
+        var $builder, $compile, $drag, $parse, $validator, component, formObject, popover, view;
         $builder = $injector.get('$builder');
         $drag = $injector.get('$drag');
         $parse = $injector.get('$parse');
@@ -176,38 +313,8 @@
         $validator = $injector.get('$validator');
         formObject = $parse(attrs.fbFormObjectEditable)(scope);
         component = $builder.components[formObject.component];
-        for (key in formObject) {
-          value = formObject[key];
-          if (key !== '$$hashKey') {
-            scope[key] = value;
-          }
-        }
-        scope.optionsText = formObject.options.join('\n');
-        scope.$watch('[label, description, placeholder, required, options]', function() {
-          formObject.label = scope.label;
-          formObject.description = scope.description;
-          formObject.placeholder = scope.placeholder;
-          formObject.required = scope.required;
-          return formObject.options = scope.options;
-        }, true);
-        scope.$watch('optionsText', function(text) {
-          var x;
-          scope.options = (function() {
-            var _i, _len, _ref, _results;
-            _ref = text.split('\n');
-            _results = [];
-            for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-              x = _ref[_i];
-              if (x.length > 0) {
-                _results.push(x);
-              }
-            }
-            return _results;
-          })();
-          return scope.inputText = scope.options[0];
-        });
-        $template = $(component.template);
-        view = $compile($template)(scope);
+        scope.setupScope(formObject);
+        view = $compile(component.template)(scope);
         $(element).append(view);
         $(element).on('click', function() {
           return false;
@@ -221,15 +328,14 @@
         } else {
           return;
         }
-        popoverId = "fb-" + (Math.random().toString().substr(2));
         popover = {
+          id: "fb-" + (Math.random().toString().substr(2)),
           isClickedSave: false,
           view: null,
           html: component.popoverTemplate
         };
-        popover.html = $(popover.html).addClass(popoverId);
+        popover.html = $(popover.html).addClass(popover.id);
         scope.popover = {
-          ngModel: null,
           save: function($event) {
             /*
             The save event of the popover.
@@ -246,10 +352,8 @@
             The delete event of the popover.
             */
 
-            var formName;
             $event.preventDefault();
-            formName = $(element).closest('[fb-builder]').attr('fb-builder');
-            $builder.removeFormObject(formName, scope.$index);
+            $builder.removeFormObject(scope.formName, scope.$index);
             $(element).popover('hide');
           },
           shown: function() {
@@ -257,13 +361,7 @@
             The shown event of the popover.
             */
 
-            this.ngModel = {
-              label: scope.label,
-              description: scope.description,
-              placeholder: scope.placeholder,
-              required: scope.required,
-              optionsText: scope.optionsText
-            };
+            scope.data.backup();
             return popover.isClickedSave = false;
           },
           cancel: function($event) {
@@ -271,13 +369,7 @@
             The cancel event of the popover.
             */
 
-            if (this.ngModel) {
-              scope.label = this.ngModel.label;
-              scope.description = this.ngModel.description;
-              scope.placeholder = this.ngModel.placeholder;
-              scope.required = this.ngModel.required;
-              scope.optionsText = this.ngModel.optionsText;
-            }
+            scope.data.rollback();
             if ($event) {
               $event.preventDefault();
               $(element).popover('hide');
@@ -285,7 +377,7 @@
           }
         };
         popover.view = $compile(popover.html)(scope);
-        $(element).addClass(popoverId);
+        $(element).addClass(popover.id);
         $(element).popover({
           html: true,
           title: component.label,
@@ -297,8 +389,8 @@
           if ($drag.isMouseMoved()) {
             return false;
           }
-          $("div.fb-form-object-editable:not(." + popoverId + ")").popover('hide');
-          $popover = $("form." + popoverId).closest('.popover');
+          $("div.fb-form-object-editable:not(." + popover.id + ")").popover('hide');
+          $popover = $("form." + popover.id).closest('.popover');
           if ($popover.length > 0) {
             elementOrigin = $(element).offset().top + $(element).height() / 2;
             popoverTop = elementOrigin - $popover.height() / 2;
@@ -315,14 +407,14 @@
           }
         });
         $(element).on('shown.bs.popover', function() {
-          $(".popover ." + popoverId + " input:first").select();
+          $(".popover ." + popover.id + " input:first").select();
           scope.$apply(function() {
             return scope.popover.shown();
           });
         });
         return $(element).on('hide.bs.popover', function() {
           var $popover;
-          $popover = $("form." + popoverId).closest('.popover');
+          $popover = $("form." + popover.id).closest('.popover');
           if (!popover.isClickedSave) {
             if (scope.$$phase) {
               scope.popover.cancel();
@@ -359,15 +451,15 @@
   fbComponent = function($injector) {
     return {
       restrict: 'A',
+      controller: 'fbComponentController',
       link: function(scope, element, attrs) {
-        var $builder, $compile, $drag, $parse, $template, component, cs, view;
+        var $builder, $compile, $drag, $parse, component, view;
         $builder = $injector.get('$builder');
         $drag = $injector.get('$drag');
         $parse = $injector.get('$parse');
         $compile = $injector.get('$compile');
-        cs = scope.$new();
         component = $parse(attrs.fbComponent)(scope);
-        $.extend(cs, component);
+        scope.copyObjectToScope(component);
         $drag.draggable($(element), {
           mode: 'mirror',
           defer: false,
@@ -375,8 +467,7 @@
             componentName: component.name
           }
         });
-        $template = $(component.template);
-        view = $compile($template)(cs);
+        view = $compile(component.template)(scope);
         return $(element).append(view);
       }
     };
@@ -396,19 +487,10 @@
       template: "<div class='fb-form-object' ng-repeat=\"object in form\" fb-form-object=\"object\">\n</div>",
       controller: 'fbFormController',
       link: function(scope, element, attrs) {
-        var $builder, $timeout, formName;
+        var $builder;
         $builder = $injector.get('$builder');
-        $timeout = $injector.get('$timeout');
-        formName = attrs.fbForm;
-        scope.form = $builder.forms[formName];
-        return scope.$watch('form', function() {
-          if (scope.input.length > scope.form.length) {
-            scope.input.splice(scope.form.length);
-          }
-          return $timeout(function() {
-            return scope.$broadcast($builder.broadcastChannel.updateInput);
-          });
-        }, true);
+        scope.formName = attrs.fbForm;
+        return scope.form = $builder.forms[scope.formName];
       }
     };
   };
@@ -420,45 +502,16 @@
   fbFormObject = function($injector) {
     return {
       restrict: 'A',
+      controller: 'fbFormObjectController',
       link: function(scope, element, attrs) {
-        var $builder, $compile, $input, $parse, $template, component, copyValueFormFormObject, formObject, updateInput, view;
+        var $builder, $compile, $input, $parse, $template, component, view;
         $builder = $injector.get('$builder');
         $compile = $injector.get('$compile');
         $parse = $injector.get('$parse');
-        formObject = $parse(attrs.fbFormObject)(scope);
-        component = $builder.components[formObject.component];
-        updateInput = function(value) {
-          /*
-          Copy current scope.input[X] to $parent.input.
-          @param value: The input value.
-          */
-
-          var input;
-          input = {
-            id: formObject.id,
-            label: formObject.label,
-            value: value != null ? value : ''
-          };
-          return scope.$parent.input.splice(scope.$index, 1, input);
-        };
-        copyValueFormFormObject = function() {
-          /*
-          Copy formObject.{} to scope.{}.
-          `ng-repeat="object in form"`
-          */
-
-          var key, value, _results;
-          _results = [];
-          for (key in formObject) {
-            value = formObject[key];
-            if (key !== '$$hashKey') {
-              _results.push(scope[key] = value);
-            }
-          }
-          return _results;
-        };
+        scope.formObject = $parse(attrs.fbFormObject)(scope);
+        component = $builder.components[scope.formObject.component];
         scope.$on($builder.broadcastChannel.updateInput, function() {
-          return updateInput(scope.inputText);
+          return scope.updateInput(scope.inputText);
         });
         if (component.arrayToText) {
           scope.inputArray = [];
@@ -477,10 +530,10 @@
           }, true);
         }
         scope.$watch('inputText', function() {
-          return updateInput(scope.inputText);
+          return scope.updateInput(scope.inputText);
         });
         scope.$watch(attrs.fbFormObject, function() {
-          return copyValueFormFormObject();
+          return scope.copyObjectToScope(scope.formObject);
         }, true);
         $template = $(component.template);
         $input = $template.find("[ng-model='inputText']");
@@ -490,8 +543,8 @@
         });
         view = $compile($template)(scope);
         $(element).append(view);
-        if (!component.arrayToText && formObject.options.length > 0) {
-          return scope.inputText = formObject.options[0];
+        if (!component.arrayToText && scope.formObject.options.length > 0) {
+          return scope.inputText = scope.formObject.options[0];
         }
       }
     };

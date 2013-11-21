@@ -2,8 +2,9 @@
 # ----------------------------------------
 # builder.directive
 # ----------------------------------------
-a = angular.module 'builder.directive', ['builder.provider', 'builder.controller', 'builder.drag',
-                                                    'validator']
+a = angular.module 'builder.directive',
+    ['builder.provider', 'builder.controller', 'builder.drag',
+     'validator']
 
 
 # ----------------------------------------
@@ -18,7 +19,6 @@ fbBuilder = ($injector) ->
                 fb-form-object-editable="object"></div>
         </div>
         """
-    controller: 'fbBuilderController'
     link: (scope, element, attrs) ->
         # ----------------------------------------
         # providers
@@ -29,14 +29,14 @@ fbBuilder = ($injector) ->
         # ----------------------------------------
         # valuables
         # ----------------------------------------
-        formName = attrs.fbBuilder
-        $builder.forms[formName] ?= []
-        scope.formObjects = $builder.forms[formName]
+        scope.formName = attrs.fbBuilder
+        $builder.forms[scope.formName] ?= []
+        scope.formObjects = $builder.forms[scope.formName]
         beginMove = yes
 
         $(element).addClass 'fb-builder'
         $drag.droppable $(element),
-            move: (e, draggable) ->
+            move: (e) ->
                 if beginMove
                     # hide all popovers
                     $("div.fb-form-object-editable").popover 'hide'
@@ -77,7 +77,7 @@ fbBuilder = ($injector) ->
                             $empty.insertAfter $($formObjects[index - 2])
                         break
                 return
-            out: (e, draggable) ->
+            out: ->
                 if beginMove
                     # hide all popovers
                     $("div.fb-form-object-editable").popover 'hide'
@@ -98,14 +98,14 @@ fbBuilder = ($injector) ->
                 else if isHover
                     if draggable.mode is 'mirror'
                         # insert a form object
-                        $builder.insertFormObject formName, $(element).find('.empty').index('.fb-form-object-editable'),
+                        $builder.insertFormObject scope.formName, $(element).find('.empty').index('.fb-form-object-editable'),
                             component: draggable.object.componentName
                     if draggable.mode is 'drag'
                         # update the index of form objects
                         oldIndex = draggable.object.formObject.index
                         newIndex = $(element).find('.empty').index('.fb-form-object-editable')
                         newIndex-- if oldIndex < newIndex
-                        $builder.updateFormObjectIndex formName, oldIndex, newIndex
+                        $builder.updateFormObjectIndex scope.formName, oldIndex, newIndex
                 $(element).find('.empty').remove()
 fbBuilder.$inject = ['$injector']
 a.directive 'fbBuilder', fbBuilder
@@ -115,6 +115,7 @@ a.directive 'fbBuilder', fbBuilder
 # ----------------------------------------
 fbFormObjectEditable = ($injector) ->
     restrict: 'A'
+    controller: 'fbFormObjectEditableController'
     link: (scope, element, attrs) ->
         # providers
         $builder = $injector.get '$builder'
@@ -127,25 +128,11 @@ fbFormObjectEditable = ($injector) ->
         formObject = $parse(attrs.fbFormObjectEditable) scope
         # get component
         component = $builder.components[formObject.component]
-        for key, value of formObject when key isnt '$$hashKey'
-            # ng-repeat="object in formObjects"
-            # copy formObject.{} to scope.{}
-            scope[key] = value
-        scope.optionsText = formObject.options.join '\n'
-        scope.$watch '[label, description, placeholder, required, options]', ->
-            formObject.label = scope.label
-            formObject.description = scope.description
-            formObject.placeholder = scope.placeholder
-            formObject.required = scope.required
-            formObject.options = scope.options
-        , yes
-        scope.$watch 'optionsText', (text) ->
-            scope.options = (x for x in text.split('\n') when x.length > 0)
-            scope.inputText = scope.options[0]
+        # setup scope
+        scope.setupScope formObject
 
         # compile formObject
-        $template = $(component.template)
-        view = $compile($template) scope
+        view = $compile(component.template) scope
         $(element).append view
 
         # disable click event
@@ -163,14 +150,13 @@ fbFormObjectEditable = ($injector) ->
         # ----------------------------------------
         # bootstrap popover
         # ----------------------------------------
-        popoverId = "fb-#{Math.random().toString().substr(2)}"
         popover =
+            id: "fb-#{Math.random().toString().substr(2)}"
             isClickedSave: no # If didn't click save then rollback
             view: null
             html: component.popoverTemplate
-        popover.html = $(popover.html).addClass popoverId
+        popover.html = $(popover.html).addClass popover.id
         scope.popover =
-            ngModel: null   # data for rollback
             save: ($event) ->
                 ###
                 The save event of the popover.
@@ -186,33 +172,20 @@ fbFormObjectEditable = ($injector) ->
                 ###
                 $event.preventDefault()
 
-                # get the form name
-                formName = $(element).closest('[fb-builder]').attr 'fb-builder'
-                $builder.removeFormObject formName, scope.$index
+                $builder.removeFormObject scope.formName, scope.$index
                 $(element).popover 'hide'
                 return
             shown: ->
                 ###
                 The shown event of the popover.
                 ###
-                # copy model for revivification
-                @ngModel =
-                    label: scope.label
-                    description: scope.description
-                    placeholder: scope.placeholder
-                    required: scope.required
-                    optionsText: scope.optionsText
+                scope.data.backup()
                 popover.isClickedSave = no
             cancel: ($event) ->
                 ###
                 The cancel event of the popover.
                 ###
-                if @ngModel
-                    scope.label = @ngModel.label
-                    scope.description = @ngModel.description
-                    scope.placeholder = @ngModel.placeholder
-                    scope.required = @ngModel.required
-                    scope.optionsText = @ngModel.optionsText
+                scope.data.rollback()
                 if $event
                     # clicked cancel by user
                     $event.preventDefault()
@@ -220,21 +193,21 @@ fbFormObjectEditable = ($injector) ->
                 return
         # compile popover
         popover.view = $compile(popover.html) scope
-        $(element).addClass popoverId
+        $(element).addClass popover.id
         $(element).popover
             html: yes
             title: component.label
             content: popover.view
             container: 'body'
         # ----------------------------------------
-        # show
+        # popover.show
         # ----------------------------------------
         $(element).on 'show.bs.popover', ->
             return no if $drag.isMouseMoved()
             # hide other popovers
-            $("div.fb-form-object-editable:not(.#{popoverId})").popover 'hide'
+            $("div.fb-form-object-editable:not(.#{popover.id})").popover 'hide'
 
-            $popover = $("form.#{popoverId}").closest '.popover'
+            $popover = $("form.#{popover.id}").closest '.popover'
             if $popover.length > 0
                 # fixed offset
                 elementOrigin = $(element).offset().top + $(element).height() / 2
@@ -250,19 +223,19 @@ fbFormObjectEditable = ($injector) ->
                 , 0
                 no
         # ----------------------------------------
-        # shown
+        # popover.shown
         # ----------------------------------------
         $(element).on 'shown.bs.popover', ->
             # select the first input
-            $(".popover .#{popoverId} input:first").select()
+            $(".popover .#{popover.id} input:first").select()
             scope.$apply -> scope.popover.shown()
             return
         # ----------------------------------------
-        # hide
+        # popover.hide
         # ----------------------------------------
         $(element).on 'hide.bs.popover', ->
             # do not remove the DOM
-            $popover = $("form.#{popoverId}").closest '.popover'
+            $popover = $("form.#{popover.id}").closest '.popover'
             if not popover.isClickedSave
                 # eval the cancel event
                 if scope.$$phase
@@ -303,6 +276,7 @@ a.directive 'fbComponents', fbComponents
 # ----------------------------------------
 fbComponent = ($injector) ->
     restrict: 'A'
+    controller: 'fbComponentController'
     link: (scope, element, attrs) ->
         # providers
         $builder = $injector.get '$builder'
@@ -311,9 +285,8 @@ fbComponent = ($injector) ->
         $compile = $injector.get '$compile'
 
         # valuables
-        cs = scope.$new()   # component scope
         component = $parse(attrs.fbComponent) scope
-        $.extend cs, component
+        scope.copyObjectToScope component
 
         $drag.draggable $(element),
             mode: 'mirror'
@@ -321,8 +294,7 @@ fbComponent = ($injector) ->
             object:
                 componentName: component.name
 
-        $template = $(component.template)
-        view = $compile($template) cs
+        view = $compile(component.template) scope
         $(element).append view
 fbComponent.$inject = ['$injector']
 a.directive 'fbComponent', fbComponent
@@ -346,19 +318,11 @@ fbForm = ($injector) ->
     link: (scope, element, attrs) ->
         # providers
         $builder = $injector.get '$builder'
-        $timeout = $injector.get '$timeout'
 
         # form name
-        formName = attrs.fbForm
-        scope.form = $builder.forms[formName]
+        scope.formName = attrs.fbForm
+        scope.form = $builder.forms[scope.formName]
 
-        scope.$watch 'form', ->
-            # remove superfluous input
-            if scope.input.length > scope.form.length
-                scope.input.splice scope.form.length
-            # tell children to update input value
-            $timeout -> scope.$broadcast $builder.broadcastChannel.updateInput
-        , yes
 fbForm.$inject = ['$injector']
 a.directive 'fbForm', fbForm
 
@@ -367,6 +331,7 @@ a.directive 'fbForm', fbForm
 # ----------------------------------------
 fbFormObject = ($injector) ->
     restrict: 'A'
+    controller: 'fbFormObjectController'
     link: (scope, element, attrs) ->
         # ----------------------------------------
         # providers
@@ -378,36 +343,14 @@ fbFormObject = ($injector) ->
         # ----------------------------------------
         # variables
         # ----------------------------------------
-        formObject = $parse(attrs.fbFormObject) scope
-        component = $builder.components[formObject.component]
-
-        # ----------------------------------------
-        # methods
-        # ----------------------------------------
-        updateInput = (value) ->
-            ###
-            Copy current scope.input[X] to $parent.input.
-            @param value: The input value.
-            ###
-            input =
-                id: formObject.id
-                label: formObject.label
-                value: value ? ''
-            scope.$parent.input.splice scope.$index, 1, input
-
-        copyValueFormFormObject = ->
-            ###
-            Copy formObject.{} to scope.{}.
-            `ng-repeat="object in form"`
-            ###
-            for key, value of formObject when key isnt '$$hashKey'
-                scope[key] = value
+        scope.formObject = $parse(attrs.fbFormObject) scope
+        component = $builder.components[scope.formObject.component]
 
         # ----------------------------------------
         # scope
         # ----------------------------------------
         # listen (formObject updated
-        scope.$on $builder.broadcastChannel.updateInput, -> updateInput scope.inputText
+        scope.$on $builder.broadcastChannel.updateInput, -> scope.updateInput scope.inputText
         if component.arrayToText
             scope.inputArray = []
             # watch (end-user updated input of the form
@@ -419,10 +362,10 @@ fbFormObject = ($injector) ->
                     checked.push scope.options[index]
                 scope.inputText = checked.join ', '
             , yes
-        scope.$watch 'inputText', -> updateInput scope.inputText
+        scope.$watch 'inputText', -> scope.updateInput scope.inputText
         # watch (management updated form objects
         scope.$watch attrs.fbFormObject, ->
-            copyValueFormFormObject()
+            scope.copyObjectToScope scope.formObject
         , yes
 
         $template = $ component.template
@@ -436,8 +379,8 @@ fbFormObject = ($injector) ->
         view = $compile($template) scope
         $(element).append view
 
-        if not component.arrayToText and formObject.options.length > 0
-            scope.inputText = formObject.options[0]
+        if not component.arrayToText and scope.formObject.options.length > 0
+            scope.inputText = scope.formObject.options[0]
 
 fbFormObject.$inject = ['$injector']
 a.directive 'fbFormObject', fbFormObject
