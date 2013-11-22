@@ -78,14 +78,14 @@ describe 'builder.provider', ->
     describe '$builderProvider.convertComponent', ->
         it 'check $builderProvider.convertComponent() argument without template', ->
             spyOn(console, 'error').andCallFake (msg) ->
-                expect(msg).toEqual 'template is empty'
+                expect(msg).toEqual 'The template is empty.'
             builderProvider.convertComponent 'inputText',
                 popoverTemplate: "<div class='form-group'></div>"
             expect(console.error).toHaveBeenCalled()
 
         it 'check $builderProvider.convertComponent() argument without popoverTemplate', ->
             spyOn(console, 'error').andCallFake (msg) ->
-                expect(msg).toEqual 'popoverTemplate is empty'
+                expect(msg).toEqual 'The popoverTemplate is empty.'
             builderProvider.convertComponent 'inputText',
                 template: "<div class='form-group'></div>"
             expect(console.error).toHaveBeenCalled()
@@ -139,3 +139,81 @@ describe 'builder.provider', ->
                 template: "<div class='form-group'></div>"
                 popoverTemplate: "<div class='form-group'></div>"
             .toEqual component
+
+
+    describe '$builderProvider.convertFormObject', ->
+        it 'check $builderProvider.convertFormObject() argument with the not exist component', ->
+            expect ->
+                builderProvider.convertFormObject 'default',
+                    component: 'input'
+            .toThrow()
+
+        it 'check $builderProvider.convertFormObject() with default value', ->
+            builderProvider.registerComponent 'inputText',
+                group: 'GroupA'
+                label: 'Input Text'
+                description: 'description'
+                placeholder: 'placeholder'
+                editable: yes
+                required: yes
+                validation: '/regexp/'
+                errorMessage: 'error message'
+                options: ['value one']
+                arrayToText: yes
+                template: "<div class='form-group'></div>"
+                popoverTemplate: "<div class='form-group'></div>"
+            formObject = builderProvider.convertFormObject 'default',
+                component: 'inputText'
+
+            expect
+                id: 0
+                component: 'inputText'
+                editable: yes
+                index: 0
+                label: 'Input Text'
+                description: 'description'
+                placeholder: 'placeholder'
+                options: ['value one']
+                required: yes
+                validation: '/regexp/'
+                errorMessage: 'error message'
+            .toEqual formObject
+
+        it 'check $builderProvider.convertFormObject()', ->
+            builderProvider.registerComponent 'inputText',
+                group: 'GroupA'
+                label: 'Input Text'
+                description: 'description'
+                placeholder: 'placeholder'
+                editable: yes
+                required: yes
+                validation: '/regexp/'
+                errorMessage: 'error message'
+                options: ['value one']
+                arrayToText: yes
+                template: "<div class='form-group'></div>"
+                popoverTemplate: "<div class='form-group'></div>"
+            formObject = builderProvider.convertFormObject 'default',
+                component: 'inputText'
+                editable: no
+                label: 'input label'
+                description: 'description A'
+                placeholder: 'placeholder A'
+                options: ['value']
+                required: no
+                validation: '/.*/'
+                errorMessage: 'error'
+
+            expect
+                id: 1
+                component: 'inputText'
+                editable: no
+                index: 0
+                label: 'input label'
+                description: 'description A'
+                placeholder: 'placeholder A'
+                options: ['value']
+                required: no
+                validation: '/.*/'
+                errorMessage: 'error'
+            .toEqual formObject

@@ -980,10 +980,10 @@
         popoverTemplate: component.popoverTemplate
       };
       if (!result.template) {
-        console.error("template is empty");
+        console.error("The template is empty.");
       }
       if (!result.popoverTemplate) {
-        console.error("popoverTemplate is empty");
+        console.error("The popoverTemplate is empty.");
       }
       return result;
     };
@@ -994,7 +994,7 @@
       }
       component = this.components[formObject.component];
       if (component == null) {
-        console.error("component " + formObject.component + " was not registered.");
+        throw "The component " + formObject.component + " was not registered.";
       }
       if (formObject.id) {
         exist = false;
@@ -1068,7 +1068,6 @@
       }
     };
     this.addFormObject = function(name, formObject) {
-      var _base, _base1;
       if (formObject == null) {
         formObject = {};
       }
@@ -1076,12 +1075,6 @@
       Insert the form object into the form at last.
       */
 
-      if ((_base = _this.forms)[name] == null) {
-        _base[name] = [];
-      }
-      if ((_base1 = _this.formsId)[name] == null) {
-        _base1[name] = 0;
-      }
       return _this.insertFormObject(name, _this.forms[name].length, formObject);
     };
     this.insertFormObject = function(name, index, formObject) {

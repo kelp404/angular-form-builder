@@ -51,13 +51,13 @@ a.provider '$builder', ->
             arrayToText: component.arrayToText ? no
             template: component.template
             popoverTemplate: component.popoverTemplate
-        if not result.template then console.error "template is empty"
-        if not result.popoverTemplate then console.error "popoverTemplate is empty"
+        if not result.template then console.error "The template is empty."
+        if not result.popoverTemplate then console.error "The popoverTemplate is empty."
         result
 
     @convertFormObject = (name, formObject={}) ->
         component = @components[formObject.component]
-        console.error "component #{formObject.component} was not registered." if not component?
+        throw "The component #{formObject.component} was not registered." if not component?
         if formObject.id
             exist = no
             for form in @forms[name] when formObject.id <= form.id # less and equal
@@ -120,8 +120,6 @@ a.provider '$builder', ->
         ###
         Insert the form object into the form at last.
         ###
-        @forms[name] ?= []
-        @formsId[name] ?= 0
         @insertFormObject name, @forms[name].length, formObject
 
     @insertFormObject = (name, index, formObject={}) =>
