@@ -74,6 +74,46 @@ $builderProvider.registerComponent = (name, component={}) ->
 $builder.registerComponent = (name, component={}) ->
 ```
 
+>component.template
+```html
+<div class="form-group">
+    <label for="{{name+index}}" class="col-md-4 control-label" ng-class="{'fb-required':required}">{{label}}</label>
+    <div class="col-md-8">
+        <input type="text" ng-model="inputText" validator-required="{{required}}" id="{{name+index}}" class="form-control" placeholder="{{placeholder}}"/>
+        <p class='help-block'>{{description}}</p>
+    </div>
+</div>
+```
+
+>component.popoverTemplate
+```html
+<form>
+    <div class="form-group">
+        <label class='control-label'>Label</label>
+        <input type='text' ng-model="label" validator="[required]" class='form-control'/>
+    </div>
+    <div class="form-group">
+        <label class='control-label'>Description</label>
+        <input type='text' ng-model="description" class='form-control'/>
+    </div>
+    <div class="form-group">
+        <label class='control-label'>Placeholder</label>
+        <input type='text' ng-model="placeholder" class='form-control'/>
+    </div>
+    <div class="checkbox">
+        <label>
+            <input type='checkbox' ng-model="required" />
+            Required</label>
+    </div>
+    <hr/>
+    <div class='form-group'>
+        <input type='submit' ng-click="popover.save($event)" class='btn btn-primary' value='Save'/>
+        <input type='button' ng-click="popover.cancel($event)" class='btn btn-default' value='Cancel'/>
+        <input type='button' ng-click="popover.remove($event)" class='btn btn-danger' value='Delete'/>
+    </div>
+</form>
+```
+
 
 ####forms
 >
@@ -150,6 +190,11 @@ fbComponents = ->
 a.directive 'fbComponents', fbComponents
 ```
 
+>
+```html
+<div fb-components></div>
+```
+
 
 ####fb-builder
 >
@@ -167,10 +212,14 @@ fbBuilder = ($injector) ->
                 fb-form-object-editable="object"></div>
         </div>
         """
-    controller: 'fbBuilderController'
     link: (scope, element, attrs) ->
 fbBuilder.$inject = ['$injector']
 a.directive 'fbBuilder', fbBuilder
+```
+
+>
+```html
+<div fb-builder="default"></div>
 ```
 
 
@@ -197,6 +246,29 @@ fbForm = ($injector) ->
 fbForm.$inject = ['$injector']
 a.directive 'fbForm', fbForm
 ```
+
+>
+```html
+<form class="form-horizontal">
+    <div ng-model="input" fb-form="default"></div>
+    <div class="form-group">
+        <div class="col-md-8 col-md-offset-4">
+            <input type="submit" ng-click="submit()" class="btn btn-default"/>
+        </div>
+    </div>
+</form>
+```
+
+
+
+
+##builder.components
+> There are some default components at this module. This module is not required.
++ textInput
++ textArea
++ checkbox
++ radio
++ select
 
 
 
