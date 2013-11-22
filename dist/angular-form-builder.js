@@ -950,9 +950,7 @@
   a = angular.module('builder.provider', []);
 
   a.provider('$builder', function() {
-    var $injector,
-      _this = this;
-    $injector = null;
+    var _this = this;
     this.components = {};
     this.groups = [];
     this.broadcastChannel = {
@@ -963,9 +961,6 @@
     };
     this.formsId = {
       "default": 0
-    };
-    this.setupProviders = function(injector) {
-      return $injector = injector;
     };
     this.convertComponent = function(name, component) {
       var result, _ref, _ref1, _ref2, _ref3, _ref4, _ref5, _ref6, _ref7, _ref8, _ref9;
@@ -1155,8 +1150,7 @@
       formObjects.splice(newIndex, 0, formObject);
       return _this.reIndexFormObject(name);
     };
-    this.get = function($injector) {
-      this.setupProviders($injector);
+    this.get = function() {
       return {
         components: this.components,
         groups: this.groups,
@@ -1169,7 +1163,6 @@
         updateFormObjectIndex: this.updateFormObjectIndex
       };
     };
-    this.get.$inject = ['$injector'];
     this.$get = this.get;
   });
 

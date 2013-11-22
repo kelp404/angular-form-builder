@@ -15,12 +15,6 @@ a = angular.module 'builder.provider', []
 
 a.provider '$builder', ->
     # ----------------------------------------
-    # providers
-    # ----------------------------------------
-    $injector = null
-
-
-    # ----------------------------------------
     # properties
     # ----------------------------------------
     # all components
@@ -42,9 +36,6 @@ a.provider '$builder', ->
     # ----------------------------------------
     # private functions
     # ----------------------------------------
-    @setupProviders = (injector) ->
-        $injector = injector
-
     @convertComponent = (name, component) ->
         result =
             name: name
@@ -184,9 +175,7 @@ a.provider '$builder', ->
     # ----------------------------------------
     # $get
     # ----------------------------------------
-    @get = ($injector) ->
-        @setupProviders $injector
-
+    @get = ->
         components: @components
         groups: @groups
         forms: @forms
@@ -196,6 +185,5 @@ a.provider '$builder', ->
         insertFormObject: @insertFormObject
         removeFormObject: @removeFormObject
         updateFormObjectIndex: @updateFormObjectIndex
-    @get.$inject = ['$injector']
     @$get = @get
     return
