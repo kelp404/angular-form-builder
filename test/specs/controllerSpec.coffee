@@ -103,7 +103,7 @@ describe 'builder.provider', ->
                 expect(formObject.required).toEqual $scope.required
                 expect(formObject.options.join('\n')).toEqual $scope.optionsText
 
-                
+
     describe 'fbComponentsController', ->
         $scope = null
         controller = null
@@ -153,3 +153,40 @@ describe 'builder.provider', ->
                 expect($scope.activeGroup).toEqual 'X'
                 expect($scope.components.length).toBe 1
                 expect($scope.components[0].name).toEqual 'xComponent'
+
+
+    describe 'fbComponentController', ->
+        $scope = null
+        controller = null
+
+        beforeEach inject ($rootScope, $controller) ->
+            $scope = $rootScope.$new()
+            controller = $controller 'fbComponentController',
+                $scope: $scope
+
+        describe '$scope.copyObjectToScope()', ->
+            component = null
+
+            beforeEach ->
+                component =
+                    $$hashKey: '007'
+                    name: 'textInput'
+                    label: 'label'
+                    description: 'description'
+                    placeholder: 'placeholder'
+                    required: no
+                    options: ['value one', 'two']
+                    template: "<div class='form-group'></div>"
+                    popoverTemplate: "<div class='form-group'></div>"
+
+            it '$scope.copyObjectToScope(component) copy properties to $scope without `$$hashKey`', ->
+                $scope.copyObjectToScope component
+                expect($scope.$$hashKey).toBeUndefined()
+                expect(component.name).toEqual $scope.name
+                expect(component.label).toEqual $scope.label
+                expect(component.description).toEqual $scope.description
+                expect(component.placeholder).toEqual $scope.placeholder
+                expect(component.required).toBe no
+                expect(component.options).toEqual $scope.options
+                expect(component.template).toEqual $scope.template
+                expect(component.popoverTemplate).toEqual $scope.popoverTemplate
