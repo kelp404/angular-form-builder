@@ -1,4 +1,4 @@
-describe 'builder.provider', ->
+describe 'builder.controller', ->
     beforeEach module('builder')
 
 
@@ -190,3 +190,85 @@ describe 'builder.provider', ->
                 expect(component.options).toEqual $scope.options
                 expect(component.template).toEqual $scope.template
                 expect(component.popoverTemplate).toEqual $scope.popoverTemplate
+
+
+    describe 'fbFormController', ->
+        $scope = null
+        controller = null
+
+        beforeEach inject ($rootScope, $controller, $injector) ->
+            $scope = $rootScope.$new()
+            controller = $controller 'fbFormController',
+                $scope: $scope
+                $injector: $injector
+
+        describe "$scope.$watch('form')", ->
+            it "$scope.$watch('form') remove superfluous input and $broadcast", inject ($builder, $timeout) ->
+                spyBroadcast = jasmine.createSpy 'broadcast'
+                $scope.$on $builder.broadcastChannel.updateInput, ->
+                    spyBroadcast()
+                $scope.input = [{}, {}]
+                $scope.form = [{}]
+                $scope.$digest()
+                $timeout.flush()
+                expect($scope.input.length).toBe 1
+                expect(spyBroadcast).toHaveBeenCalled()
+
+
+    describe 'fbFormObjectController', ->
+        $scope = null
+        controller = null
+
+        beforeEach inject ($rootScope, $controller, $injector) ->
+            $scope = $rootScope.$new()
+            controller = $controller 'fbFormObjectController',
+                $scope: $scope
+                $injector: $injector
+
+        describe '$scope.copyObjectToScope()', ->
+            formObject = null
+            beforeEach ->
+                formObject =
+                    $$hashKey: '007'
+                    name: 'textInput'
+                    label: 'label'
+                    description: 'description'
+                    placeholder: 'placeholder'
+                    required: no
+                    options: ['value one', 'two']
+            it '$scope.copyObjectToScope(formObject) copy properties to $scope without `$$hashKey`', ->
+                $scope.copyObjectToScope formObject
+                expect($scope.$$hashKey).toBeUndefined()
+                expect(formObject.name).toEqual $scope.name
+                expect(formObject.label).toEqual $scope.label
+                expect(formObject.description).toEqual $scope.description
+                expect(formObject.placeholder).toEqual $scope.placeholder
+                expect(formObject.required).toBe no
+                expect(formObject.options).toEqual $scope.options
+
+        describe '$scope.updateInput()', ->
+            it '$scope.updateInput(value) will copy input value to $parent.input', ->
+                $scope.$parent.input = []
+                $scope.$index = 0
+                $scope.formObject =
+                    id: 0
+                    label: 'label'
+                $scope.updateInput 'value'
+                expect($scope.$parent.input).toEqual [
+                    id: 0
+                    label: 'label'
+                    value: 'value'
+                ]
+
+            it '$scope.updateInput(value) will copy input value to $parent.input with default', ->
+                $scope.$parent.input = []
+                $scope.$index = 0
+                $scope.formObject =
+                    id: 0
+                    label: 'label'
+                $scope.updateInput()
+                expect($scope.$parent.input).toEqual [
+                    id: 0
+                    label: 'label'
+                    value: ''
+                ]
