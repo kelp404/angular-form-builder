@@ -330,3 +330,72 @@ describe 'builder.provider', ->
             $builder.insertFormObject 'default', 1, component: 'inputText'
             expect(builderProvider.convertFormObject).toHaveBeenCalled()
             expect(builderProvider.reindexFormObject).toHaveBeenCalled()
+
+    describe '$builder.removeFormObject', ->
+        beforeEach -> inject ($builder) ->
+            $builder.registerComponent 'inputText',
+                template: "<div class='form-group'></div>"
+                popoverTemplate: "<div class='form-group'></div>"
+
+        it 'check $builder.removeFormObject() will call formObject.splice() and reindexFormObject()', inject ($builder) ->
+            spyOn(builderProvider.forms.default, 'splice').andCallFake (index, length, object) ->
+                expect(index).toBe 1
+                expect(length).toBe 1
+                expect(object).toBeUndefined()
+            spyOn(builderProvider, 'reindexFormObject').andCallFake (name) ->
+                expect(name).toEqual 'default'
+            $builder.removeFormObject 'default', 1
+            expect(builderProvider.forms.default.splice).toHaveBeenCalled()
+            expect(builderProvider.reindexFormObject).toHaveBeenCalled()
+
+    describe '$builder.updateFormObjectIndex', ->
+        beforeEach -> inject ($builder) ->
+            $builder.registerComponent 'inputText',
+                template: "<div class='form-group'></div>"
+                popoverTemplate: "<div class='form-group'></div>"
+
+        it 'check $builder.updateFormObjectIndex() will directive return if the new index and the old index are the same one', inject ($builder) ->
+            spyOn builderProvider.forms.default, 'splice'
+            spyOn builderProvider, 'reindexFormObject'
+            $builder.updateFormObjectIndex 'default', 0, 0
+            expect(builderProvider.forms.default.splice).not.toHaveBeenCalled()
+            expect(builderProvider.reindexFormObject).not.toHaveBeenCalled()
+
+        it 'check $builder.updateFormObjectIndex() will call formObject.splice() and reindexFormObject()', inject ($builder) ->
+            formObject = id: 0
+            spySplice = spyOn(builderProvider.forms.default, 'splice').andCallFake (index, length, object) ->
+                switch spySplice.calls.length
+                    when 1
+                        expect(index).toBe 0
+                        expect(length).toBe 1
+                        expect(object).toBeUndefined()
+                        [formObject]
+                    when 2
+                        expect(index).toBe 1
+                        expect(length).toBe 0
+                        expect(object).toBe formObject
+                    else
+            spyOn builderProvider, 'reindexFormObject'
+            $builder.updateFormObjectIndex 'default', 0, 1
+            expect(spySplice.calls.length).toBe 2
+            expect(builderProvider.reindexFormObject).toHaveBeenCalled()
+
+    describe '$builder.$get', ->
+        it 'check $builder.components is equal $builderProvider.components', inject ($builder) ->
+            expect($builder.components).toBe builderProvider.components
+        it 'check $builder.groups is equal $builderProvider.groups', inject ($builder) ->
+            expect($builder.groups).toBe builderProvider.groups
+        it 'check $builder.forms is equal $builderProvider.forms', inject ($builder) ->
+            expect($builder.forms).toBe builderProvider.forms
+        it 'check $builder.broadcastChannel is equal $builderProvider.broadcastChannel', inject ($builder) ->
+            expect($builder.broadcastChannel).toBe builderProvider.broadcastChannel
+        it 'check $builder.registerComponent is equal $builderProvider.registerComponent', inject ($builder) ->
+            expect($builder.registerComponent).toBe builderProvider.registerComponent
+        it 'check $builder.addFormObject is equal $builderProvider.addFormObject', inject ($builder) ->
+            expect($builder.addFormObject).toBe builderProvider.addFormObject
+        it 'check $builder.insertFormObject is equal $builderProvider.insertFormObject', inject ($builder) ->
+            expect($builder.insertFormObject).toBe builderProvider.insertFormObject
+        it 'check $builder.removeFormObject is equal $builderProvider.removeFormObject', inject ($builder) ->
+            expect($builder.removeFormObject).toBe builderProvider.removeFormObject
+        it 'check $builder.updateFormObjectIndex is equal $builderProvider.updateFormObjectIndex', inject ($builder) ->
+            expect($builder.updateFormObjectIndex).toBe builderProvider.updateFormObjectIndex
