@@ -217,3 +217,17 @@ describe 'builder.provider', ->
                 validation: '/.*/'
                 errorMessage: 'error'
             .toEqual formObject
+
+
+    describe '$builderProvider.reindexFormObject', ->
+        it 'check $builderProvider.reindexFormObject()', ->
+            builderProvider.forms.default.push index: 0
+            builderProvider.forms.default.push index: 0
+
+            calledCount = jasmine.createSpy 'calledCount'
+            builderProvider.reindexFormObject 'default'
+            for index in [0..builderProvider.forms.default.length - 1] by 1
+                formObject = builderProvider.forms.default[index]
+                expect(formObject.index).toBe index
+                calledCount()
+            expect(calledCount.calls.length).toBe 2

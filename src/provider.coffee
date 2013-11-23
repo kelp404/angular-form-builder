@@ -79,7 +79,7 @@ a.provider '$builder', ->
             errorMessage: formObject.errorMessage ? component.errorMessage
         result
 
-    @reIndexFormObject = (name) =>
+    @reindexFormObject = (name) =>
         formObjects = @forms[name]
         for index in [0..formObjects.length - 1] by 1
             formObjects[index].index = index
@@ -145,7 +145,7 @@ a.provider '$builder', ->
         if index > @forms.length then index = @forms.length
         else if index < 0 then index = 0
         @forms[name].splice index, 0, @convertFormObject(name, formObject)
-        @reIndexFormObject name
+        @reindexFormObject name
 
     @removeFormObject = (name, index) =>
         ###
@@ -155,7 +155,7 @@ a.provider '$builder', ->
         ###
         formObjects = @forms[name]
         formObjects.splice index, 1
-        @reIndexFormObject name
+        @reindexFormObject name
 
     @updateFormObjectIndex = (name, oldIndex, newIndex) =>
         ###
@@ -168,7 +168,7 @@ a.provider '$builder', ->
         formObjects = @forms[name]
         formObject = formObjects.splice(oldIndex, 1)[0]
         formObjects.splice newIndex, 0, formObject
-        @reIndexFormObject name
+        @reindexFormObject name
 
     # ----------------------------------------
     # $get

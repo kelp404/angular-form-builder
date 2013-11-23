@@ -1027,7 +1027,7 @@
       };
       return result;
     };
-    this.reIndexFormObject = function(name) {
+    this.reindexFormObject = function(name) {
       var formObjects, index, _i, _ref;
       formObjects = _this.forms[name];
       for (index = _i = 0, _ref = formObjects.length - 1; _i <= _ref; index = _i += 1) {
@@ -1112,7 +1112,7 @@
         index = 0;
       }
       _this.forms[name].splice(index, 0, _this.convertFormObject(name, formObject));
-      return _this.reIndexFormObject(name);
+      return _this.reindexFormObject(name);
     };
     this.removeFormObject = function(name, index) {
       /*
@@ -1124,7 +1124,7 @@
       var formObjects;
       formObjects = _this.forms[name];
       formObjects.splice(index, 1);
-      return _this.reIndexFormObject(name);
+      return _this.reindexFormObject(name);
     };
     this.updateFormObjectIndex = function(name, oldIndex, newIndex) {
       /*
@@ -1141,7 +1141,7 @@
       formObjects = _this.forms[name];
       formObject = formObjects.splice(oldIndex, 1)[0];
       formObjects.splice(newIndex, 0, formObject);
-      return _this.reIndexFormObject(name);
+      return _this.reindexFormObject(name);
     };
     this.get = function() {
       return {
