@@ -142,7 +142,7 @@ a.provider '$builder', ->
         ###
         @forms[name] ?= []
         @formsId[name] ?= 0
-        if index > @forms.length then index = @forms.length
+        if index > @forms[name].length then index = @forms[name].length
         else if index < 0 then index = 0
         @forms[name].splice index, 0, @convertFormObject(name, formObject)
         @reindexFormObject name

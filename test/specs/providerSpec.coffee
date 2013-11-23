@@ -148,8 +148,9 @@ describe 'builder.provider', ->
                     component: 'input'
             .toThrow()
 
-        it 'check $builderProvider.convertFormObject() with default value', ->
-            builderProvider.registerComponent 'inputText',
+        it 'check $builderProvider.convertFormObject() with default value', inject ($builder) ->
+            # Register the component `inputText`.
+            $builder.registerComponent 'inputText',
                 group: 'GroupA'
                 label: 'Input Text'
                 description: 'description'
@@ -179,20 +180,11 @@ describe 'builder.provider', ->
                 errorMessage: 'error message'
             .toEqual formObject
 
-        it 'check $builderProvider.convertFormObject()', ->
-            builderProvider.registerComponent 'inputText',
-                group: 'GroupA'
-                label: 'Input Text'
-                description: 'description'
-                placeholder: 'placeholder'
-                editable: yes
-                required: yes
-                validation: '/regexp/'
-                errorMessage: 'error message'
-                options: ['value one']
-                arrayToText: yes
+        it 'check $builderProvider.convertFormObject()', inject ($builder) ->
+            $builder.registerComponent 'inputText',
                 template: "<div class='form-group'></div>"
                 popoverTemplate: "<div class='form-group'></div>"
+
             formObject = builderProvider.convertFormObject 'default',
                 component: 'inputText'
                 editable: no
@@ -205,7 +197,7 @@ describe 'builder.provider', ->
                 errorMessage: 'error'
 
             expect
-                id: 1
+                id: 0
                 component: 'inputText'
                 editable: no
                 index: 0
@@ -231,3 +223,110 @@ describe 'builder.provider', ->
                 expect(formObject.index).toBe index
                 calledCount()
             expect(calledCount.calls.length).toBe 2
+
+
+    describe '$builder.registerComponent', ->
+        it 'check $builder.registerComponent()', inject ($builder) ->
+            $builder.registerComponent 'textInput',
+                group: 'Default'
+                label: ''
+                description: ''
+                placeholder: ''
+                editable: yes
+                required: no
+                validation: '/.*/'
+                errorMessage: ''
+                options: []
+                arrayToText: no
+                template: "<div class='form-group'></div>"
+                popoverTemplate: "<div class='form-group'></div>"
+
+            expect
+                name: 'textInput'
+                group: 'Default'
+                label: ''
+                description: ''
+                placeholder: ''
+                editable: yes
+                required: no
+                validation: '/.*/'
+                errorMessage: ''
+                options: []
+                arrayToText: no
+                template: "<div class='form-group'></div>"
+                popoverTemplate: "<div class='form-group'></div>"
+            .toEqual $builder.components.textInput
+
+        it 'check $builder.registerComponent() the same component will call console.error()', inject ($builder) ->
+            $builder.registerComponent 'textInput',
+                template: "<div class='form-group'></div>"
+                popoverTemplate: "<div class='form-group'></div>"
+            spyOn(console, 'error').andCallFake (msg) ->
+                expect('The component textInput was registered.').toEqual msg
+            $builder.registerComponent 'textInput',
+                template: "<div class='form-group'></div>"
+                popoverTemplate: "<div class='form-group'></div>"
+            expect(console.error).toHaveBeenCalled()
+
+
+    describe '$builder.addFormObject', ->
+        beforeEach -> inject ($builder) ->
+            $builder.registerComponent 'inputText',
+                template: "<div class='form-group'></div>"
+                popoverTemplate: "<div class='form-group'></div>"
+
+        it 'check $builder.addFormObject() will call $builderProvider.insertFormObject()', inject ($builder) ->
+            spyOn(builderProvider, 'insertFormObject').andCallFake (name, index, formObject) ->
+                expect(name).toEqual 'default'
+                expect(index).toBe 0
+                expect
+                    component: 'inputText'
+                .toEqual formObject
+            $builder.addFormObject 'default', component: 'inputText'
+            expect(builderProvider.insertFormObject).toHaveBeenCalled()
+
+
+    describe '$builder.insertFormObject', ->
+        beforeEach -> inject ($builder) ->
+            $builder.registerComponent 'inputText',
+                template: "<div class='form-group'></div>"
+                popoverTemplate: "<div class='form-group'></div>"
+
+        it 'check $builder.insertFormObject() a new form', inject ($builder) ->
+            $builder.insertFormObject 'form', 0, component: 'inputText'
+            expect(builderProvider.forms.form.length).toBe 1
+            expect(builderProvider.formsId.form).toBe 1
+
+        it 'check $builder.insertFormObject() index out of bound', inject ($builder) ->
+            spyOn(builderProvider.forms.default, 'splice').andCallFake (index, length) ->
+                expect(index).toBe 0
+                expect(length).toBe 0
+            $builder.insertFormObject 'default', 1000, component: 'inputText'
+            expect(builderProvider.forms.default.splice).toHaveBeenCalled()
+
+        it 'check $builder.insertFormObject() index less than 0', inject ($builder) ->
+            spyOn(builderProvider.forms.default, 'splice').andCallFake (index, length) ->
+                expect(index).toBe 0
+                expect(length).toBe 0
+            $builder.insertFormObject 'default', -1, component: 'inputText'
+            expect(builderProvider.forms.default.splice).toHaveBeenCalled()
+
+        it 'check $builder.insertFormObject()', inject ($builder) ->
+            $builder.insertFormObject 'default', 0, component: 'inputText'
+            spyOn(builderProvider.forms.default, 'splice').andCallFake (index, length) ->
+                expect(index).toBe 1
+                expect(length).toBe 0
+            $builder.insertFormObject 'default', 1, component: 'inputText'
+            expect(builderProvider.forms.default.splice).toHaveBeenCalled()
+
+        it 'check $builder.insertFormObject() will call convertFormObject() and reindexFormObject()', inject ($builder) ->
+            spyOn(builderProvider, 'convertFormObject').andCallFake (name, formObject) ->
+                expect(name).toEqual 'default'
+                expect
+                    component: 'inputText'
+                .toEqual formObject
+            spyOn(builderProvider, 'reindexFormObject').andCallFake (name) ->
+                expect(name).toEqual 'default'
+            $builder.insertFormObject 'default', 1, component: 'inputText'
+            expect(builderProvider.convertFormObject).toHaveBeenCalled()
+            expect(builderProvider.reindexFormObject).toHaveBeenCalled()

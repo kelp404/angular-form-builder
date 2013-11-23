@@ -1106,8 +1106,8 @@
       if ((_base1 = _this.formsId)[name] == null) {
         _base1[name] = 0;
       }
-      if (index > _this.forms.length) {
-        index = _this.forms.length;
+      if (index > _this.forms[name].length) {
+        index = _this.forms[name].length;
       } else if (index < 0) {
         index = 0;
       }
