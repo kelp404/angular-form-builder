@@ -75,6 +75,9 @@ describe 'builder.provider', ->
             .toEqual builderProvider.formsId
 
 
+    # ----------------------------------------
+    # methods
+    # ----------------------------------------
     describe '$builderProvider.convertComponent', ->
         it 'check $builderProvider.convertComponent() argument without template', ->
             spyOn(console, 'error').andCallFake (msg) ->
@@ -331,6 +334,7 @@ describe 'builder.provider', ->
             expect(builderProvider.convertFormObject).toHaveBeenCalled()
             expect(builderProvider.reindexFormObject).toHaveBeenCalled()
 
+
     describe '$builder.removeFormObject', ->
         beforeEach -> inject ($builder) ->
             $builder.registerComponent 'inputText',
@@ -347,6 +351,7 @@ describe 'builder.provider', ->
             $builder.removeFormObject 'default', 1
             expect(builderProvider.forms.default.splice).toHaveBeenCalled()
             expect(builderProvider.reindexFormObject).toHaveBeenCalled()
+
 
     describe '$builder.updateFormObjectIndex', ->
         beforeEach -> inject ($builder) ->
@@ -379,6 +384,7 @@ describe 'builder.provider', ->
             $builder.updateFormObjectIndex 'default', 0, 1
             expect(spySplice.calls.length).toBe 2
             expect(builderProvider.reindexFormObject).toHaveBeenCalled()
+
 
     describe '$builder.$get', ->
         it 'check $builder.components is equal $builderProvider.components', inject ($builder) ->
