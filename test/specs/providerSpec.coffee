@@ -106,6 +106,7 @@ describe 'builder.provider', ->
                 editable: yes
                 required: no
                 validation: '/.*/'
+                validationOptions: []
                 errorMessage: ''
                 options: []
                 arrayToText: no
@@ -122,6 +123,7 @@ describe 'builder.provider', ->
                 editable: no
                 required: yes
                 validation: '/regexp/'
+                validationOptions: []
                 errorMessage: 'error message'
                 options: ['value one']
                 arrayToText: yes
@@ -136,6 +138,7 @@ describe 'builder.provider', ->
                 editable: no
                 required: yes
                 validation: '/regexp/'
+                validationOptions: []
                 errorMessage: 'error message'
                 options: ['value one']
                 arrayToText: yes
@@ -253,6 +256,7 @@ describe 'builder.provider', ->
                 editable: yes
                 required: no
                 validation: '/.*/'
+                validationOptions: []
                 errorMessage: ''
                 options: []
                 arrayToText: no

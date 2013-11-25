@@ -14,29 +14,36 @@ copyObjectToScope = (object, scope) ->
 # ----------------------------------------
 # fbFormObjectEditableController
 # ----------------------------------------
-fbFormObjectEditableController = ($scope) ->
+fbFormObjectEditableController = ($scope, $injector) ->
+    $builder = $injector.get '$builder'
+
     $scope.setupScope = (formObject) ->
         ###
         1. Copy origin formObject (ng-repeat="object in formObjects") to scope.
         2. Setup optionsText with formObject.options.
         3. Watch scope.label, .description, .placeholder, .required, .options then copy to origin formObject.
         4. Watch scope.optionsText then convert to scope.options.
+        5. setup validationOptions
         ###
         copyObjectToScope formObject, $scope
 
         $scope.optionsText = formObject.options.join '\n'
 
-        $scope.$watch '[label, description, placeholder, required, options]', ->
+        $scope.$watch '[label, description, placeholder, required, options, validation]', ->
             formObject.label = $scope.label
             formObject.description = $scope.description
             formObject.placeholder = $scope.placeholder
             formObject.required = $scope.required
             formObject.options = $scope.options
+            formObject.validation = $scope.validation
         , yes
 
         $scope.$watch 'optionsText', (text) ->
             $scope.options = (x for x in text.split('\n') when x.length > 0)
             $scope.inputText = $scope.options[0]
+
+        component = $builder.components[formObject.component]
+        $scope.validationOptions = component.validationOptions
 
     $scope.data =
         model: null
@@ -50,6 +57,7 @@ fbFormObjectEditableController = ($scope) ->
                 placeholder: $scope.placeholder
                 required: $scope.required
                 optionsText: $scope.optionsText
+                validation: $scope.validation
         rollback: ->
             ###
             Rollback input value.
@@ -60,8 +68,9 @@ fbFormObjectEditableController = ($scope) ->
             $scope.placeholder = @model.placeholder
             $scope.required = @model.required
             $scope.optionsText = @model.optionsText
+            $scope.validation = @model.validation
 
-fbFormObjectEditableController.$inject = ['$scope']
+fbFormObjectEditableController.$inject = ['$scope', '$injector']
 a.controller 'fbFormObjectEditableController', fbFormObjectEditableController
 
 

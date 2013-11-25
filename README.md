@@ -64,6 +64,7 @@ $builderProvider.registerComponent = (name, component={}) ->
         editable: {bool} Is the form object editable?
         required: {bool} Is the form object required?
         validation: {string} angular-validator. "/regex/" or "[rule1, rule2]". (default is '/.*/')
+        validationOptions: {array} [{rule: angular-validator, label: 'option label'}] the options for the validation. (default is [])
         errorMessage: {string} The validator error message
         options: {array} The input options.
         arrayToText: {bool} checkbox could use this to convert input (default is no)
@@ -104,6 +105,10 @@ $builder.registerComponent = (name, component={}) ->
         <label>
             <input type='checkbox' ng-model="required" />
             Required</label>
+    </div>
+    <div class="form-group" ng-if="validationOptions.length > 0">
+        <label class='control-label'>Validation</label>
+        <select ng-model="$parent.validation" class='form-control' ng-options="option.rule as option.label for option in validationOptions"></select>
     </div>
     <hr/>
     <div class='form-group'>

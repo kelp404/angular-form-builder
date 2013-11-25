@@ -17,25 +17,30 @@
     }
   };
 
-  fbFormObjectEditableController = function($scope) {
+  fbFormObjectEditableController = function($scope, $injector) {
+    var $builder;
+    $builder = $injector.get('$builder');
     $scope.setupScope = function(formObject) {
       /*
       1. Copy origin formObject (ng-repeat="object in formObjects") to scope.
       2. Setup optionsText with formObject.options.
       3. Watch scope.label, .description, .placeholder, .required, .options then copy to origin formObject.
       4. Watch scope.optionsText then convert to scope.options.
+      5. setup validationOptions
       */
 
+      var component;
       copyObjectToScope(formObject, $scope);
       $scope.optionsText = formObject.options.join('\n');
-      $scope.$watch('[label, description, placeholder, required, options]', function() {
+      $scope.$watch('[label, description, placeholder, required, options, validation]', function() {
         formObject.label = $scope.label;
         formObject.description = $scope.description;
         formObject.placeholder = $scope.placeholder;
         formObject.required = $scope.required;
-        return formObject.options = $scope.options;
+        formObject.options = $scope.options;
+        return formObject.validation = $scope.validation;
       }, true);
-      return $scope.$watch('optionsText', function(text) {
+      $scope.$watch('optionsText', function(text) {
         var x;
         $scope.options = (function() {
           var _i, _len, _ref, _results;
@@ -51,6 +56,8 @@
         })();
         return $scope.inputText = $scope.options[0];
       });
+      component = $builder.components[formObject.component];
+      return $scope.validationOptions = component.validationOptions;
     };
     return $scope.data = {
       model: null,
@@ -64,7 +71,8 @@
           description: $scope.description,
           placeholder: $scope.placeholder,
           required: $scope.required,
-          optionsText: $scope.optionsText
+          optionsText: $scope.optionsText,
+          validation: $scope.validation
         };
       },
       rollback: function() {
@@ -79,12 +87,13 @@
         $scope.description = this.model.description;
         $scope.placeholder = this.model.placeholder;
         $scope.required = this.model.required;
-        return $scope.optionsText = this.model.optionsText;
+        $scope.optionsText = this.model.optionsText;
+        return $scope.validation = this.model.validation;
       }
     };
   };
 
-  fbFormObjectEditableController.$inject = ['$scope'];
+  fbFormObjectEditableController.$inject = ['$scope', '$injector'];
 
   a.controller('fbFormObjectEditableController', fbFormObjectEditableController);
 
@@ -963,7 +972,7 @@
       "default": 0
     };
     this.convertComponent = function(name, component) {
-      var result, _ref, _ref1, _ref2, _ref3, _ref4, _ref5, _ref6, _ref7, _ref8, _ref9;
+      var result, _ref, _ref1, _ref10, _ref2, _ref3, _ref4, _ref5, _ref6, _ref7, _ref8, _ref9;
       result = {
         name: name,
         group: (_ref = component.group) != null ? _ref : 'Default',
@@ -973,9 +982,10 @@
         editable: (_ref4 = component.editable) != null ? _ref4 : true,
         required: (_ref5 = component.required) != null ? _ref5 : false,
         validation: (_ref6 = component.validation) != null ? _ref6 : '/.*/',
-        errorMessage: (_ref7 = component.errorMessage) != null ? _ref7 : '',
-        options: (_ref8 = component.options) != null ? _ref8 : [],
-        arrayToText: (_ref9 = component.arrayToText) != null ? _ref9 : false,
+        validationOptions: (_ref7 = component.validationOptions) != null ? _ref7 : [],
+        errorMessage: (_ref8 = component.errorMessage) != null ? _ref8 : '',
+        options: (_ref9 = component.options) != null ? _ref9 : [],
+        arrayToText: (_ref10 = component.arrayToText) != null ? _ref10 : false,
         template: component.template,
         popoverTemplate: component.popoverTemplate
       };
@@ -1050,6 +1060,7 @@
           editable: {bool} Is the form object editable?
           required: {bool} Is the form object required?
           validation: {string} angular-validator. "/regex/" or "[rule1, rule2]". (default is RegExp(.*))
+          validationOptions: {array} [{rule: angular-validator, label: 'option label'}] the options for the validation. (default is [])
           errorMessage: {string} The validator error message
           options: {array} The input options.
           arrayToText: {bool} checkbox could use this to convert input (default is no)

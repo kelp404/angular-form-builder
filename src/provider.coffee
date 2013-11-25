@@ -46,6 +46,7 @@ a.provider '$builder', ->
             editable: component.editable ? yes
             required: component.required ? no
             validation: component.validation ? '/.*/'
+            validationOptions: component.validationOptions ? []
             errorMessage: component.errorMessage ? ''
             options: component.options ? []
             arrayToText: component.arrayToText ? no
@@ -100,6 +101,7 @@ a.provider '$builder', ->
             editable: {bool} Is the form object editable?
             required: {bool} Is the form object required?
             validation: {string} angular-validator. "/regex/" or "[rule1, rule2]". (default is RegExp(.*))
+            validationOptions: {array} [{rule: angular-validator, label: 'option label'}] the options for the validation. (default is [])
             errorMessage: {string} The validator error message
             options: {array} The input options.
             arrayToText: {bool} checkbox could use this to convert input (default is no)

@@ -6,10 +6,15 @@ describe 'builder.controller', ->
         $scope = null
         controller = null
 
-        beforeEach inject ($rootScope, $controller) ->
+        beforeEach inject ($rootScope, $controller, $builder, $injector) ->
+            $builder.registerComponent 'inputText',
+                template: "<div class='form-group'></div>"
+                popoverTemplate: "<div class='form-group'></div>"
+
             $scope = $rootScope.$new()
             controller = $controller 'fbFormObjectEditableController',
                 $scope: $scope
+                $injector: $injector
 
         describe '$scope.setupScope()', ->
             formObject = null
@@ -17,11 +22,13 @@ describe 'builder.controller', ->
             beforeEach ->
                 formObject =
                     $$hashKey: '007'
+                    component: 'inputText'
                     label: 'label'
                     description: 'description'
                     placeholder: 'placeholder'
                     required: no
                     options: ['value one', 'two']
+                    validation: '/.*/'
                 $scope.setupScope formObject
 
             it '$scope.setupScope(formObject) copy properties from formObject without `$$hashKey`', ->
@@ -31,11 +38,12 @@ describe 'builder.controller', ->
                 expect(formObject.placeholder).toEqual $scope.placeholder
                 expect(formObject.required).toBe no
                 expect(formObject.options).toEqual $scope.options
+                expect(formObject.validation).toEqual $scope.validation
 
             it '$scope.setupScope(formObject) $scope.optionsText is joined by `\\n` from options', ->
                 expect($scope.optionsText).toEqual 'value one\ntwo'
 
-            it '$scope.setupScope(formObject) $scope.$watch `[label, description, placeholder, required, options]`', ->
+            it '$scope.setupScope(formObject) $scope.$watch `[label, description, placeholder, required, options, validation]`', ->
                 $scope.label = 'new'
                 $scope.$digest()
                 expect(formObject.label).toEqual $scope.label
@@ -56,11 +64,18 @@ describe 'builder.controller', ->
                 $scope.$digest()
                 expect(formObject.options).toEqual $scope.options
 
+                $scope.validation = '/regex/'
+                $scope.$digest()
+                expect(formObject.validation).toEqual $scope.validation
+
             it '$scope.setupScope(formObject) $scope.$watch `optionsText`', ->
                 $scope.optionsText = "one\ntwo"
                 $scope.$digest()
                 expect(['one', 'two']).toEqual $scope.options
                 expect('one').toEqual $scope.inputText
+
+            it '$scope.setupScope(formObject) setup validationOptions', ->
+                expect([]).toEqual $scope.validationOptions
 
         describe '$scope.data', ->
             formObject = null
@@ -68,11 +83,13 @@ describe 'builder.controller', ->
             beforeEach ->
                 formObject =
                     $$hashKey: '007'
+                    component: 'inputText'
                     label: 'label'
                     description: 'description'
                     placeholder: 'placeholder'
                     required: no
                     options: ['value one', 'two']
+                    validation: '/.*/'
                 $scope.setupScope formObject
 
             it '$scope.data.model is null', ->
@@ -86,6 +103,7 @@ describe 'builder.controller', ->
                     placeholder: 'placeholder'
                     required: no
                     optionsText: 'value one\ntwo'
+                    validation: '/.*/'
                 .toEqual $scope.data.model
 
             it '$scope after call $scope.data.rollback()', ->

@@ -11,6 +11,12 @@ config = ($builderProvider) ->
         description: 'description'
         placeholder: 'placeholder'
         required: no
+        validationOptions: [
+            label: 'none', rule: '/.*/'
+        ,   label: 'number', rule: '[number]',
+            label: 'email', rule: '[email]'
+        ,   label: 'url', rule: '[url]'
+        ]
         template:
             """
             <div class="form-group">
@@ -40,6 +46,10 @@ config = ($builderProvider) ->
                     <label>
                         <input type='checkbox' ng-model="required" />
                         Required</label>
+                </div>
+                <div class="form-group" ng-if="validationOptions.length > 0">
+                    <label class='control-label'>Validation</label>
+                    <select ng-model="$parent.validation" class='form-control' ng-options="option.rule as option.label for option in validationOptions"></select>
                 </div>
 
                 <hr/>
