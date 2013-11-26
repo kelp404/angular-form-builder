@@ -292,6 +292,10 @@ describe 'builder.provider', ->
             $builder.addFormObject 'default', component: 'inputText'
             expect(builderProvider.insertFormObject).toHaveBeenCalled()
 
+        it '$builder.addFormObject() add the form object into the new form', inject ($builder) ->
+            expect ->
+                $builder.addFormObject 'new', component: 'inputText'
+            .not.toThrow()
 
     describe '$builder.insertFormObject()', ->
         beforeEach -> inject ($builder) ->

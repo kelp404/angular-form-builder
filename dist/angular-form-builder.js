@@ -1079,6 +1079,7 @@
       }
     };
     this.addFormObject = function(name, formObject) {
+      var _base;
       if (formObject == null) {
         formObject = {};
       }
@@ -1086,6 +1087,9 @@
       Insert the form object into the form at last.
       */
 
+      if ((_base = _this.forms)[name] == null) {
+        _base[name] = [];
+      }
       return _this.insertFormObject(name, _this.forms[name].length, formObject);
     };
     this.insertFormObject = function(name, index, formObject) {

@@ -122,6 +122,7 @@ a.provider '$builder', ->
         ###
         Insert the form object into the form at last.
         ###
+        @forms[name] ?= []
         @insertFormObject name, @forms[name].length, formObject
 
     @insertFormObject = (name, index, formObject={}) =>
