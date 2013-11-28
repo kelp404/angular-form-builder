@@ -207,7 +207,7 @@
         $(element).addClass('fb-builder');
         return $drag.droppable($(element), {
           move: function(e) {
-            var $empty, $formObject, $formObjects, height, index, offset, positionStart, positions, uneditableIndex, _i, _j, _k, _ref, _ref1, _ref2;
+            var $empty, $formObject, $formObjects, height, index, offset, positions, _i, _j, _ref, _ref1;
             if (beginMove) {
               $("div.fb-form-object-editable").popover('hide');
               beginMove = false;
@@ -228,16 +228,7 @@
               positions.push(offset.top + height / 2);
             }
             positions.push(positions[positions.length - 1] + 1000);
-            uneditableIndex = -1;
-            for (index = _j = _ref1 = scope.formObjects.length - 1; _j >= 0; index = _j += -1) {
-              if (!(!scope.formObjects[index].editable)) {
-                continue;
-              }
-              uneditableIndex = index;
-              break;
-            }
-            positionStart = uneditableIndex >= 0 ? uneditableIndex + 2 : 1;
-            for (index = _k = positionStart, _ref2 = positions.length - 1; _k <= _ref2; index = _k += 1) {
+            for (index = _j = 1, _ref1 = positions.length - 1; _j <= _ref1; index = _j += 1) {
               if (e.pageY > positions[index - 1] && e.pageY <= positions[index]) {
                 $(element).find('.empty').remove();
                 $empty = $("<div class='fb-form-object-editable empty'></div>");
@@ -266,7 +257,9 @@
             }
             if (!isHover && draggable.mode === 'drag') {
               formObject = draggable.object.formObject;
-              $builder.removeFormObject(attrs.fbBuilder, formObject.index);
+              if (formObject.editable) {
+                $builder.removeFormObject(attrs.fbBuilder, formObject.index);
+              }
             } else if (isHover) {
               if (draggable.mode === 'mirror') {
                 $builder.insertFormObject(scope.formName, $(element).find('.empty').index('.fb-form-object-editable'), {
@@ -312,13 +305,12 @@
         $(element).on('click', function() {
           return false;
         });
-        if (formObject.editable) {
-          $drag.draggable($(element), {
-            object: {
-              formObject: formObject
-            }
-          });
-        } else {
+        $drag.draggable($(element), {
+          object: {
+            formObject: formObject
+          }
+        });
+        if (!formObject.editable) {
           return;
         }
         popover = {

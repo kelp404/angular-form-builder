@@ -61,12 +61,7 @@ fbBuilder = ($injector) ->
                 positions.push positions[positions.length - 1] + 1000   # last
 
                 # search where should I insert the .empty
-                uneditableIndex = -1
-                for index in [(scope.formObjects.length - 1)..0] by -1 when not scope.formObjects[index].editable
-                    uneditableIndex = index
-                    break
-                positionStart = if uneditableIndex >= 0 then uneditableIndex + 2 else 1
-                for index in [positionStart..positions.length - 1] by 1
+                for index in [1..positions.length - 1] by 1
                     if e.pageY > positions[index - 1] and e.pageY <= positions[index]
                         # you known, this one
                         $(element).find('.empty').remove()
@@ -94,7 +89,8 @@ fbBuilder = ($injector) ->
                 if not isHover and draggable.mode is 'drag'
                     # remove the form object by draggin out
                     formObject = draggable.object.formObject
-                    $builder.removeFormObject attrs.fbBuilder, formObject.index
+                    if formObject.editable
+                        $builder.removeFormObject attrs.fbBuilder, formObject.index
                 else if isHover
                     if draggable.mode is 'mirror'
                         # insert a form object
@@ -138,14 +134,13 @@ fbFormObjectEditable = ($injector) ->
         # disable click event
         $(element).on 'click', -> no
 
-        if formObject.editable
-            # draggable
-            $drag.draggable $(element),
-                object:
-                    formObject: formObject
-        else
-            # do not setup bootstrap popover
-            return
+        # draggable
+        $drag.draggable $(element),
+            object:
+                formObject: formObject
+
+        # do not setup bootstrap popover
+        return if not formObject.editable
 
         # ----------------------------------------
         # bootstrap popover
