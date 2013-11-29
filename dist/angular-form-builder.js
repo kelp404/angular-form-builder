@@ -690,6 +690,10 @@
           _this.autoScroll.up = false;
           return _this.autoScroll.down = false;
         }
+      },
+      stop: function() {
+        _this.autoScroll.up = false;
+        return _this.autoScroll.down = false;
       }
     };
     this.dragMirrorMode = function($element, defer, object) {
@@ -751,7 +755,8 @@
           delete _this.hooks.move.drag;
           delete _this.hooks.up.drag;
           result.element = null;
-          return $clone.remove();
+          $clone.remove();
+          return _this.autoScroll.stop();
         };
         $('body').append($clone);
         if (!defer) {
@@ -823,7 +828,8 @@
             left: '',
             top: ''
           });
-          return $element.removeClass('dragging defer-dragging');
+          $element.removeClass('dragging defer-dragging');
+          return _this.autoScroll.stop();
         };
         if (!defer) {
           return _this.hooks.move.drag(e, defer);

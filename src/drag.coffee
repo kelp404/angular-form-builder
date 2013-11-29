@@ -127,6 +127,9 @@ a.provider '$drag', ->
             else
                 @autoScroll.up = no
                 @autoScroll.down = no
+        stop: =>
+            @autoScroll.up = no
+            @autoScroll.down = no
 
 
     @dragMirrorMode = ($element, defer=yes, object) =>
@@ -173,6 +176,7 @@ a.provider '$drag', ->
                 delete @hooks.up.drag
                 result.element = null
                 $clone.remove()
+                @autoScroll.stop()
             $('body').append $clone
             # setup left & top of the element
             @hooks.move.drag(e, defer) if not defer
@@ -227,6 +231,7 @@ a.provider '$drag', ->
                     width: '', height: ''
                     left: '', top: ''
                 $element.removeClass 'dragging defer-dragging'
+                @autoScroll.stop()
             # setup left & top of the element
             @hooks.move.drag(e, defer) if not defer
         result
