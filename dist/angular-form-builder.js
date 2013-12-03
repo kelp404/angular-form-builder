@@ -960,6 +960,7 @@
 
   a.provider('$builder', function() {
     var _this = this;
+    this.version = '0.0.0';
     this.components = {};
     this.groups = [];
     this.broadcastChannel = {
@@ -1160,6 +1161,7 @@
     };
     this.get = function() {
       return {
+        version: this.version,
         components: this.components,
         groups: this.groups,
         forms: this.forms,

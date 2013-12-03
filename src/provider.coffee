@@ -17,6 +17,7 @@ a.provider '$builder', ->
     # ----------------------------------------
     # properties
     # ----------------------------------------
+    @version = '0.0.0'
     # all components
     @components = {}
     # all groups of components
@@ -177,6 +178,7 @@ a.provider '$builder', ->
     # $get
     # ----------------------------------------
     @get = ->
+        version: @version
         components: @components
         groups: @groups
         forms: @forms
