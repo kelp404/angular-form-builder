@@ -141,7 +141,6 @@ describe 'builder.directive', ->
             view = $compile(template) $scope
             $scope.$digest()
             expect($scope.$$childHead).toBe $scope.$$childTail
-            expect($scope.$$childHead.formName).toEqual 'default'
             expect($scope.$$childHead.form).toBe $builder.forms.default
             $formObject = $(view).find '.fb-form-object'
             expect($formObject.length).toBe 1

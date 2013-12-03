@@ -116,6 +116,8 @@ fbFormController = ($scope, $injector) ->
     $builder = $injector.get '$builder'
     $timeout = $injector.get '$timeout'
 
+    # set default for input
+    $scope.input ?= []
     $scope.$watch 'form', ->
         # remove superfluous input
         if $scope.input.length > $scope.form.length
