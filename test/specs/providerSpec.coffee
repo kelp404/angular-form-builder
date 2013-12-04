@@ -224,7 +224,7 @@ describe 'builder.provider', ->
 
             calledCount = jasmine.createSpy 'calledCount'
             builderProvider.reindexFormObject 'default'
-            for index in [0..builderProvider.forms.default.length - 1] by 1
+            for index in [0...builderProvider.forms.default.length] by 1
                 formObject = builderProvider.forms.default[index]
                 expect(formObject.index).toBe index
                 calledCount()

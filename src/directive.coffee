@@ -53,7 +53,7 @@ fbBuilder = ($injector) ->
                 positions = []
                 # first
                 positions.push -1000
-                for index in [0..$formObjects.length - 1] by 1
+                for index in [0...$formObjects.length] by 1
                     $formObject = $($formObjects[index])
                     offset = $formObject.offset()
                     height = $formObject.height()

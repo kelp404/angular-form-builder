@@ -83,7 +83,7 @@ a.provider '$builder', ->
 
     @reindexFormObject = (name) =>
         formObjects = @forms[name]
-        for index in [0..formObjects.length - 1] by 1
+        for index in [0...formObjects.length] by 1
             formObjects[index].index = index
         return
 

@@ -224,7 +224,7 @@
             }
             positions = [];
             positions.push(-1000);
-            for (index = _i = 0, _ref = $formObjects.length - 1; _i <= _ref; index = _i += 1) {
+            for (index = _i = 0, _ref = $formObjects.length; _i < _ref; index = _i += 1) {
               $formObject = $($formObjects[index]);
               offset = $formObject.offset();
               height = $formObject.height();
@@ -1041,7 +1041,7 @@
     this.reindexFormObject = function(name) {
       var formObjects, index, _i, _ref;
       formObjects = _this.forms[name];
-      for (index = _i = 0, _ref = formObjects.length - 1; _i <= _ref; index = _i += 1) {
+      for (index = _i = 0, _ref = formObjects.length; _i < _ref; index = _i += 1) {
         formObjects[index].index = index;
       }
     };
