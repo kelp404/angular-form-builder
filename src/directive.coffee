@@ -313,6 +313,8 @@ fbForm = ($injector) ->
         # providers
         $builder = $injector.get '$builder'
 
+        # get the form name for directive
+        scope.formName = attrs.fbForm
         # get the form for controller
         scope.form = $builder.forms[attrs.fbForm]
 

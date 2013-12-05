@@ -477,6 +477,7 @@
       link: function(scope, element, attrs) {
         var $builder;
         $builder = $injector.get('$builder');
+        scope.formName = attrs.fbForm;
         return scope.form = $builder.forms[attrs.fbForm];
       }
     };

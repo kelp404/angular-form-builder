@@ -17,6 +17,6 @@ a.controller 'FormController', ($scope, $validator) ->
     $scope.input = []
 
     $scope.submit = ->
-        v = $validator.validate $scope
+        v = $validator.validate $scope, 'default'
         v.success -> console.log 'success'
         v.error -> console.log 'error'

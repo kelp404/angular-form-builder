@@ -19,7 +19,7 @@
     $scope.input = [];
     return $scope.submit = function() {
       var v;
-      v = $validator.validate($scope);
+      v = $validator.validate($scope, 'default');
       v.success(function() {
         return console.log('success');
       });
