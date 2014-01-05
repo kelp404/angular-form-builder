@@ -961,7 +961,7 @@
 
   a.provider('$builder', function() {
     var _this = this;
-    this.version = '0.0.0';
+    this.version = '0.0.1';
     this.components = {};
     this.groups = [];
     this.broadcastChannel = {
