@@ -1,0 +1,17 @@
+{
+  "name": "angular-form-builder",
+  "version": "0.0.1",
+  "homepage": "http://kelp404.github.io/angular-form-builder/",
+  "description": "AngularJS form builder.",
+  "keywords": [
+    "AngularJS",
+    "CoffeeScript"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test"
+  ]
+}
