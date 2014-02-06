@@ -11,9 +11,9 @@
         They can input the value to the form.
 ###
 
-a = angular.module 'builder.provider', []
+angular.module 'builder.provider', []
 
-a.provider '$builder', ->
+.provider '$builder', ->
     # ----------------------------------------
     # properties
     # ----------------------------------------

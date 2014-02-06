@@ -1,7 +1,6 @@
+angular.module 'builder.components', ['builder', 'validator.rules']
 
-a = angular.module 'builder.components', ['builder', 'validator.rules']
-
-config = ($builderProvider) ->
+.config ['$builderProvider', ($builderProvider) ->
     # ----------------------------------------
     # text input
     # ----------------------------------------
@@ -261,6 +260,4 @@ config = ($builderProvider) ->
                 </div>
             </form>
             """
-
-config.$inject = ['$builderProvider']
-a.config config
+]

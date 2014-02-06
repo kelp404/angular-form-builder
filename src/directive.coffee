@@ -2,7 +2,7 @@
 # ----------------------------------------
 # builder.directive
 # ----------------------------------------
-a = angular.module 'builder.directive',
+angular.module 'builder.directive',
     ['builder.provider', 'builder.controller', 'builder.drag',
      'validator']
 
@@ -10,7 +10,7 @@ a = angular.module 'builder.directive',
 # ----------------------------------------
 # fb-builder
 # ----------------------------------------
-fbBuilder = ($injector) ->
+.directive 'fbBuilder', ['$injector', ($injector) ->
     restrict: 'A'
     template:
         """
@@ -103,13 +103,12 @@ fbBuilder = ($injector) ->
                         newIndex-- if oldIndex < newIndex
                         $builder.updateFormObjectIndex scope.formName, oldIndex, newIndex
                 $(element).find('.empty').remove()
-fbBuilder.$inject = ['$injector']
-a.directive 'fbBuilder', fbBuilder
+]
 
 # ----------------------------------------
 # fb-form-object-editable
 # ----------------------------------------
-fbFormObjectEditable = ($injector) ->
+.directive 'fbFormObjectEditable', ['$injector', ($injector) ->
     restrict: 'A'
     controller: 'fbFormObjectEditableController'
     link: (scope, element, attrs) ->
@@ -242,14 +241,13 @@ fbFormObjectEditable = ($injector) ->
                 $popover.hide()
             , 300
             no
-fbFormObjectEditable.$inject = ['$injector']
-a.directive 'fbFormObjectEditable', fbFormObjectEditable
+]
 
 
 # ----------------------------------------
 # fb-components
 # ----------------------------------------
-fbComponents = ->
+.directive 'fbComponents', ->
     restrict: 'A'
     template:
         """
@@ -264,12 +262,11 @@ fbComponents = ->
         </div>
         """
     controller: 'fbComponentsController'
-a.directive 'fbComponents', fbComponents
 
 # ----------------------------------------
 # fb-component
 # ----------------------------------------
-fbComponent = ($injector) ->
+.directive 'fbComponent', ['$injector', ($injector) ->
     restrict: 'A'
     controller: 'fbComponentController'
     link: (scope, element, attrs) ->
@@ -291,14 +288,13 @@ fbComponent = ($injector) ->
 
         view = $compile(component.template) scope
         $(element).append view
-fbComponent.$inject = ['$injector']
-a.directive 'fbComponent', fbComponent
+]
 
 
 # ----------------------------------------
 # fb-form
 # ----------------------------------------
-fbForm = ($injector) ->
+.directive 'fbForm', ['$injector', ($injector) ->
     restrict: 'A'
     require: 'ngModel'  # form data (end-user input value)
     scope:
@@ -317,14 +313,12 @@ fbForm = ($injector) ->
         scope.formName = attrs.fbForm
         # get the form for controller
         scope.form = $builder.forms[attrs.fbForm]
-
-fbForm.$inject = ['$injector']
-a.directive 'fbForm', fbForm
+]
 
 # ----------------------------------------
 # fb-form-object
 # ----------------------------------------
-fbFormObject = ($injector) ->
+.directive 'fbFormObject', ['$injector', ($injector) ->
     restrict: 'A'
     controller: 'fbFormObjectController'
     link: (scope, element, attrs) ->
@@ -375,7 +369,4 @@ fbFormObject = ($injector) ->
 
         if not component.arrayToText and scope.formObject.options.length > 0
             scope.inputText = scope.formObject.options[0]
-
-fbFormObject.$inject = ['$injector']
-a.directive 'fbFormObject', fbFormObject
-
+]

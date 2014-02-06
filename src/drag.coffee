@@ -1,7 +1,6 @@
+angular.module 'builder.drag', []
 
-a = angular.module 'builder.drag', []
-
-a.provider '$drag', ->
+.provider '$drag', ->
     # ----------------------------------------
     # provider
     # ----------------------------------------
