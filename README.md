@@ -9,8 +9,8 @@ This is an AngularJS form builder written in [CoffeeScript](http://coffeescript.
 
 
 ##Frameworks
-1. [AngularJS](http://angularjs.org/) 1.2.9
-2. [jQuery](http://jquery.com/) 1.10.2, 2.0.3
+1. [AngularJS](http://angularjs.org/) 1.2.11
+2. [jQuery](http://jquery.com/) 1.11.0, 2.1.0
 3. [Bootstrap 3](http://getbootstrap.com/)
 4. [angular-validator](https://github.com/kelp404/angular-validator)
 
