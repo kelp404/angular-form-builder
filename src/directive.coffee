@@ -119,6 +119,7 @@ angular.module 'builder.directive',
         $compile = $injector.get '$compile'
         $validator = $injector.get '$validator'
 
+        scope.inputArray = [] # just for fix warning
         # get formObject
         formObject = $parse(attrs.fbFormObjectEditable) scope
         # get component
@@ -299,7 +300,9 @@ angular.module 'builder.directive',
     require: 'ngModel'  # form data (end-user input value)
     scope:
         # input model for scops in ng-repeat
+        formName: '@fbForm'
         input: '=ngModel'
+        default: '=fbDefault'
     template:
         """
         <div class='fb-form-object' ng-repeat="object in form" fb-form-object="object"></div>
@@ -309,10 +312,8 @@ angular.module 'builder.directive',
         # providers
         $builder = $injector.get '$builder'
 
-        # get the form name for directive
-        scope.formName = attrs.fbForm
         # get the form for controller
-        scope.form = $builder.forms[attrs.fbForm]
+        scope.form = $builder.forms[scope.formName]
 ]
 
 # ----------------------------------------
@@ -367,6 +368,15 @@ angular.module 'builder.directive',
         view = $compile($template) scope
         $(element).append view
 
+        # select the first option
         if not component.arrayToText and scope.formObject.options.length > 0
             scope.inputText = scope.formObject.options[0]
+
+        # set default value
+        scope.$watch "default[#{scope.formObject.id}]", (value) ->
+            return if not value
+            if component.arrayToText
+                scope.inputArray = value
+            else
+                scope.inputText = value
 ]

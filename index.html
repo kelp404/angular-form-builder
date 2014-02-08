@@ -16,8 +16,8 @@
     <script type="text/javascript" src="submodules/angular-validator/dist/angular-validator-rules.js"></script>
     <script type="text/javascript" src="example/demo.js"></script>
 </head>
-<body class="container">
-    <div class="row" ng-controller="BuilderController">
+<body class="container" ng-controller="DemoController">
+    <div class="row">
         <h1>angular-form-builder</h1>
         <hr/>
 
@@ -43,11 +43,11 @@
         </div>
     </div>
 
-    <div class="row" ng-controller="FormController">
+    <div class="row">
         <h2>Form</h2>
         <hr/>
         <form class="form-horizontal">
-            <div ng-model="input" fb-form="default"></div>
+            <div ng-model="input" fb-form="default" fb-default="defaultValue"></div>
             <div class="form-group">
                 <div class="col-md-8 col-md-offset-4">
                     <input type="submit" ng-click="submit()" class="btn btn-default"/>

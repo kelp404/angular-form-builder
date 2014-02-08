@@ -14,9 +14,6 @@
 angular.module 'builder.provider', []
 
 .provider '$builder', ->
-    # ----------------------------------------
-    # properties
-    # ----------------------------------------
     @version = '0.0.1'
     # all components
     @components = {}
@@ -129,6 +126,7 @@ angular.module 'builder.provider', []
         @param name: The form name.
         @param index: The form object index.
         @param form: The form object.
+            id: {int} The form object id. It will be generate by $builder if not asigned.
             component: {string} The component name
             editable: {bool} Is the form object editable? (default is yes)
             label: {string} The form object label.
@@ -137,8 +135,8 @@ angular.module 'builder.provider', []
             options: {array} The form object options.
             required: {bool} Is the form object required? (default is no)
             validation: {string} angular-validator. "/regex/" or "[rule1, rule2]".
-            [id]: {int} The form object id. It will be generate by $builder.
             [index]: {int} The form object index. It will be updated by $builder.
+        @return: The form object.
         ###
         @forms[name] ?= []
         @formsId[name] ?= 0
@@ -146,6 +144,7 @@ angular.module 'builder.provider', []
         else if index < 0 then index = 0
         @forms[name].splice index, 0, @convertFormObject(name, formObject)
         @reindexFormObject name
+        @forms[name][index]
 
     @removeFormObject = (name, index) =>
         ###

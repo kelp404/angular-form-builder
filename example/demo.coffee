@@ -1,22 +1,35 @@
+angular.module 'app', ['builder', 'builder.components', 'validator.rules']
 
-a = angular.module 'app', ['builder', 'builder.components', 'validator.rules']
-
-a.controller 'BuilderController', ($scope, $builder) ->
-    $builder.addFormObject 'default',
+.controller 'DemoController', ($scope, $builder, $validator) ->
+    # ----------------------------------------
+    # builder
+    # ----------------------------------------
+    textbox = $builder.addFormObject 'default',
         component: 'textInput'
         label: 'Name'
         description: 'Your name'
         placeholder: 'Your name'
         required: yes
         editable: no
+    checkbox = $builder.addFormObject 'default',
+        component: 'checkbox'
+        label: 'Pets'
+        description: 'Do you have any pets?'
+        options: ['Dog', 'Cat']
     # formObjects
     $scope.form = $builder.forms['default']
 
-a.controller 'FormController', ($scope, $validator) ->
+    # ----------------------------------------
+    # form
+    # ----------------------------------------
     # user input value
     $scope.input = []
+    $scope.defaultValue = {}
+    # formObjectId: default value
+    $scope.defaultValue[textbox.id] = 'default value'
+    $scope.defaultValue[checkbox.id] = [yes, yes]
 
     $scope.submit = ->
-        v = $validator.validate $scope, 'default'
-        v.success -> console.log 'success'
-        v.error -> console.log 'error'
+        $validator.validate $scope, 'default'
+        .success -> console.log 'success'
+        .error -> console.log 'error'

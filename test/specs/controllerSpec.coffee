@@ -221,14 +221,15 @@ describe 'builder.controller', ->
                 $injector: $injector
 
         describe "$scope.$watch('form')", ->
-            it "$scope.$watch('form') remove superfluous input and $broadcast", inject ($builder, $timeout) ->
+            it "$scope.$watch('form') remove superfluous input and $broadcast", inject ($builder) ->
                 spyBroadcast = jasmine.createSpy 'broadcast'
                 $scope.$on $builder.broadcastChannel.updateInput, ->
                     spyBroadcast()
                 $scope.input = [{}, {}]
-                $scope.form = [{}]
+                $scope.form = [
+                    component: 'textbox'
+                ]
                 $scope.$digest()
-                $timeout.flush()
                 expect($scope.input.length).toBe 1
                 expect(spyBroadcast).toHaveBeenCalled()
 

@@ -127,9 +127,8 @@
     }
   ]).controller('fbFormController', [
     '$scope', '$injector', function($scope, $injector) {
-      var $builder, $timeout;
+      var $builder;
       $builder = $injector.get('$builder');
-      $timeout = $injector.get('$timeout');
       if ($scope.input == null) {
         $scope.input = [];
       }
@@ -137,9 +136,7 @@
         if ($scope.input.length > $scope.form.length) {
           $scope.input.splice($scope.form.length);
         }
-        return $timeout(function() {
-          return $scope.$broadcast($builder.broadcastChannel.updateInput);
-        });
+        return $scope.$broadcast($builder.broadcastChannel.updateInput);
       }, true);
     }
   ]).controller('fbFormObjectController', [
@@ -273,6 +270,7 @@
           $parse = $injector.get('$parse');
           $compile = $injector.get('$compile');
           $validator = $injector.get('$validator');
+          scope.inputArray = [];
           formObject = $parse(attrs.fbFormObjectEditable)(scope);
           component = $builder.components[formObject.component];
           scope.setupScope(formObject);
@@ -431,15 +429,16 @@
         restrict: 'A',
         require: 'ngModel',
         scope: {
-          input: '=ngModel'
+          formName: '@fbForm',
+          input: '=ngModel',
+          "default": '=fbDefault'
         },
         template: "<div class='fb-form-object' ng-repeat=\"object in form\" fb-form-object=\"object\"></div>",
         controller: 'fbFormController',
         link: function(scope, element, attrs) {
           var $builder;
           $builder = $injector.get('$builder');
-          scope.formName = attrs.fbForm;
-          return scope.form = $builder.forms[attrs.fbForm];
+          return scope.form = $builder.forms[scope.formName];
         }
       };
     }
@@ -488,8 +487,18 @@
           view = $compile($template)(scope);
           $(element).append(view);
           if (!component.arrayToText && scope.formObject.options.length > 0) {
-            return scope.inputText = scope.formObject.options[0];
+            scope.inputText = scope.formObject.options[0];
           }
+          return scope.$watch("default[" + scope.formObject.id + "]", function(value) {
+            if (!value) {
+              return;
+            }
+            if (component.arrayToText) {
+              return scope.inputArray = value;
+            } else {
+              return scope.inputText = value;
+            }
+          });
         }
       };
     }
@@ -1077,6 +1086,7 @@
         @param name: The form name.
         @param index: The form object index.
         @param form: The form object.
+            id: {int} The form object id. It will be generate by $builder if not asigned.
             component: {string} The component name
             editable: {bool} Is the form object editable? (default is yes)
             label: {string} The form object label.
@@ -1085,8 +1095,8 @@
             options: {array} The form object options.
             required: {bool} Is the form object required? (default is no)
             validation: {string} angular-validator. "/regex/" or "[rule1, rule2]".
-            [id]: {int} The form object id. It will be generate by $builder.
             [index]: {int} The form object index. It will be updated by $builder.
+        @return: The form object.
          */
         if ((_base = _this.forms)[name] == null) {
           _base[name] = [];
@@ -1100,7 +1110,8 @@
           index = 0;
         }
         _this.forms[name].splice(index, 0, _this.convertFormObject(name, formObject));
-        return _this.reindexFormObject(name);
+        _this.reindexFormObject(name);
+        return _this.forms[name][index];
       };
     })(this);
     this.removeFormObject = (function(_this) {
