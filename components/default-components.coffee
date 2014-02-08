@@ -11,10 +11,10 @@ angular.module 'builder.components', ['builder', 'validator.rules']
         placeholder: 'placeholder'
         required: no
         validationOptions: [
-            label: 'none', rule: '/.*/'
-        ,   label: 'number', rule: '[number]',
-            label: 'email', rule: '[email]'
-        ,   label: 'url', rule: '[url]'
+            {label: 'none', rule: '/.*/'}
+            {label: 'number', rule: '[number]'}
+            {label: 'email', rule: '[email]'}
+            {label: 'url', rule: '[url]'}
         ]
         template:
             """
