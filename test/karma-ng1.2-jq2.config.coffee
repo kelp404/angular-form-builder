@@ -7,8 +7,8 @@ module.exports = (config) ->
 
         # list of files / patterns to load in the browser
         files: [
-            'test/lib/angularjs/angular.1.2.11.min.js'
-            'test/lib/angularjs/angular-mocks.1.2.11.js'
+            'test/lib/angularjs/angular.1.2.12.min.js'
+            'test/lib/angularjs/angular-mocks.1.2.12.js'
             'test/lib/jquery/jquery-2.1.0.min.js'
             'test/lib/angular-validator/dist/angular-validator.js'
             'test/lib/angular-validator/dist/angular-validator-rules.js'
