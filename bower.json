@@ -1,6 +1,7 @@
 {
   "name": "angular-form-builder",
   "version": "0.0.1",
+  "main": ["./dist/angular-form-builder.js","./dist/angular-form-builder-components.js"],
   "homepage": "http://kelp404.github.io/angular-form-builder/",
   "description": "AngularJS form builder.",
   "keywords": [
