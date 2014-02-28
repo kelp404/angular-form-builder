@@ -1,12 +1,13 @@
 {
   "name": "angular-form-builder",
   "version": "0.0.1",
-  "main": ["./dist/angular-form-builder.js","./dist/angular-form-builder-components.js"],
-  "homepage": "http://kelp404.github.io/angular-form-builder/",
-  "description": "AngularJS form builder.",
+  "main": ["./dist/angular-form-builder.js", "./dist/angular-form-builder-components.js"],
+  "homepage": "https://github.com/kelp404/angular-form-builder",
+  "description": "Drag and drop to build bootstrap forms in AngularJS.",
   "keywords": [
     "AngularJS",
-    "CoffeeScript"
+    "CoffeeScript",
+    "form"
   ],
   "license": "MIT",
   "ignore": [
