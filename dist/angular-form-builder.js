@@ -436,8 +436,11 @@
         template: "<div class='fb-form-object' ng-repeat=\"object in form\" fb-form-object=\"object\"></div>",
         controller: 'fbFormController',
         link: function(scope, element, attrs) {
-          var $builder;
+          var $builder, _base, _name;
           $builder = $injector.get('$builder');
+          if ((_base = $builder.forms)[_name = scope.formName] == null) {
+            _base[_name] = [];
+          }
           return scope.form = $builder.forms[scope.formName];
         }
       };

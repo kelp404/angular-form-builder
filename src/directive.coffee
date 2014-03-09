@@ -313,6 +313,7 @@ angular.module 'builder.directive',
         $builder = $injector.get '$builder'
 
         # get the form for controller
+        $builder.forms[scope.formName] ?= []
         scope.form = $builder.forms[scope.formName]
 ]
 
