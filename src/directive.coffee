@@ -258,8 +258,12 @@ angular.module 'builder.directive',
             </li>
         </ul>
         <div class='form-horizontal'>
-            <div class='fb-component' ng-repeat="component in components"
-                fb-component="component"></div>
+          <div class='fb-component-container' ng-repeat="component in components">
+            <button class='add-to-form btn btn-xs' ng-click="addThis(component.name); $event.stopPropagation(); $event.preventDefault();">
+              <span class='glyphicon glyphicon-plus'></span>
+            </button>
+            <div class='fb-component' fb-component="component"></div>
+          </div>
         </div>
         """
     controller: 'fbComponentsController'
