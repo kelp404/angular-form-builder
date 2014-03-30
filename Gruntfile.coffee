@@ -6,34 +6,34 @@ module.exports = (grunt) ->
         compass:
             example:
                 options:
-                    sassDir: './example'
-                    cssDir: './example'
+                    sassDir: 'example'
+                    cssDir: 'example'
                     outputStyle: 'compressed'
             src:
                 options:
-                    sassDir: './src'
-                    cssDir: './dist'
+                    sassDir: 'src'
+                    cssDir: 'dist'
                     outputStyle: 'compressed'
 
         coffee:
             source:
                 files:
-                    './dist/angular-form-builder.js': ['./src/*.coffee']
+                    'dist/angular-form-builder.js': ['src/*.coffee']
             components:
                 files:
-                    './dist/angular-form-builder-components.js': ['./components/*.coffee']
+                    'dist/angular-form-builder-components.js': ['components/*.coffee']
             demo:
                 files:
-                    './example/demo.js': './example/demo.coffee'
+                    'example/demo.js': 'example/demo.coffee'
 
         watch:
             compass:
-                files: ['./example/*.scss', './src/*.scss']
+                files: ['example/*.scss', 'src/*.scss']
                 tasks: ['compass']
                 options:
                     spawn: no
             coffee:
-                files: ['./src/*.coffee', './components/*.coffee', './example/*.coffee']
+                files: ['src/*.coffee', 'components/*.coffee', 'example/*.coffee']
                 tasks: ['coffee']
                 options:
                     spawn: no
@@ -48,9 +48,9 @@ module.exports = (grunt) ->
 
         karma:
             min:
-                configFile: './test/karma-min.config.coffee'
+                configFile: 'test/karma-min.config.coffee'
             source:
-                configFile: './test/karma.config.coffee'
+                configFile: 'test/karma.config.coffee'
 
     # -----------------------------------
     # register task
