@@ -211,10 +211,12 @@ describe 'builder.controller', ->
 
 
     describe 'fbFormController', ->
+        $timeout = null
         $scope = null
         controller = null
 
         beforeEach inject ($rootScope, $controller, $injector) ->
+            $timeout = $injector.get '$timeout'
             $scope = $rootScope.$new()
             controller = $controller 'fbFormController',
                 $scope: $scope
@@ -230,6 +232,7 @@ describe 'builder.controller', ->
                     component: 'textbox'
                 ]
                 $scope.$digest()
+                $timeout.flush()
                 expect($scope.input.length).toBe 1
                 expect(spyBroadcast).toHaveBeenCalled()
 
