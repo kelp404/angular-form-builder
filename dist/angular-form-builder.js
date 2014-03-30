@@ -127,8 +127,9 @@
     }
   ]).controller('fbFormController', [
     '$scope', '$injector', function($scope, $injector) {
-      var $builder;
+      var $builder, $timeout;
       $builder = $injector.get('$builder');
+      $timeout = $injector.get('$timeout');
       if ($scope.input == null) {
         $scope.input = [];
       }
@@ -136,7 +137,9 @@
         if ($scope.input.length > $scope.form.length) {
           $scope.input.splice($scope.form.length);
         }
-        return $scope.$broadcast($builder.broadcastChannel.updateInput);
+        return $timeout(function() {
+          return $scope.$broadcast($builder.broadcastChannel.updateInput);
+        });
       }, true);
     }
   ]).controller('fbFormObjectController', [
