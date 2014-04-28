@@ -61,7 +61,7 @@ angular.module 'builder.directive',
                 positions.push positions[positions.length - 1] + 1000   # last
 
                 # search where should I insert the .empty
-                for index in [1..positions.length - 1] by 1
+                for index in [1...positions.length] by 1
                     if e.pageY > positions[index - 1] and e.pageY <= positions[index]
                         # you known, this one
                         $(element).find('.empty').remove()

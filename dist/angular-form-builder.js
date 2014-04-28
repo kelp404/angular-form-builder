@@ -208,7 +208,7 @@
                 positions.push(offset.top + height / 2);
               }
               positions.push(positions[positions.length - 1] + 1000);
-              for (index = _j = 1, _ref1 = positions.length - 1; _j <= _ref1; index = _j += 1) {
+              for (index = _j = 1, _ref1 = positions.length; _j < _ref1; index = _j += 1) {
                 if (e.pageY > positions[index - 1] && e.pageY <= positions[index]) {
                   $(element).find('.empty').remove();
                   $empty = $("<div class='fb-form-object-editable empty'></div>");

@@ -20,8 +20,8 @@
     "test"
   ],
   "dependencies": {
-    "angular": "~1.2.15",
-    "angular-mocks": "~1.2.15",
+    "angular": "1.2.16",
+    "angular-mocks": "1.2.16",
     "jquery": "~2.1.0"
   }
 }
