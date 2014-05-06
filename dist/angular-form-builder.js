@@ -1114,7 +1114,9 @@
             options: {array} The input options.
             arrayToText: {bool} checkbox could use this to convert input (default is no)
             template: {string} html template
+            templateUrl: {string} The url of the template.
             popoverTemplate: {string} html template
+            popoverTemplateUrl: {string} The url of the popover template.
          */
         if (_this.components[name] == null) {
           newComponent = _this.convertComponent(name, component);
