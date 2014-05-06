@@ -165,6 +165,17 @@ $builder.addFormObject = (name, formObject={}) =>
     ###
 ```
 
+####removeFormObject
+>
+```coffee
+$builder.removeFormObject = (name, index) =>
+    ###
+    Remove the form object by the index.
+    @param name: {string} The form name.
+    @param index: {int} The form object index.
+    ###
+```
+
 
 
 
