@@ -14,7 +14,11 @@
 angular.module 'builder.provider', []
 
 .provider '$builder', ->
-    @version = '0.0.1'
+    $injector = null
+    $http = null
+    $templateCache = null
+
+    @version = '0.0.2'
     # all components
     @components = {}
     # all groups of components
@@ -48,9 +52,13 @@ angular.module 'builder.provider', []
             options: component.options ? []
             arrayToText: component.arrayToText ? no
             template: component.template
+            templateUrl: component.templateUrl
             popoverTemplate: component.popoverTemplate
-        if not result.template then console.error "The template is empty."
-        if not result.popoverTemplate then console.error "The popoverTemplate is empty."
+            popoverTemplateUrl: component.popoverTemplateUrl
+        if not result.template and not result.templateUrl
+            console.error "The template is empty."
+        if not result.popoverTemplate and not result.popoverTemplateUrl
+            console.error "The popoverTemplate is empty."
         result
 
     @convertFormObject = (name, formObject={}) ->
@@ -82,6 +90,27 @@ angular.module 'builder.provider', []
             formObjects[index].index = index
         return
 
+    @setupProviders = (injector) =>
+        $injector = injector
+        $http = $injector.get '$http'
+        $templateCache = $injector.get '$templateCache'
+
+    @loadTemplate = (component) ->
+        ###
+        Load template for components.
+        @param component: {object} The component of $builder.
+        ###
+        if not component.template?
+            $http.get component.templateUrl,
+                cache: $templateCache
+            .success (template) ->
+                component.template = template
+        if not component.popoverTemplate?
+            $http.get component.popoverTemplateUrl,
+                cache: $templateCache
+            .success (template) ->
+                component.popoverTemplate = template
+
     # ----------------------------------------
     # public functions
     # ----------------------------------------
@@ -107,6 +136,7 @@ angular.module 'builder.provider', []
             # regist the new component
             newComponent = @convertComponent name, component
             @components[name] = newComponent
+            @loadTemplate(newComponent) if $injector?
             if newComponent.group not in @groups
                 @groups.push newComponent.group
         else
@@ -172,7 +202,11 @@ angular.module 'builder.provider', []
     # ----------------------------------------
     # $get
     # ----------------------------------------
-    @get = ->
+    @$get = ['$injector', ($injector) =>
+        @setupProviders($injector)
+        for name, component of @components
+            @loadTemplate component
+
         version: @version
         components: @components
         groups: @groups
@@ -183,5 +217,5 @@ angular.module 'builder.provider', []
         insertFormObject: @insertFormObject
         removeFormObject: @removeFormObject
         updateFormObjectIndex: @updateFormObjectIndex
-    @$get = @get
+    ]
     return

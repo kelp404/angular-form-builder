@@ -171,13 +171,14 @@
 (function() {
   angular.module('builder.directive', ['builder.provider', 'builder.controller', 'builder.drag', 'validator']).directive('fbBuilder', [
     '$injector', function($injector) {
+      var $builder, $drag;
+      $builder = $injector.get('$builder');
+      $drag = $injector.get('$drag');
       return {
         restrict: 'A',
         template: "<div class='form-horizontal'>\n    <div class='fb-form-object-editable' ng-repeat=\"object in formObjects\"\n        fb-form-object-editable=\"object\"></div>\n</div>",
         link: function(scope, element, attrs) {
-          var $builder, $drag, beginMove, _base, _name;
-          $builder = $injector.get('$builder');
-          $drag = $injector.get('$drag');
+          var beginMove, _base, _name;
           scope.formName = attrs.fbBuilder;
           if ((_base = $builder.forms)[_name = scope.formName] == null) {
             _base[_name] = [];
@@ -263,40 +264,63 @@
     }
   ]).directive('fbFormObjectEditable', [
     '$injector', function($injector) {
+      var $builder, $compile, $drag, $validator;
+      $builder = $injector.get('$builder');
+      $drag = $injector.get('$drag');
+      $compile = $injector.get('$compile');
+      $validator = $injector.get('$validator');
       return {
         restrict: 'A',
         controller: 'fbFormObjectEditableController',
-        link: function(scope, element, attrs) {
-          var $builder, $compile, $drag, $parse, $validator, component, formObject, popover, view;
-          $builder = $injector.get('$builder');
-          $drag = $injector.get('$drag');
-          $parse = $injector.get('$parse');
-          $compile = $injector.get('$compile');
-          $validator = $injector.get('$validator');
+        scope: {
+          formObject: '=fbFormObjectEditable'
+        },
+        link: function(scope, element) {
+          var popover;
           scope.inputArray = [];
-          formObject = $parse(attrs.fbFormObjectEditable)(scope);
-          component = $builder.components[formObject.component];
-          scope.setupScope(formObject);
-          view = $compile(component.template)(scope);
-          $(element).append(view);
+          scope.$component = $builder.components[scope.formObject.component];
+          scope.setupScope(scope.formObject);
+          scope.$watch('$component.template', function(template) {
+            var view;
+            if (!template) {
+              return;
+            }
+            view = $compile(template)(scope);
+            return $(element).html(view);
+          });
           $(element).on('click', function() {
             return false;
           });
           $drag.draggable($(element), {
             object: {
-              formObject: formObject
+              formObject: scope.formObject
             }
           });
-          if (!formObject.editable) {
+          if (!scope.formObject.editable) {
             return;
           }
-          popover = {
-            id: "fb-" + (Math.random().toString().substr(2)),
-            isClickedSave: false,
-            view: null,
-            html: component.popoverTemplate
-          };
-          popover.html = $(popover.html).addClass(popover.id);
+          popover = {};
+          scope.$watch('$component.popoverTemplate', function(template) {
+            if (!template) {
+              return;
+            }
+            $(element).removeClass(popover.id);
+            popover = {
+              id: "fb-" + (Math.random().toString().substr(2)),
+              isClickedSave: false,
+              view: null,
+              html: template
+            };
+            popover.html = $(popover.html).addClass(popover.id);
+            popover.view = $compile(popover.html)(scope);
+            $(element).addClass(popover.id);
+            return $(element).popover({
+              html: true,
+              title: scope.$component.label,
+              content: popover.view,
+              container: 'body'
+            });
+          });
           scope.popover = {
             save: function($event) {
 
@@ -315,7 +339,7 @@
               The delete event of the popover.
                */
               $event.preventDefault();
-              $builder.removeFormObject(scope.formName, scope.$index);
+              $builder.removeFormObject(scope.$parent.formName, scope.$index);
               $(element).popover('hide');
             },
             shown: function() {
@@ -338,14 +362,6 @@
               }
             }
           };
-          popover.view = $compile(popover.html)(scope);
-          $(element).addClass(popover.id);
-          $(element).popover({
-            html: true,
-            title: component.label,
-            content: popover.view,
-            container: 'body'
-          });
           $(element).on('show.bs.popover', function() {
             var $popover, elementOrigin, popoverTop;
             if ($drag.isMouseMoved()) {
@@ -378,7 +394,7 @@
             var $popover;
             $popover = $("form." + popover.id).closest('.popover');
             if (!popover.isClickedSave) {
-              if (scope.$$phase) {
+              if (scope.$$phase || scope.$root.$$phase) {
                 scope.popover.cancel();
               } else {
                 scope.$apply(function() {
@@ -403,26 +419,33 @@
     };
   }).directive('fbComponent', [
     '$injector', function($injector) {
+      var $builder, $compile, $drag;
+      $builder = $injector.get('$builder');
+      $drag = $injector.get('$drag');
+      $compile = $injector.get('$compile');
       return {
         restrict: 'A',
+        scope: {
+          component: '=fbComponent'
+        },
         controller: 'fbComponentController',
-        link: function(scope, element, attrs) {
-          var $builder, $compile, $drag, $parse, component, view;
-          $builder = $injector.get('$builder');
-          $drag = $injector.get('$drag');
-          $parse = $injector.get('$parse');
-          $compile = $injector.get('$compile');
-          component = $parse(attrs.fbComponent)(scope);
-          scope.copyObjectToScope(component);
+        link: function(scope, element) {
+          scope.copyObjectToScope(scope.component);
           $drag.draggable($(element), {
             mode: 'mirror',
             defer: false,
             object: {
-              componentName: component.name
+              componentName: scope.component.name
             }
           });
-          view = $compile(component.template)(scope);
-          return $(element).append(view);
+          return scope.$watch('component.template', function(template) {
+            var view;
+            if (!template) {
+              return;
+            }
+            view = $compile(template)(scope);
+            return $(element).html(view);
+          });
         }
       };
     }
@@ -450,20 +473,20 @@
     }
   ]).directive('fbFormObject', [
     '$injector', function($injector) {
+      var $builder, $compile, $parse;
+      $builder = $injector.get('$builder');
+      $compile = $injector.get('$compile');
+      $parse = $injector.get('$parse');
       return {
         restrict: 'A',
         controller: 'fbFormObjectController',
         link: function(scope, element, attrs) {
-          var $builder, $compile, $input, $parse, $template, component, view;
-          $builder = $injector.get('$builder');
-          $compile = $injector.get('$compile');
-          $parse = $injector.get('$parse');
           scope.formObject = $parse(attrs.fbFormObject)(scope);
-          component = $builder.components[scope.formObject.component];
+          scope.$component = $builder.components[scope.formObject.component];
           scope.$on($builder.broadcastChannel.updateInput, function() {
             return scope.updateInput(scope.inputText);
           });
-          if (component.arrayToText) {
+          if (scope.$component.arrayToText) {
             scope.inputArray = [];
             scope.$watch('inputArray', function(newValue, oldValue) {
               var checked, index;
@@ -485,21 +508,27 @@
           scope.$watch(attrs.fbFormObject, function() {
             return scope.copyObjectToScope(scope.formObject);
           }, true);
-          $template = $(component.template);
-          $input = $template.find("[ng-model='inputText']");
-          $input.attr({
-            validator: '{{validation}}'
+          scope.$watch('$component.template', function(template) {
+            var $input, $template, view;
+            if (!template) {
+              return;
+            }
+            $template = $(template);
+            $input = $template.find("[ng-model='inputText']");
+            $input.attr({
+              validator: '{{validation}}'
+            });
+            view = $compile($template)(scope);
+            return $(element).html(view);
           });
-          view = $compile($template)(scope);
-          $(element).append(view);
-          if (!component.arrayToText && scope.formObject.options.length > 0) {
+          if (!scope.$component.arrayToText && scope.formObject.options.length > 0) {
             scope.inputText = scope.formObject.options[0];
           }
           return scope.$watch("default[" + scope.formObject.id + "]", function(value) {
             if (!value) {
               return;
             }
-            if (component.arrayToText) {
+            if (scope.$component.arrayToText) {
               return scope.inputArray = value;
             } else {
               return scope.inputText = value;
@@ -944,7 +973,11 @@
   var __indexOf = [].indexOf || function(item) { for (var i = 0, l = this.length; i < l; i++) { if (i in this && this[i] === item) return i; } return -1; };
 
   angular.module('builder.provider', []).provider('$builder', function() {
-    this.version = '0.0.1';
+    var $http, $injector, $templateCache;
+    $injector = null;
+    $http = null;
+    $templateCache = null;
+    this.version = '0.0.2';
     this.components = {};
     this.groups = [];
     this.broadcastChannel = {
@@ -971,12 +1004,14 @@
         options: (_ref8 = component.options) != null ? _ref8 : [],
         arrayToText: (_ref9 = component.arrayToText) != null ? _ref9 : false,
         template: component.template,
-        popoverTemplate: component.popoverTemplate
+        templateUrl: component.templateUrl,
+        popoverTemplate: component.popoverTemplate,
+        popoverTemplateUrl: component.popoverTemplateUrl
       };
-      if (!result.template) {
+      if (!result.template && !result.templateUrl) {
         console.error("The template is empty.");
       }
-      if (!result.popoverTemplate) {
+      if (!result.popoverTemplate && !result.popoverTemplateUrl) {
         console.error("The popoverTemplate is empty.");
       }
       return result;
@@ -1029,6 +1064,34 @@
         }
       };
     })(this);
+    this.setupProviders = (function(_this) {
+      return function(injector) {
+        $injector = injector;
+        $http = $injector.get('$http');
+        return $templateCache = $injector.get('$templateCache');
+      };
+    })(this);
+    this.loadTemplate = function(component) {
+
+      /*
+      Load template for components.
+      @param component: {object} The component of $builder.
+       */
+      if (component.template == null) {
+        $http.get(component.templateUrl, {
+          cache: $templateCache
+        }).success(function(template) {
+          return component.template = template;
+        });
+      }
+      if (component.popoverTemplate == null) {
+        return $http.get(component.popoverTemplateUrl, {
+          cache: $templateCache
+        }).success(function(template) {
+          return component.popoverTemplate = template;
+        });
+      }
+    };
     this.registerComponent = (function(_this) {
       return function(name, component) {
         var newComponent, _ref;
@@ -1056,6 +1119,9 @@
         if (_this.components[name] == null) {
           newComponent = _this.convertComponent(name, component);
           _this.components[name] = newComponent;
+          if ($injector != null) {
+            _this.loadTemplate(newComponent);
+          }
           if (_ref = newComponent.group, __indexOf.call(_this.groups, _ref) < 0) {
             _this.groups.push(newComponent.group);
           }
@@ -1153,21 +1219,31 @@
         return _this.reindexFormObject(name);
       };
     })(this);
-    this.get = function() {
-      return {
-        version: this.version,
-        components: this.components,
-        groups: this.groups,
-        forms: this.forms,
-        broadcastChannel: this.broadcastChannel,
-        registerComponent: this.registerComponent,
-        addFormObject: this.addFormObject,
-        insertFormObject: this.insertFormObject,
-        removeFormObject: this.removeFormObject,
-        updateFormObjectIndex: this.updateFormObjectIndex
-      };
-    };
-    this.$get = this.get;
+    this.$get = [
+      '$injector', (function(_this) {
+        return function($injector) {
+          var component, name, _ref;
+          _this.setupProviders($injector);
+          _ref = _this.components;
+          for (name in _ref) {
+            component = _ref[name];
+            _this.loadTemplate(component);
+          }
+          return {
+            version: _this.version,
+            components: _this.components,
+            groups: _this.groups,
+            forms: _this.forms,
+            broadcastChannel: _this.broadcastChannel,
+            registerComponent: _this.registerComponent,
+            addFormObject: _this.addFormObject,
+            insertFormObject: _this.insertFormObject,
+            removeFormObject: _this.removeFormObject,
+            updateFormObjectIndex: _this.updateFormObjectIndex
+          };
+        };
+      })(this)
+    ];
   });
 
 }).call(this);

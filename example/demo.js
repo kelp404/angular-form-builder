@@ -1,5 +1,32 @@
 (function() {
-  angular.module('app', ['builder', 'builder.components', 'validator.rules']).controller('DemoController', function($scope, $builder, $validator) {
+  angular.module('app', ['builder', 'builder.components', 'validator.rules']).run([
+    '$builder', function($builder) {
+      return $builder.registerComponent('sampleInput', {
+        group: 'from html',
+        label: 'Sample',
+        description: 'From html template',
+        placeholder: 'placeholder',
+        required: false,
+        validationOptions: [
+          {
+            label: 'none',
+            rule: '/.*/'
+          }, {
+            label: 'number',
+            rule: '[number]'
+          }, {
+            label: 'email',
+            rule: '[email]'
+          }, {
+            label: 'url',
+            rule: '[url]'
+          }
+        ],
+        templateUrl: 'example/template.html',
+        popoverTemplateUrl: 'example/popoverTemplate.html'
+      });
+    }
+  ]).controller('DemoController', function($scope, $builder, $validator) {
     var checkbox, textbox;
     textbox = $builder.addFormObject('default', {
       component: 'textInput',
@@ -14,6 +41,9 @@
       label: 'Pets',
       description: 'Do you have any pets?',
       options: ['Dog', 'Cat']
+    });
+    $builder.addFormObject('default', {
+      component: 'sampleInput'
     });
     $scope.form = $builder.forms['default'];
     $scope.input = [];

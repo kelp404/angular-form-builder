@@ -1,5 +1,23 @@
 angular.module 'app', ['builder', 'builder.components', 'validator.rules']
 
+.run ['$builder', ($builder) ->
+    $builder.registerComponent 'sampleInput',
+        group: 'from html'
+        label: 'Sample'
+        description: 'From html template'
+        placeholder: 'placeholder'
+        required: no
+        validationOptions: [
+            {label: 'none', rule: '/.*/'}
+            {label: 'number', rule: '[number]'}
+            {label: 'email', rule: '[email]'}
+            {label: 'url', rule: '[url]'}
+        ]
+        templateUrl: 'example/template.html'
+        popoverTemplateUrl: 'example/popoverTemplate.html'
+]
+
+
 .controller 'DemoController', ($scope, $builder, $validator) ->
     # ----------------------------------------
     # builder
@@ -16,6 +34,8 @@ angular.module 'app', ['builder', 'builder.components', 'validator.rules']
         label: 'Pets'
         description: 'Do you have any pets?'
         options: ['Dog', 'Cat']
+    $builder.addFormObject 'default',
+        component: 'sampleInput'
     # formObjects
     $scope.form = $builder.forms['default']
 

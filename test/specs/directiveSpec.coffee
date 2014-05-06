@@ -75,7 +75,7 @@ describe 'builder.directive', ->
             $scope.$digest()
 
             expect($scope.$$childHead).toBe $scope.$$childTail
-            child = $scope.$$childHead
+            child = $scope.$$childHead.$$childHead
             expect(child.$$hashKey).toBeUndefined()
             for key, value of $scope.components[0] when key isnt '$$hashKey'
                 expect(child[key]).toEqual value

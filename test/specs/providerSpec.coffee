@@ -252,7 +252,9 @@ describe 'builder.provider', ->
                 options: []
                 arrayToText: no
                 template: "<div class='form-group'></div>"
+                templateUrl: undefined
                 popoverTemplate: "<div class='form-group'></div>"
+                popoverTemplateUrl: undefined
             .toEqual $builder.components.textInput
 
         it '$builder.registerComponent() the same component will call console.error()', inject ($builder) ->
