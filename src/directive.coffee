@@ -19,6 +19,10 @@ angular.module 'builder.directive', [
     $drag = $injector.get '$drag'
 
     restrict: 'A'
+
+    scope : 
+        fbBuilder:'='
+
     template:
         """
         <div class='form-horizontal'>
@@ -128,11 +132,13 @@ angular.module 'builder.directive', [
         scope.setupScope scope.formObject
 
         # compile formObject
-        scope.$watch '$component.template', (template) ->
+        scope.$watch '[formObject.template,$component.template]', (templates) ->
+            template = templates [0]
+            template = templates [1] if not template
             return if not template
             view = $compile(template) scope
             $(element).html view
-
+        ,   true
         # disable click event
         $(element).on 'click', -> no
 
@@ -364,7 +370,9 @@ angular.module 'builder.directive', [
             scope.copyObjectToScope scope.formObject
         , yes
 
-        scope.$watch '$component.template', (template) ->
+        scope.$watch '[formObject.template,$component.template]', (templates) ->
+            template = templates [0]
+            template = templates [1] if not template
             return if not template
             $template = $(template)
             # add validator
@@ -374,6 +382,7 @@ angular.module 'builder.directive', [
             # compile
             view = $compile($template) scope
             $(element).html view
+        ,   true
 
         # select the first option
         if not scope.$component.arrayToText and scope.formObject.options.length > 0
