@@ -283,14 +283,18 @@
           scope.inputArray = [];
           scope.$component = $builder.components[scope.formObject.component];
           scope.setupScope(scope.formObject);
-          scope.$watch('$component.template', function(template) {
-            var view;
+          scope.$watch('[formObject.template,$component.template]', function(templates) {
+            var template, view;
+            template = templates([0]);
+            if (!template) {
+              template = templates([1]);
+            }
             if (!template) {
               return;
             }
             view = $compile(template)(scope);
             return $(element).html(view);
-          });
+          }, true);
           $(element).on('click', function() {
             return false;
           });
@@ -511,8 +515,12 @@
           scope.$watch(attrs.fbFormObject, function() {
             return scope.copyObjectToScope(scope.formObject);
           }, true);
-          scope.$watch('$component.template', function(template) {
-            var $input, $template, view;
+          scope.$watch('[formObject.template,$component.template]', function(templates) {
+            var $input, $template, template, view;
+            template = templates([0]);
+            if (!template) {
+              template = templates([1]);
+            }
             if (!template) {
               return;
             }
@@ -523,7 +531,7 @@
             });
             view = $compile($template)(scope);
             return $(element).html(view);
-          });
+          }, true);
           if (!scope.$component.arrayToText && scope.formObject.options.length > 0) {
             scope.inputText = scope.formObject.options[0];
           }
