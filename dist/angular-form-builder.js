@@ -76,6 +76,7 @@
             required: $scope.required,
             optionsText: $scope.optionsText,
             validation: $scope.validation,
+            template: $scope.template,
             attributes: angular.copy($scope.attributes)
           };
         },
@@ -93,7 +94,8 @@
           $scope.required = this.model.required;
           $scope.optionsText = this.model.optionsText;
           $scope.validation = this.model.validation;
-          return $scope.attributes = angular.copy(this.model.attributes);
+          $scope.attributes = angular.copy(this.model.attributes);
+          return $scope.template = this.model.template;
         }
       };
     }
@@ -373,6 +375,15 @@
                 $event.preventDefault();
                 $(element).popover('hide');
               }
+            },
+            copyTemplate: function($event) {
+
+              /*
+              Copy componemnt template to formObject.
+               */
+              var componemnt;
+              componemnt = $builder.components[scope.formObject.component];
+              scope.template = componemnt.template;
             }
           };
           $(element).on('show.bs.popover', function() {

@@ -68,6 +68,7 @@ angular.module 'builder.controller', ['builder.provider']
                 required: $scope.required
                 optionsText: $scope.optionsText
                 validation: $scope.validation
+                template: $scope.template
                 attributes: angular.copy($scope.attributes)
         rollback: ->
             ###
@@ -81,6 +82,7 @@ angular.module 'builder.controller', ['builder.provider']
             $scope.optionsText = @model.optionsText
             $scope.validation = @model.validation
             $scope.attributes = angular.copy(@model.attributes)
+            $scope.template = @model.template
 ]
 
 

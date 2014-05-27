@@ -21,13 +21,13 @@
         <select ng-model="$parent.validation" class='form-control' ng-options="option.rule as option.label for option in validationOptions"></select>
     </div>
     <div class="form-group">
-        <label class='control-label'>Template</label>
-        <input type='text' ng-model="template" class='form-control'/>
+        <div><label class='control-label'>Template</label><a href ng-click="popover.copyTemplate($event)">copy template</a></div>
+        <textarea type="text" ng-model="template" class='form-control'/>
     </div>
 
     <div class="form-group">
-        <label class='control-label'>Custome Attribute</label>
-        <input type='text' ng-model="attributes.att1" class='form-control'/>
+        <label class='control-label'>Custome Attribute background-color</label>
+        <input type='text' ng-model="attributes.backgroundColor" class='form-control'/>
     </div>
 
     <hr/>

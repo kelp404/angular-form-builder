@@ -205,6 +205,13 @@ angular.module 'builder.directive', [
                     $event.preventDefault()
                     $(element).popover 'hide'
                 return
+            copyTemplate: ($event) ->
+                ###
+                Copy componemnt template to formObject.
+                ###
+                componemnt=$builder.components[scope.formObject.component]
+                scope.template=componemnt.template                
+                return
         # ----------------------------------------
         # popover.show
         # ----------------------------------------
