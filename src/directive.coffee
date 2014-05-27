@@ -19,10 +19,8 @@ angular.module 'builder.directive', [
     $drag = $injector.get '$drag'
 
     restrict: 'A'
-
-    scope : 
-        fbBuilder:'='
-
+    scope:
+        fbBuilder: '='
     template:
         """
         <div class='form-horizontal'>
