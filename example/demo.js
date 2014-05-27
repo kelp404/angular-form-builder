@@ -46,7 +46,9 @@
       component: 'sampleInput'
     });
     $scope.form = $builder.forms['default'];
+    $scope.form2 = $builder.forms['default2'];
     $scope.input = [];
+    $scope.input2 = [];
     $scope.defaultValue = {};
     $scope.defaultValue[textbox.id] = 'default value';
     $scope.defaultValue[checkbox.id] = [true, true];
