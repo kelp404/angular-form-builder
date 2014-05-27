@@ -24,20 +24,24 @@
         /*
         1. Copy origin formObject (ng-repeat="object in formObjects") to scope.
         2. Setup optionsText with formObject.options.
-        3. Watch scope.label, .description, .placeholder, .required, .options then copy to origin formObject.
+        3. Watch scope.label, .description, .placeholder, .required, .options, attributes then copy to origin formObject.
         4. Watch scope.optionsText then convert to scope.options.
         5. setup validationOptions
          */
         var component;
         copyObjectToScope(formObject, $scope);
         $scope.optionsText = formObject.options.join('\n');
-        $scope.$watch('[label, description, placeholder, required, options, validation]', function() {
+        $scope.$watch('[label, description, placeholder, required, options, validation, template]', function() {
           formObject.label = $scope.label;
           formObject.description = $scope.description;
           formObject.placeholder = $scope.placeholder;
           formObject.required = $scope.required;
           formObject.options = $scope.options;
-          return formObject.validation = $scope.validation;
+          formObject.validation = $scope.validation;
+          return formObject.template = $scope.template;
+        }, true);
+        $scope.$watch('attributes', function() {
+          return formObject.attributes = angular.copy($scope.attributes);
         }, true);
         $scope.$watch('optionsText', function(text) {
           var x;
@@ -71,7 +75,8 @@
             placeholder: $scope.placeholder,
             required: $scope.required,
             optionsText: $scope.optionsText,
-            validation: $scope.validation
+            validation: $scope.validation,
+            attributes: angular.copy($scope.attributes)
           };
         },
         rollback: function() {
@@ -87,7 +92,8 @@
           $scope.placeholder = this.model.placeholder;
           $scope.required = this.model.required;
           $scope.optionsText = this.model.optionsText;
-          return $scope.validation = this.model.validation;
+          $scope.validation = this.model.validation;
+          return $scope.attributes = angular.copy(this.model.attributes);
         }
       };
     }
@@ -283,14 +289,18 @@
           scope.inputArray = [];
           scope.$component = $builder.components[scope.formObject.component];
           scope.setupScope(scope.formObject);
-          scope.$watch('$component.template', function(template) {
-            var view;
+          scope.$watch('[formObject.template,$component.template]', function(templates) {
+            var template, view;
+            template = templates[0];
+            if (!template) {
+              template = templates[1];
+            }
             if (!template) {
               return;
             }
             view = $compile(template)(scope);
             return $(element).html(view);
-          });
+          }, true);
           $(element).on('click', function() {
             return false;
           });
@@ -511,8 +521,12 @@
           scope.$watch(attrs.fbFormObject, function() {
             return scope.copyObjectToScope(scope.formObject);
           }, true);
-          scope.$watch('$component.template', function(template) {
-            var $input, $template, view;
+          scope.$watch('[formObject.template,$component.template]', function(templates) {
+            var $input, $template, template, view;
+            template = templates[0];
+            if (!template) {
+              template = templates[1];
+            }
             if (!template) {
               return;
             }
@@ -523,7 +537,7 @@
             });
             view = $compile($template)(scope);
             return $(element).html(view);
-          });
+          }, true);
           if (!scope.$component.arrayToText && scope.formObject.options.length > 0) {
             scope.inputText = scope.formObject.options[0];
           }
@@ -1006,6 +1020,7 @@
         validationOptions: (_ref7 = component.validationOptions) != null ? _ref7 : [],
         options: (_ref8 = component.options) != null ? _ref8 : [],
         arrayToText: (_ref9 = component.arrayToText) != null ? _ref9 : false,
+        attributes: !!component.attributes ? angular.copy(component.attributes) : {},
         template: component.template,
         templateUrl: component.templateUrl,
         popoverTemplate: component.popoverTemplate,
@@ -1054,7 +1069,8 @@
         placeholder: (_ref6 = formObject.placeholder) != null ? _ref6 : component.placeholder,
         options: (_ref7 = formObject.options) != null ? _ref7 : component.options,
         required: (_ref8 = formObject.required) != null ? _ref8 : component.required,
-        validation: (_ref9 = formObject.validation) != null ? _ref9 : component.validation
+        validation: (_ref9 = formObject.validation) != null ? _ref9 : component.validation,
+        attributes: !!component.attributes ? angular.copy(component.attributes) : !!component.attributes ? angular.copy(component.attributes) : false
       };
       return result;
     };
@@ -1120,6 +1136,7 @@
             templateUrl: {string} The url of the template.
             popoverTemplate: {string} html template
             popoverTemplateUrl: {string} The url of the popover template.
+            attributes: {object}: Customer attributes used by this component
          */
         if (_this.components[name] == null) {
           newComponent = _this.convertComponent(name, component);
@@ -1173,6 +1190,7 @@
             required: {bool} Is the form object required? (default is no)
             validation: {string} angular-validator. "/regex/" or "[rule1, rule2]".
             [index]: {int} The form object index. It will be updated by $builder.
+            attributes: {object}: Customer attributes used by this component
         @return: The form object.
          */
         if ((_base = _this.forms)[name] == null) {
