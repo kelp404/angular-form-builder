@@ -176,6 +176,9 @@
       $drag = $injector.get('$drag');
       return {
         restrict: 'A',
+        scope: {
+          fbBuilder: '='
+        },
         template: "<div class='form-horizontal'>\n    <div class='fb-form-object-editable' ng-repeat=\"object in formObjects\"\n        fb-form-object-editable=\"object\"></div>\n</div>",
         link: function(scope, element, attrs) {
           var beginMove, _base, _name;
