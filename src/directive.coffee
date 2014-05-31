@@ -225,6 +225,7 @@ angular.module 'builder.directive', [
                 # fixed offset
                 elementOrigin = $(element).offset().top + $(element).height() / 2
                 popoverTop = elementOrigin - $popover.height() / 2
+                popoverTop = 20 if popoverTop < 0
                 $popover.css
                     position: 'absolute'
                     top: popoverTop
