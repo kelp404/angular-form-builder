@@ -83,7 +83,7 @@ angular.module 'builder.provider', []
             options: formObject.options ? component.options
             required: formObject.required ? component.required
             validation: formObject.validation ? component.validation
-            attributes: if !!component.attributes then angular.copy(component.attributes) else if !!component.attributes then angular.copy(component.attributes) else no
+            attributes: if !!formObject.attributes then angular.copy(formObject.attributes) else if !!component.attributes then angular.copy(component.attributes) else {}
         result
 
     @reindexFormObject = (name) =>

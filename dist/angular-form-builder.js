@@ -1084,7 +1084,7 @@
         options: (_ref7 = formObject.options) != null ? _ref7 : component.options,
         required: (_ref8 = formObject.required) != null ? _ref8 : component.required,
         validation: (_ref9 = formObject.validation) != null ? _ref9 : component.validation,
-        attributes: !!component.attributes ? angular.copy(component.attributes) : !!component.attributes ? angular.copy(component.attributes) : false
+        attributes: !!formObject.attributes ? angular.copy(formObject.attributes) : !!component.attributes ? angular.copy(component.attributes) : {}
       };
       return result;
     };
