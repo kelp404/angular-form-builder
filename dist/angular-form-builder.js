@@ -1256,6 +1256,17 @@
         return _this.reindexFormObject(name);
       };
     })(this);
+    this.reset = (function(_this) {
+      return function(name) {
+
+        /*
+        Rest the form
+        @param name: The form name
+         */
+        _this.forms[name] = [];
+        return _this.formsId[name] = 0;
+      };
+    })(this);
     this.$get = [
       '$injector', (function(_this) {
         return function($injector) {
@@ -1276,7 +1287,8 @@
             addFormObject: _this.addFormObject,
             insertFormObject: _this.insertFormObject,
             removeFormObject: _this.removeFormObject,
-            updateFormObjectIndex: _this.updateFormObjectIndex
+            updateFormObjectIndex: _this.updateFormObjectIndex,
+            reset: _this.reset
           };
         };
       })(this)
