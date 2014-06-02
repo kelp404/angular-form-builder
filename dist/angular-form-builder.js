@@ -1057,7 +1057,7 @@
       if (component == null) {
         throw "The component " + formObject.component + " was not registered.";
       }
-      if (formObject.id) {
+      if (formObject.hasOwnProperty('id')) {
         exist = false;
         _ref = this.forms[name];
         for (_i = 0, _len = _ref.length; _i < _len; _i++) {

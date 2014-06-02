@@ -65,7 +65,7 @@ angular.module 'builder.provider', []
     @convertFormObject = (name, formObject={}) ->
         component = @components[formObject.component]
         throw "The component #{formObject.component} was not registered." if not component?
-        if formObject.id
+        if formObject.hasOwnProperty('id')
             exist = no
             for form in @forms[name] when formObject.id <= form.id # less and equal
                 formObject.id = @formsId[name]++
