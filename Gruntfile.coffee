@@ -52,6 +52,29 @@ module.exports = (grunt) ->
             source:
                 configFile: 'test/karma.config.coffee'
 
+        ngmin:
+            dist: 
+                files: [
+                    {
+                        src: 'dist/angular-form-builder.js'
+                        dest: 'dist/angular-form-builder.min.js'
+                    },
+                    {
+                        src: 'dist/angular-form-builder-components.js'
+                        dest: 'dist/angular-form-builder-components.min.js'
+                    }
+                ]
+
+        uglify:
+            dist:
+                files:
+                    'dist/angular-form-builder.min.js': ['dist/angular-form-builder.min.js']
+                    'dist/angular-form-builder-components.min.js': ['dist/angular-form-builder-components.min.js']
+
+        
+      
+    
+
     # -----------------------------------
     # register task
     # -----------------------------------
@@ -62,6 +85,7 @@ module.exports = (grunt) ->
         'watch'
     ]
     grunt.registerTask 'test', ['karma']
+    grunt.registerTask 'build', ['coffee', 'ngmin', 'uglify']
 
     # -----------------------------------
     # Plugins
@@ -71,3 +95,5 @@ module.exports = (grunt) ->
     grunt.loadNpmTasks 'grunt-contrib-watch'
     grunt.loadNpmTasks 'grunt-contrib-connect'
     grunt.loadNpmTasks 'grunt-karma'
+    grunt.loadNpmTasks 'grunt-ngmin'
+    grunt.loadNpmTasks 'grunt-contrib-uglify'

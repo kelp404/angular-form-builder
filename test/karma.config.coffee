@@ -7,11 +7,11 @@ module.exports = (config) ->
 
         # list of files / patterns to load in the browser
         files: [
-            'test/lib/jquery/dist/jquery.min.js'
-            'test/lib/angular/angular.min.js'
-            'test/lib/angular-mocks/angular-mocks.js'
-            'test/lib/angular-validator/dist/angular-validator.js'
-            'test/lib/angular-validator/dist/angular-validator-rules.js'
+            'bower_components/jquery/dist/jquery.min.js'
+            'bower_components/angular/angular.min.js'
+            'bower_components/angular-mocks/angular-mocks.js'
+            'submodules/angular-validator/dist/angular-validator.js'
+            'submodules/angular-validator/dist/angular-validator-rules.js'
             'dist/angular-form-builder.js'
             'dist/angular-form-builder-components.js'
             'test/specs/*.coffee'

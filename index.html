@@ -24,7 +24,7 @@
         <div class="col-md-6">
             <div class="panel panel-default">
                 <div class="panel-heading">
-                    <h3 class="panel-title">Builder</h3>
+                    <h3 class="panel-title">Builder 1</h3>
                 </div>
                 <div fb-builder="default"></div>
                 <div class="panel-footer">
@@ -36,6 +36,20 @@
                     <pre ng-if="isShowScope">{{form}}</pre>
                 </div>
             </div>
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h3 class="panel-title">Builder 2</h3>
+                </div>
+                <div fb-builder="default2"></div>
+                <div class="panel-footer">
+                    <div class="checkbox">
+                        <label><input type="checkbox" ng-model="isShowScope" />
+                            Show scope
+                        </label>
+                    </div>
+                    <pre ng-if="isShowScope">{{form2}}</pre>
+                </div>
+            </div>
         </div>
 
         <div class="col-md-6">
@@ -44,7 +58,7 @@
     </div>
 
     <div class="row">
-        <h2>Form</h2>
+        <h2>Form 1</h2>
         <hr/>
         <form class="form-horizontal">
             <div ng-model="input" fb-form="default" fb-default="defaultValue"></div>
@@ -61,7 +75,24 @@
         </div>
         <pre ng-if="isShowScope">{{input}}</pre>
     </div>
-
+<div class="row">
+        <h2>Form 2</h2>
+        <hr/>
+        <form class="form-horizontal">
+            <div ng-model="input2" fb-form="default2" fb-default="defaultValue"></div>
+            <div class="form-group">
+                <div class="col-md-8 col-md-offset-4">
+                    <input type="submit" ng-click="submit()" class="btn btn-default"/>
+                </div>
+            </div>
+        </form>
+        <div class="checkbox">
+            <label><input type="checkbox" ng-model="isShowScope" ng-init="isShowScope=true" />
+                Show scope
+            </label>
+        </div>
+        <pre ng-if="isShowScope">{{input2}}</pre>
+    </div>
     <div class="row">
         <div class="col-md-12 footer"></div>
     </div>

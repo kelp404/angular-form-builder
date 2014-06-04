@@ -51,6 +51,7 @@ angular.module 'builder.provider', []
             validationOptions: component.validationOptions ? []
             options: component.options ? []
             arrayToText: component.arrayToText ? no
+            attributes: if !!component.attributes then angular.copy(component.attributes) else {}
             template: component.template
             templateUrl: component.templateUrl
             popoverTemplate: component.popoverTemplate
@@ -64,7 +65,7 @@ angular.module 'builder.provider', []
     @convertFormObject = (name, formObject={}) ->
         component = @components[formObject.component]
         throw "The component #{formObject.component} was not registered." if not component?
-        if formObject.id
+        if formObject.hasOwnProperty('id')
             exist = no
             for form in @forms[name] when formObject.id <= form.id # less and equal
                 formObject.id = @formsId[name]++
@@ -82,6 +83,7 @@ angular.module 'builder.provider', []
             options: formObject.options ? component.options
             required: formObject.required ? component.required
             validation: formObject.validation ? component.validation
+            attributes: if !!formObject.attributes then angular.copy(formObject.attributes) else if !!component.attributes then angular.copy(component.attributes) else {}
         result
 
     @reindexFormObject = (name) =>
@@ -133,6 +135,7 @@ angular.module 'builder.provider', []
             templateUrl: {string} The url of the template.
             popoverTemplate: {string} html template
             popoverTemplateUrl: {string} The url of the popover template.
+            attributes: {object}: Customer attributes used by this component
         ###
         if not @components[name]?
             # regist the new component
@@ -168,6 +171,7 @@ angular.module 'builder.provider', []
             required: {bool} Is the form object required? (default is no)
             validation: {string} angular-validator. "/regex/" or "[rule1, rule2]".
             [index]: {int} The form object index. It will be updated by $builder.
+            attributes: {object}: Customer attributes used by this component
         @return: The form object.
         ###
         @forms[name] ?= []
@@ -201,6 +205,14 @@ angular.module 'builder.provider', []
         formObjects.splice newIndex, 0, formObject
         @reindexFormObject name
 
+    @reset = (name) =>
+        ###
+        Rest the form
+        @param name: The form name
+        ###
+        @forms[name] = []
+        @formsId[name] = 0
+
     # ----------------------------------------
     # $get
     # ----------------------------------------
@@ -219,5 +231,6 @@ angular.module 'builder.provider', []
         insertFormObject: @insertFormObject
         removeFormObject: @removeFormObject
         updateFormObjectIndex: @updateFormObjectIndex
+        reset: @reset
     ]
     return

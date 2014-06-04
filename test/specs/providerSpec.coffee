@@ -111,6 +111,7 @@ describe 'builder.provider', ->
                 arrayToText: no
                 template: "<div class='form-group'></div>"
                 popoverTemplate: "<div class='form-group'></div>"
+                attributes : {}
             .toEqual component
 
         it '$builderProvider.convertComponent()', ->
@@ -141,6 +142,7 @@ describe 'builder.provider', ->
                 arrayToText: yes
                 template: "<div class='form-group'></div>"
                 popoverTemplate: "<div class='form-group'></div>"
+                attributes: {}
             .toEqual component
 
 
@@ -179,6 +181,7 @@ describe 'builder.provider', ->
                 options: ['value one']
                 required: yes
                 validation: '/regexp/'
+                attributes: {}
             .toEqual formObject
 
         it '$builderProvider.convertFormObject()', inject ($builder) ->
@@ -207,6 +210,7 @@ describe 'builder.provider', ->
                 options: ['value']
                 required: no
                 validation: '/.*/'
+                attributes: {}
             .toEqual formObject
 
 
@@ -255,6 +259,7 @@ describe 'builder.provider', ->
                 templateUrl: undefined
                 popoverTemplate: "<div class='form-group'></div>"
                 popoverTemplateUrl: undefined
+                attributes: {}
             .toEqual $builder.components.textInput
 
         it '$builder.registerComponent() the same component will call console.error()', inject ($builder) ->
