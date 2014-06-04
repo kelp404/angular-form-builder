@@ -4,8 +4,9 @@
 # PyCharm
 .idea
 
-# node modules
+# node
 node_modules
+npm-debug.log
 
 # bower components
 bower_components
