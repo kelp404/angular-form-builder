@@ -18,7 +18,7 @@ angular.module 'app', ['builder', 'builder.components', 'validator.rules']
 ]
 
 
-.controller 'DemoController', ($scope, $builder, $validator) ->
+.controller 'DemoController', ['$scope', '$builder', '$validator', ($scope, $builder, $validator) ->
     # ----------------------------------------
     # builder
     # ----------------------------------------
@@ -53,3 +53,4 @@ angular.module 'app', ['builder', 'builder.components', 'validator.rules']
         $validator.validate $scope, 'default'
         .success -> console.log 'success'
         .error -> console.log 'error'
+]
