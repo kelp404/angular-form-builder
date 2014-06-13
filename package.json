@@ -32,17 +32,17 @@
   },
   "devDependencies": {
     "grunt": "~0.4.2",
-    "grunt-contrib-watch": "^0.6.1",
     "grunt-contrib-coffee": "~0.10.0",
     "grunt-contrib-compass": "^0.8.0",
-    "grunt-contrib-connect": "^0.7.1",
-    "karma-script-launcher": "~0.1.0",
-    "karma-requirejs": "~0.2.1",
+    "grunt-contrib-connect": "^0.8.0",
+    "grunt-contrib-watch": "^0.6.1",
+    "grunt-karma": "~0.8.2",
+    "karma": "~0.12.1",
+    "karma-coffee-preprocessor": "~0.2.1",
     "karma-html2js-preprocessor": "~0.1.0",
     "karma-jasmine": "~0.1.5",
-    "karma-coffee-preprocessor": "~0.2.1",
     "karma-phantomjs-launcher": "~0.1.2",
-    "karma": "~0.12.1",
-    "grunt-karma": "~0.8.2"
+    "karma-requirejs": "~0.2.1",
+    "karma-script-launcher": "~0.1.0"
   }
 }
