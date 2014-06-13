@@ -342,7 +342,7 @@
               The delete event of the popover.
                */
               $event.preventDefault();
-              $builder.removeFormObject(scope.$parent.formName, scope.$index);
+              $builder.removeFormObject(scope.$parent.formName, scope.$parent.$index);
               $(element).popover('hide');
             },
             shown: function() {

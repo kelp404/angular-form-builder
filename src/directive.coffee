@@ -183,7 +183,7 @@ angular.module 'builder.directive', [
                 ###
                 $event.preventDefault()
 
-                $builder.removeFormObject scope.$parent.formName, scope.$index
+                $builder.removeFormObject scope.$parent.formName, scope.$parent.$index
                 $(element).popover 'hide'
                 return
             shown: ->
