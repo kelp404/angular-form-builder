@@ -148,7 +148,7 @@ describe 'builder.controller', ->
                 expect($scope.allComponents).toBe $builder.components
 
             it '$watch $scope.allComponents than call $scope.selectGroup', inject ($builder) ->
-                spyOn($scope, 'selectGroup').andCallFake ($event, activeGroup) ->
+                spyOn($scope, 'selectGroup').and.callFake ($event, activeGroup) ->
                     expect($event).toBeNull()
                     expect($scope.activeGroup).toEqual activeGroup
                 $builder.registerComponent 'newComponent',

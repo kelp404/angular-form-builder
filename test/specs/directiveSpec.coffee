@@ -82,7 +82,7 @@ describe 'builder.directive', ->
 
         it 'compile fb-component and called `$drag.draggable()`', inject ($drag) ->
             componentName = Object.keys($builder.components)[0]
-            spyOn($drag, 'draggable').andCallFake ($element, object) ->
+            spyOn($drag, 'draggable').and.callFake ($element, object) ->
                 expect($element.length).toBe 1
                 expect($element.hasClass('fb-component')).toBe yes
                 expect

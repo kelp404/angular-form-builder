@@ -80,14 +80,14 @@ describe 'builder.provider', ->
     # ----------------------------------------
     describe '$builderProvider.convertComponent()', ->
         it '$builderProvider.convertComponent() argument without template', ->
-            spyOn(console, 'error').andCallFake (msg) ->
+            spyOn(console, 'error').and.callFake (msg) ->
                 expect(msg).toEqual 'The template is empty.'
             builderProvider.convertComponent 'inputText',
                 popoverTemplate: "<div class='form-group'></div>"
             expect(console.error).toHaveBeenCalled()
 
         it '$builderProvider.convertComponent() argument without popoverTemplate', ->
-            spyOn(console, 'error').andCallFake (msg) ->
+            spyOn(console, 'error').and.callFake (msg) ->
                 expect(msg).toEqual 'The popoverTemplate is empty.'
             builderProvider.convertComponent 'inputText',
                 template: "<div class='form-group'></div>"
@@ -110,7 +110,9 @@ describe 'builder.provider', ->
                 options: []
                 arrayToText: no
                 template: "<div class='form-group'></div>"
+                templateUrl: undefined
                 popoverTemplate: "<div class='form-group'></div>"
+                popoverTemplateUrl: undefined
             .toEqual component
 
         it '$builderProvider.convertComponent()', ->
@@ -140,7 +142,9 @@ describe 'builder.provider', ->
                 options: ['value one']
                 arrayToText: yes
                 template: "<div class='form-group'></div>"
+                templateUrl: undefined
                 popoverTemplate: "<div class='form-group'></div>"
+                popoverTemplateUrl: undefined
             .toEqual component
 
 
@@ -221,7 +225,7 @@ describe 'builder.provider', ->
                 formObject = builderProvider.forms.default[index]
                 expect(formObject.index).toBe index
                 calledCount()
-            expect(calledCount.calls.length).toBe 2
+            expect(calledCount.calls.count()).toBe 2
 
 
     describe '$builder.registerComponent()', ->
@@ -261,7 +265,7 @@ describe 'builder.provider', ->
             $builder.registerComponent 'textInput',
                 template: "<div class='form-group'></div>"
                 popoverTemplate: "<div class='form-group'></div>"
-            spyOn(console, 'error').andCallFake (msg) ->
+            spyOn(console, 'error').and.callFake (msg) ->
                 expect('The component textInput was registered.').toEqual msg
             $builder.registerComponent 'textInput',
                 template: "<div class='form-group'></div>"
@@ -276,7 +280,7 @@ describe 'builder.provider', ->
                 popoverTemplate: "<div class='form-group'></div>"
 
         it '$builder.addFormObject() will call $builderProvider.insertFormObject()', inject ($builder) ->
-            spyOn(builderProvider, 'insertFormObject').andCallFake (name, index, formObject) ->
+            spyOn(builderProvider, 'insertFormObject').and.callFake (name, index, formObject) ->
                 expect(name).toEqual 'default'
                 expect(index).toBe 0
                 expect
@@ -302,14 +306,14 @@ describe 'builder.provider', ->
             expect(builderProvider.formsId.form).toBe 1
 
         it '$builder.insertFormObject() index out of bound', inject ($builder) ->
-            spyOn(builderProvider.forms.default, 'splice').andCallFake (index, length) ->
+            spyOn(builderProvider.forms.default, 'splice').and.callFake (index, length) ->
                 expect(index).toBe 0
                 expect(length).toBe 0
             $builder.insertFormObject 'default', 1000, component: 'inputText'
             expect(builderProvider.forms.default.splice).toHaveBeenCalled()
 
         it '$builder.insertFormObject() index less than 0', inject ($builder) ->
-            spyOn(builderProvider.forms.default, 'splice').andCallFake (index, length) ->
+            spyOn(builderProvider.forms.default, 'splice').and.callFake (index, length) ->
                 expect(index).toBe 0
                 expect(length).toBe 0
             $builder.insertFormObject 'default', -1, component: 'inputText'
@@ -317,19 +321,19 @@ describe 'builder.provider', ->
 
         it '$builder.insertFormObject()', inject ($builder) ->
             $builder.insertFormObject 'default', 0, component: 'inputText'
-            spyOn(builderProvider.forms.default, 'splice').andCallFake (index, length) ->
+            spyOn(builderProvider.forms.default, 'splice').and.callFake (index, length) ->
                 expect(index).toBe 1
                 expect(length).toBe 0
             $builder.insertFormObject 'default', 1, component: 'inputText'
             expect(builderProvider.forms.default.splice).toHaveBeenCalled()
 
         it '$builder.insertFormObject() will call convertFormObject() and reindexFormObject()', inject ($builder) ->
-            spyOn(builderProvider, 'convertFormObject').andCallFake (name, formObject) ->
+            spyOn(builderProvider, 'convertFormObject').and.callFake (name, formObject) ->
                 expect(name).toEqual 'default'
                 expect
                     component: 'inputText'
                 .toEqual formObject
-            spyOn(builderProvider, 'reindexFormObject').andCallFake (name) ->
+            spyOn(builderProvider, 'reindexFormObject').and.callFake (name) ->
                 expect(name).toEqual 'default'
             $builder.insertFormObject 'default', 1, component: 'inputText'
             expect(builderProvider.convertFormObject).toHaveBeenCalled()
@@ -343,11 +347,11 @@ describe 'builder.provider', ->
                 popoverTemplate: "<div class='form-group'></div>"
 
         it '$builder.removeFormObject() will call formObject.splice() and reindexFormObject()', inject ($builder) ->
-            spyOn(builderProvider.forms.default, 'splice').andCallFake (index, length, object) ->
+            spyOn(builderProvider.forms.default, 'splice').and.callFake (index, length, object) ->
                 expect(index).toBe 1
                 expect(length).toBe 1
                 expect(object).toBeUndefined()
-            spyOn(builderProvider, 'reindexFormObject').andCallFake (name) ->
+            spyOn(builderProvider, 'reindexFormObject').and.callFake (name) ->
                 expect(name).toEqual 'default'
             $builder.removeFormObject 'default', 1
             expect(builderProvider.forms.default.splice).toHaveBeenCalled()
@@ -369,8 +373,8 @@ describe 'builder.provider', ->
 
         it '$builder.updateFormObjectIndex() will call formObject.splice() and reindexFormObject()', inject ($builder) ->
             formObject = id: 0
-            spySplice = spyOn(builderProvider.forms.default, 'splice').andCallFake (index, length, object) ->
-                switch spySplice.calls.length
+            spySplice = spyOn(builderProvider.forms.default, 'splice').and.callFake (index, length, object) ->
+                switch spySplice.calls.count()
                     when 1
                         expect(index).toBe 0
                         expect(length).toBe 1
@@ -383,7 +387,7 @@ describe 'builder.provider', ->
                     else
             spyOn builderProvider, 'reindexFormObject'
             $builder.updateFormObjectIndex 'default', 0, 1
-            expect(spySplice.calls.length).toBe 2
+            expect(spySplice.calls.count()).toBe 2
             expect(builderProvider.reindexFormObject).toHaveBeenCalled()
 
 
