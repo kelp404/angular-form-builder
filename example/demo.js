@@ -30,6 +30,7 @@
     '$scope', '$builder', '$validator', function($scope, $builder, $validator) {
       var checkbox, textbox;
       textbox = $builder.addFormObject('default', {
+        id: 'textbox',
         component: 'textInput',
         label: 'Name',
         description: 'Your name',
@@ -38,6 +39,7 @@
         editable: false
       });
       checkbox = $builder.addFormObject('default', {
+        id: 'checkbox',
         component: 'checkbox',
         label: 'Pets',
         description: 'Do you have any pets?',

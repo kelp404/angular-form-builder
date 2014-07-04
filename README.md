@@ -143,7 +143,7 @@ $builder.insertFormObject = (name, index, formObject={}) =>
     @param name: The form name.
     @param index: The form object index.
     @param form: The form object.
-        id: {int} The form object id. It will be generate by $builder if not asigned.
+        id: The form object id.
         component: {string} The component name
         editable: {bool} Is the form object editable? (default is yes)
         label: {string} The form object label.

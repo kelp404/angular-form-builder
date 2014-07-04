@@ -382,7 +382,7 @@ angular.module 'builder.directive', [
             scope.inputText = scope.formObject.options[0]
 
         # set default value
-        scope.$watch "default[#{scope.formObject.id}]", (value) ->
+        scope.$watch "default['#{scope.formObject.id}']", (value) ->
             return if not value
             if scope.$component.arrayToText
                 scope.inputArray = value
