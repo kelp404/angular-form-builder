@@ -68,13 +68,6 @@ describe 'builder.provider', ->
             .toEqual $builder.forms
 
 
-    describe '$builderProvider.formsId', ->
-        it '$builderProvider.formsId', ->
-            expect
-                default: 0
-            .toEqual builderProvider.formsId
-
-
     # ----------------------------------------
     # methods
     # ----------------------------------------
@@ -173,7 +166,7 @@ describe 'builder.provider', ->
                 component: 'inputText'
 
             expect
-                id: 0
+                id: undefined
                 component: 'inputText'
                 editable: yes
                 index: 0
@@ -201,7 +194,7 @@ describe 'builder.provider', ->
                 validation: '/.*/'
 
             expect
-                id: 0
+                id: undefined
                 component: 'inputText'
                 editable: no
                 index: 0
@@ -299,11 +292,6 @@ describe 'builder.provider', ->
             $builder.registerComponent 'inputText',
                 template: "<div class='form-group'></div>"
                 popoverTemplate: "<div class='form-group'></div>"
-
-        it '$builder.insertFormObject() a new form', inject ($builder) ->
-            $builder.insertFormObject 'form', 0, component: 'inputText'
-            expect(builderProvider.forms.form.length).toBe 1
-            expect(builderProvider.formsId.form).toBe 1
 
         it '$builder.insertFormObject() index out of bound', inject ($builder) ->
             spyOn(builderProvider.forms.default, 'splice').and.callFake (index, length) ->
