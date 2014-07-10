@@ -1,7 +1,7 @@
 (function() {
   angular.module('app', ['builder', 'builder.components', 'validator.rules']).run([
     '$builder', function($builder) {
-      return $builder.registerComponent('sampleInput', {
+      $builder.registerComponent('sampleInput', {
         group: 'from html',
         label: 'Sample',
         description: 'From html template',
@@ -24,6 +24,12 @@
         ],
         templateUrl: 'example/template.html',
         popoverTemplateUrl: 'example/popoverTemplate.html'
+      });
+      return $builder.addComponent('gender', 'radio', {
+        group: 'add component',
+        label: 'gender',
+        description: 'your gender',
+        options: ['male', 'female', 'others']
       });
     }
   ]).controller('DemoController', [

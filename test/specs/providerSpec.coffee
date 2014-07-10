@@ -265,6 +265,51 @@ describe 'builder.provider', ->
                 popoverTemplate: "<div class='form-group'></div>"
             expect(console.error).toHaveBeenCalled()
 
+    describe '$builder.addComponent()', ->
+        it '$builder.addComponent()', inject ($builder) ->
+            $builder.registerComponent 'textInput',
+                group: 'Default'
+                label: ''
+                description: ''
+                placeholder: ''
+                editable: yes
+                required: no
+                validation: '/.*/'
+                options: []
+                arrayToText: no
+                template: "<div class='form-group'></div>"
+                popoverTemplate: "<div class='form-group'></div>"
+
+            $builder.registerComponent 'firstName', 'textInput'
+
+            expect
+                name: 'firstName'
+                group: 'Default'
+                label: ''
+                description: ''
+                placeholder: ''
+                editable: yes
+                required: no
+                validation: '/.*/'
+                validationOptions: []
+                options: []
+                arrayToText: no
+                template: "<div class='form-group'></div>"
+                templateUrl: undefined
+                popoverTemplate: "<div class='form-group'></div>"
+                popoverTemplateUrl: undefined
+            .toEqual $builder.components.firstName
+
+        it '$builder.addComponent() the same component will call console.error()', inject ($builder) ->
+            $builder.addComponent 'firstName', 'textInput',
+                template: "<div class='form-group'></div>"
+                popoverTemplate: "<div class='form-group'></div>"
+            spyOn(console, 'error').and.callFake (msg) ->
+                expect('The component firstName was registered.').toEqual msg
+            $builder.addComponent 'firstName', 'textInput',
+                template: "<div class='form-group'></div>"
+                popoverTemplate: "<div class='form-group'></div>"
+            expect(console.error).toHaveBeenCalled()
 
     describe '$builder.addFormObject()', ->
         beforeEach -> inject ($builder) ->

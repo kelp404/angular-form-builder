@@ -136,6 +136,27 @@ angular.module 'builder.provider', []
             console.error "The component #{name} was registered."
         return
 
+    @addComponent = (name, baseComponent, component={}) =>
+        ###
+        Add the component based on register component.
+        @param name: The component name.
+        @param baseComponent: The base component name.
+        @param component: The component object. (same as register component)
+        ###
+        if not @components[name]?
+            # add the new component
+            extend = (object, properties) =>
+                for key, val of properties
+                    object[key] = val
+                object
+            newComponent = extend @components[baseComponent], component
+            @components[name] = @convertComponent name, newComponent
+            if newComponent.group not in @groups
+                @groups.push newComponent.group
+        else
+            console.error "The component #{name} was registered."
+        return
+
     @addFormObject = (name, formObject={}) =>
         ###
         Insert the form object into the form at last.
@@ -205,6 +226,7 @@ angular.module 'builder.provider', []
         forms: @forms
         broadcastChannel: @broadcastChannel
         registerComponent: @registerComponent
+        addComponent: @addComponent
         addFormObject: @addFormObject
         insertFormObject: @insertFormObject
         removeFormObject: @removeFormObject
