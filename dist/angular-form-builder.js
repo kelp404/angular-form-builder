@@ -1116,6 +1116,38 @@
         }
       };
     })(this);
+    this.addComponent = (function(_this) {
+      return function(name, baseComponent, component) {
+        var extend, newComponent, _ref;
+        if (component == null) {
+          component = {};
+        }
+
+        /*
+        Add the component based on register component.
+        @param name: The component name.
+        @param baseComponent: The base component name.
+        @param component: The component object. (same as register component)
+         */
+        if (_this.components[name] == null) {
+          extend = function(object, properties) {
+            var key, val;
+            for (key in properties) {
+              val = properties[key];
+              object[key] = val;
+            }
+            return object;
+          };
+          newComponent = extend(_this.components[baseComponent], component);
+          _this.components[name] = _this.convertComponent(name, newComponent);
+          if (_ref = newComponent.group, __indexOf.call(_this.groups, _ref) < 0) {
+            _this.groups.push(newComponent.group);
+          }
+        } else {
+          console.error("The component " + name + " was registered.");
+        }
+      };
+    })(this);
     this.addFormObject = (function(_this) {
       return function(name, formObject) {
         var _base;
@@ -1219,6 +1251,7 @@
             forms: _this.forms,
             broadcastChannel: _this.broadcastChannel,
             registerComponent: _this.registerComponent,
+            addComponent: _this.addComponent,
             addFormObject: _this.addFormObject,
             insertFormObject: _this.insertFormObject,
             removeFormObject: _this.removeFormObject,

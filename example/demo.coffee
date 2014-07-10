@@ -15,6 +15,13 @@ angular.module 'app', ['builder', 'builder.components', 'validator.rules']
         ]
         templateUrl: 'example/template.html'
         popoverTemplateUrl: 'example/popoverTemplate.html'
+
+    $builder.addComponent 'gender', 'radio',
+        group: 'add component'
+        label: 'gender'
+        description: 'your gender'
+        options: ['male', 'female', 'others']
+
 ]
 
 
