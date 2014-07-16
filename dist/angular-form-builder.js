@@ -492,14 +492,14 @@
           if (scope.$component.arrayToText) {
             scope.inputArray = [];
             scope.$watch('inputArray', function(newValue, oldValue) {
-              var checked, index;
+              var checked, index, _ref;
               if (newValue === oldValue) {
                 return;
               }
               checked = [];
               for (index in scope.inputArray) {
                 if (scope.inputArray[index]) {
-                  checked.push(scope.options[index]);
+                  checked.push((_ref = scope.options[index]) != null ? _ref : scope.inputArray[index]);
                 }
               }
               return scope.inputText = checked.join(', ');
