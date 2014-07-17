@@ -380,6 +380,8 @@ describe 'builder.provider', ->
 
 
     describe '$builder.$get()', ->
+        it '$builder.config is equal $builderProvider.config', inject ($builder) ->
+            expect($builder.config).toBe builderProvider.config
         it '$builder.components is equal $builderProvider.components', inject ($builder) ->
             expect($builder.components).toBe builderProvider.components
         it '$builder.groups is equal $builderProvider.groups', inject ($builder) ->
