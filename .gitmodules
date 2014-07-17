@@ -1,4 +1,0 @@
-[submodule "submodules/angular-validator"]
-	path = submodules/angular-validator
-	url = https://github.com/kelp404/angular-validator.git
-	ignore = dirty

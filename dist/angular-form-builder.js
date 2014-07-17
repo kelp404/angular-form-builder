@@ -321,7 +321,8 @@
               html: true,
               title: scope.$component.label,
               content: popover.view,
-              container: 'body'
+              container: 'body',
+              placement: $builder.config.popoverPlacement
             });
           });
           scope.popover = {
@@ -980,7 +981,9 @@
     $injector = null;
     $http = null;
     $templateCache = null;
-    this.version = '0.0.2';
+    this.config = {
+      popoverPlacement: 'right'
+    };
     this.components = {};
     this.groups = [];
     this.broadcastChannel = {
@@ -1213,7 +1216,7 @@
             _this.loadTemplate(component);
           }
           return {
-            version: _this.version,
+            config: _this.config,
             components: _this.components,
             groups: _this.groups,
             forms: _this.forms,

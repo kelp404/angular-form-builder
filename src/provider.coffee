@@ -18,7 +18,8 @@ angular.module 'builder.provider', []
     $http = null
     $templateCache = null
 
-    @version = '0.0.2'
+    @config =
+        popoverPlacement: 'right'
     # all components
     @components = {}
     # all groups of components
@@ -199,7 +200,7 @@ angular.module 'builder.provider', []
         for name, component of @components
             @loadTemplate component
 
-        version: @version
+        config: @config
         components: @components
         groups: @groups
         forms: @forms
