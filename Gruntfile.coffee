@@ -1,7 +1,4 @@
 module.exports = (grunt) ->
-    # -----------------------------------
-    # Options
-    # -----------------------------------
     grunt.config.init
         compass:
             example:
@@ -25,6 +22,12 @@ module.exports = (grunt) ->
             demo:
                 files:
                     'example/demo.js': 'example/demo.coffee'
+
+        uglify:
+            build:
+                files:
+                    'dist/angular-form-builder.min.js': 'dist/angular-form-builder.js'
+                    'dist/angular-form-builder-components.min.js': 'dist/angular-form-builder-components.js'
 
         watch:
             compass:
@@ -61,6 +64,11 @@ module.exports = (grunt) ->
         'connect'
         'watch'
     ]
+    grunt.registerTask 'build', [
+        'compass'
+        'coffee'
+        'uglify'
+    ]
     grunt.registerTask 'test', ['karma']
 
     # -----------------------------------
@@ -71,3 +79,4 @@ module.exports = (grunt) ->
     grunt.loadNpmTasks 'grunt-contrib-watch'
     grunt.loadNpmTasks 'grunt-contrib-connect'
     grunt.loadNpmTasks 'grunt-karma'
+    grunt.loadNpmTasks 'grunt-contrib-uglify'

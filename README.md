@@ -309,18 +309,6 @@ $ bower install
 ```bash
 # run the local server and the file watcher to compile CoffeeScript
 $ grunt dev
+# compile coffee script and minify
+$ grunt build
 ```
-
-
-
-
-###[Closure Compiler](https://code.google.com/p/closure-compiler/)
-You could download compiler form [Google Code](https://code.google.com/p/closure-compiler/wiki/BinaryDownloads?tm=2).
-
-**[External Tools](http://www.jetbrains.com/pycharm/webhelp/external-tools.html):**
-
-Settings  |  value
-:---------:|:---------:
-Program | java
-Parameters | -jar /Volumes/Data/tools/closure-compiler/compiler.jar --compilation_level SIMPLE_OPTIMIZATIONS --js $FileName$ --js_output_file $FileNameWithoutExtension$.min.$FileExt$
-Working directory | $FileDir$
