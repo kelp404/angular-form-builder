@@ -1,5 +1,5 @@
 {
-  "name": "angular-form-builder-gueorgui",
+  "name": "angular-form-builder",
   "version": "0.1.0",
   "main": [
     "./dist/angular-form-builder.js",
