@@ -9,8 +9,8 @@ This is an AngularJS form builder written in [CoffeeScript](http://coffeescript.
 
 
 ##Frameworks
-1. [AngularJS](http://angularjs.org/) 1.2.14, 1.3
-2. [jQuery](http://jquery.com/) 1.11.0, 2.1.0
+1. [AngularJS](http://angularjs.org/) 1.2.18
+2. [jQuery](http://jquery.com/) 2.1.0
 3. [Bootstrap 3](http://getbootstrap.com/)
 4. [angular-validator](https://github.com/kelp404/angular-validator)
 
@@ -68,7 +68,9 @@ $builderProvider.registerComponent = (name, component={}) ->
         options: {array} The input options.
         arrayToText: {bool} checkbox could use this to convert input (default is no)
         template: {string} html template
+        templateUrl: {string} The url of the template.
         popoverTemplate: {string} html template
+        popoverTemplateUrl: {string} The url of the popover template.
     ###
 # .run
 $builder.registerComponent = (name, component={}) ->
@@ -141,7 +143,7 @@ $builder.insertFormObject = (name, index, formObject={}) =>
     @param name: The form name.
     @param index: The form object index.
     @param form: The form object.
-        id: {int} The form object id. It will be generate by $builder if not asigned.
+        id: The form object id.
         component: {string} The component name
         editable: {bool} Is the form object editable? (default is yes)
         label: {string} The form object label.
@@ -162,6 +164,17 @@ $builder.addFormObject = (name, formObject={}) =>
     ###
     Insert the form object into the form at last.
     reference $builder.insertFormObject()
+    ###
+```
+
+####removeFormObject
+>
+```coffee
+$builder.removeFormObject = (name, index) =>
+    ###
+    Remove the form object by the index.
+    @param name: {string} The form name.
+    @param index: {int} The form object index.
     ###
 ```
 
@@ -290,22 +303,12 @@ $ grunt test
 ```bash
 # install node modules
 $ npm install
+# install bower components
+$ bower install
 ```
 ```bash
 # run the local server and the file watcher to compile CoffeeScript
 $ grunt dev
+# compile coffee script and minify
+$ grunt build
 ```
-
-
-
-
-###[Closure Compiler](https://code.google.com/p/closure-compiler/)
-You could download compiler form [Google Code](https://code.google.com/p/closure-compiler/wiki/BinaryDownloads?tm=2).
-
-**[External Tools](http://www.jetbrains.com/pycharm/webhelp/external-tools.html):**
-
-Settings  |  value
-:---------:|:---------:
-Program | java
-Parameters | -jar /Volumes/Data/tools/closure-compiler/compiler.jar --compilation_level SIMPLE_OPTIMIZATIONS --js $FileName$ --js_output_file $FileNameWithoutExtension$.min.$FileExt$
-Working directory | $FileDir$

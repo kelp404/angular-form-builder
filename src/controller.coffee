@@ -113,6 +113,7 @@ angular.module 'builder.controller', ['builder.provider']
 .controller 'fbFormController', ['$scope', '$injector', ($scope, $injector) ->
     # providers
     $builder = $injector.get '$builder'
+    $timeout = $injector.get '$timeout'
 
     # set default for input
     $scope.input ?= []
@@ -120,8 +121,10 @@ angular.module 'builder.controller', ['builder.provider']
         # remove superfluous input
         if $scope.input.length > $scope.form.length
             $scope.input.splice $scope.form.length
-        # tell children to update input value
-        $scope.$broadcast $builder.broadcastChannel.updateInput
+        # tell children to update input value.
+        # ! use $timeout for waiting $scope updated.
+        $timeout ->
+            $scope.$broadcast $builder.broadcastChannel.updateInput
     , yes
 ]
 

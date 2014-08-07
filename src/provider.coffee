@@ -14,7 +14,12 @@
 angular.module 'builder.provider', []
 
 .provider '$builder', ->
-    @version = '0.0.1'
+    $injector = null
+    $http = null
+    $templateCache = null
+
+    @config =
+        popoverPlacement: 'right'
     # all components
     @components = {}
     # all groups of components
@@ -27,8 +32,6 @@ angular.module 'builder.provider', []
     #   form mode: `fb-form` this is the form for end-user to input value.
     @forms =
         default: []
-    @formsId =
-        default: 0
 
 
     # ----------------------------------------
@@ -48,23 +51,20 @@ angular.module 'builder.provider', []
             options: component.options ? []
             arrayToText: component.arrayToText ? no
             template: component.template
+            templateUrl: component.templateUrl
             popoverTemplate: component.popoverTemplate
-        if not result.template then console.error "The template is empty."
-        if not result.popoverTemplate then console.error "The popoverTemplate is empty."
+            popoverTemplateUrl: component.popoverTemplateUrl
+        if not result.template and not result.templateUrl
+            console.error "The template is empty."
+        if not result.popoverTemplate and not result.popoverTemplateUrl
+            console.error "The popoverTemplate is empty."
         result
 
     @convertFormObject = (name, formObject={}) ->
         component = @components[formObject.component]
         throw "The component #{formObject.component} was not registered." if not component?
-        if formObject.id
-            exist = no
-            for form in @forms[name] when formObject.id <= form.id # less and equal
-                formObject.id = @formsId[name]++
-                exist = yes
-                break
-            @formsId[name] = formObject.id + 1 if not exist
         result =
-            id: formObject.id ? @formsId[name]++
+            id: formObject.id
             component: formObject.component
             editable: formObject.editable ? component.editable
             index: formObject.index ? 0
@@ -81,6 +81,27 @@ angular.module 'builder.provider', []
         for index in [0...formObjects.length] by 1
             formObjects[index].index = index
         return
+
+    @setupProviders = (injector) =>
+        $injector = injector
+        $http = $injector.get '$http'
+        $templateCache = $injector.get '$templateCache'
+
+    @loadTemplate = (component) ->
+        ###
+        Load template for components.
+        @param component: {object} The component of $builder.
+        ###
+        if not component.template?
+            $http.get component.templateUrl,
+                cache: $templateCache
+            .success (template) ->
+                component.template = template
+        if not component.popoverTemplate?
+            $http.get component.popoverTemplateUrl,
+                cache: $templateCache
+            .success (template) ->
+                component.popoverTemplate = template
 
     # ----------------------------------------
     # public functions
@@ -101,12 +122,15 @@ angular.module 'builder.provider', []
             options: {array} The input options.
             arrayToText: {bool} checkbox could use this to convert input (default is no)
             template: {string} html template
+            templateUrl: {string} The url of the template.
             popoverTemplate: {string} html template
+            popoverTemplateUrl: {string} The url of the popover template.
         ###
         if not @components[name]?
             # regist the new component
             newComponent = @convertComponent name, component
             @components[name] = newComponent
+            @loadTemplate(newComponent) if $injector?
             if newComponent.group not in @groups
                 @groups.push newComponent.group
         else
@@ -126,7 +150,7 @@ angular.module 'builder.provider', []
         @param name: The form name.
         @param index: The form object index.
         @param form: The form object.
-            id: {int} The form object id. It will be generate by $builder if not asigned.
+            id: The form object id.
             component: {string} The component name
             editable: {bool} Is the form object editable? (default is yes)
             label: {string} The form object label.
@@ -139,7 +163,6 @@ angular.module 'builder.provider', []
         @return: The form object.
         ###
         @forms[name] ?= []
-        @formsId[name] ?= 0
         if index > @forms[name].length then index = @forms[name].length
         else if index < 0 then index = 0
         @forms[name].splice index, 0, @convertFormObject(name, formObject)
@@ -172,8 +195,12 @@ angular.module 'builder.provider', []
     # ----------------------------------------
     # $get
     # ----------------------------------------
-    @get = ->
-        version: @version
+    @$get = ['$injector', ($injector) =>
+        @setupProviders($injector)
+        for name, component of @components
+            @loadTemplate component
+
+        config: @config
         components: @components
         groups: @groups
         forms: @forms
@@ -183,5 +210,5 @@ angular.module 'builder.provider', []
         insertFormObject: @insertFormObject
         removeFormObject: @removeFormObject
         updateFormObjectIndex: @updateFormObjectIndex
-    @$get = @get
+    ]
     return

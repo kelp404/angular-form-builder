@@ -1,7 +1,10 @@
 {
   "name": "angular-form-builder-gueorgui",
-  "version": "0.0.3",
-  "main": ["./dist/angular-form-builder.js", "./dist/angular-form-builder-components.js"],
+  "version": "0.1.0",
+  "main": [
+    "./dist/angular-form-builder.js",
+    "./dist/angular-form-builder-components.js"
+  ],
   "homepage": "https://github.com/gueorgui/angular-form-builder",
   "description": "Drag and drop to build bootstrap forms in AngularJS.",
   "keywords": [
@@ -15,5 +18,11 @@
     "node_modules",
     "bower_components",
     "test"
-  ]
+  ],
+  "dependencies": {
+    "angular": ">=1.2.18",
+    "angular-mocks": ">=1.2.18",
+    "angular-validator": ">=0.2.3",
+    "jquery": "~2.1.0"
+  }
 }

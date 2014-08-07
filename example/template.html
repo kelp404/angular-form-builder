@@ -1,0 +1,7 @@
+<div class="form-group">
+    <label for="{{formName+index}}" class="col-sm-4 control-label" ng-class="{'fb-required':required}">{{label}}</label>
+    <div class="col-sm-8">
+        <input type="text" ng-model="inputText" validator-required="{{required}}" validator-group="{{formName}}" id="{{formName+index}}" class="form-control" placeholder="{{placeholder}}"/>
+        <p class='help-block'>{{description}}</p>
+    </div>
+</div>
