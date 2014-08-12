@@ -418,7 +418,7 @@
   ]).directive('fbComponents', function() {
     return {
       restrict: 'A',
-      template: "<ul ng-if=\"groups.length > 1\" class=\"nav nav-tabs nav-justified\">\n    <li ng-repeat=\"group in groups\" ng-class=\"{active:activeGroup==group}\">\n        <a href='#' ng-click=\"selectGroup($event, group)\">{{group}}</a>\n    </li>\n</ul>\n<div class='form-horizontal'>\n  <div class='fb-component-container' ng-repeat=\"component in components | filter: {locked: '!true'}\">\n    <button class='add-to-form btn btn-xs' ng-click=\"addThis(component.name); $event.stopPropagation(); $event.preventDefault();\">\n      <span class='glyphicon glyphicon-plus'></span>\n    </button>\n    <div class='fb-component' fb-component=\"component\"></div>\n  </div>\n</div>",
+      template: "<ul ng-if=\"groups.length > 1\" class=\"nav nav-tabs nav-justified\">\n    <li ng-repeat=\"group in groups\" ng-class=\"{active:activeGroup==group}\">\n        <a href='#' ng-click=\"selectGroup($event, group)\">{{group}}</a>\n    </li>\n</ul>\n<div class='form-horizontal'>\n  <div class='fb-component-container' ng-repeat=\"component in components | filter: {addable: 'true'}\">\n    <button class='add-to-form btn btn-xs' ng-click=\"addThis(component.name); $event.stopPropagation(); $event.preventDefault();\">\n      <span class='glyphicon glyphicon-plus'></span>\n    </button>\n    <div class='fb-component' fb-component=\"component\"></div>\n  </div>\n</div>",
       controller: 'fbComponentsController'
     };
   }).directive('fbComponent', [
@@ -993,7 +993,7 @@
       "default": []
     };
     this.convertComponent = function(name, component) {
-      var result, _ref, _ref1, _ref2, _ref3, _ref4, _ref5, _ref6, _ref7, _ref8, _ref9;
+      var result, _ref, _ref1, _ref10, _ref2, _ref3, _ref4, _ref5, _ref6, _ref7, _ref8, _ref9;
       result = {
         name: name,
         group: (_ref = component.group) != null ? _ref : 'Default',
@@ -1002,10 +1002,11 @@
         placeholder: (_ref3 = component.placeholder) != null ? _ref3 : '',
         editable: (_ref4 = component.editable) != null ? _ref4 : true,
         required: (_ref5 = component.required) != null ? _ref5 : false,
-        validation: (_ref6 = component.validation) != null ? _ref6 : '/.*/',
-        validationOptions: (_ref7 = component.validationOptions) != null ? _ref7 : [],
-        options: (_ref8 = component.options) != null ? _ref8 : [],
-        arrayToText: (_ref9 = component.arrayToText) != null ? _ref9 : false,
+        addable: (_ref6 = component.addable) != null ? _ref6 : true,
+        validation: (_ref7 = component.validation) != null ? _ref7 : '/.*/',
+        validationOptions: (_ref8 = component.validationOptions) != null ? _ref8 : [],
+        options: (_ref9 = component.options) != null ? _ref9 : [],
+        arrayToText: (_ref10 = component.arrayToText) != null ? _ref10 : false,
         template: component.template,
         templateUrl: component.templateUrl,
         popoverTemplate: component.popoverTemplate,
