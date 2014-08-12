@@ -68,6 +68,7 @@ angular.module 'builder.provider', []
             id: formObject.id
             component: formObject.component
             editable: formObject.editable ? component.editable
+            addable: formObject.addable ? component.addable
             index: formObject.index ? 0
             label: formObject.label ? component.label
             description: formObject.description ? component.description

@@ -92,7 +92,7 @@ angular.module 'builder.directive', [
                 if not isHover and draggable.mode is 'drag'
                     # remove the form object by draggin out
                     formObject = draggable.object.formObject
-                    if formObject.editable
+                    if formObject.editable and formObject.addable
                         $builder.removeFormObject attrs.fbBuilder, formObject.index
                 else if isHover
                     if draggable.mode is 'mirror'

@@ -241,7 +241,7 @@
               }
               if (!isHover && draggable.mode === 'drag') {
                 formObject = draggable.object.formObject;
-                if (formObject.editable) {
+                if (formObject.editable && formObject.addable) {
                   $builder.removeFormObject(attrs.fbBuilder, formObject.index);
                 }
               } else if (isHover) {
@@ -1021,7 +1021,7 @@
       return result;
     };
     this.convertFormObject = function(name, formObject) {
-      var component, result, _ref, _ref1, _ref2, _ref3, _ref4, _ref5, _ref6, _ref7;
+      var component, result, _ref, _ref1, _ref2, _ref3, _ref4, _ref5, _ref6, _ref7, _ref8;
       if (formObject == null) {
         formObject = {};
       }
@@ -1033,13 +1033,14 @@
         id: formObject.id,
         component: formObject.component,
         editable: (_ref = formObject.editable) != null ? _ref : component.editable,
-        index: (_ref1 = formObject.index) != null ? _ref1 : 0,
-        label: (_ref2 = formObject.label) != null ? _ref2 : component.label,
-        description: (_ref3 = formObject.description) != null ? _ref3 : component.description,
-        placeholder: (_ref4 = formObject.placeholder) != null ? _ref4 : component.placeholder,
-        options: (_ref5 = formObject.options) != null ? _ref5 : component.options,
-        required: (_ref6 = formObject.required) != null ? _ref6 : component.required,
-        validation: (_ref7 = formObject.validation) != null ? _ref7 : component.validation
+        addable: (_ref1 = formObject.addable) != null ? _ref1 : component.addable,
+        index: (_ref2 = formObject.index) != null ? _ref2 : 0,
+        label: (_ref3 = formObject.label) != null ? _ref3 : component.label,
+        description: (_ref4 = formObject.description) != null ? _ref4 : component.description,
+        placeholder: (_ref5 = formObject.placeholder) != null ? _ref5 : component.placeholder,
+        options: (_ref6 = formObject.options) != null ? _ref6 : component.options,
+        required: (_ref7 = formObject.required) != null ? _ref7 : component.required,
+        validation: (_ref8 = formObject.validation) != null ? _ref8 : component.validation
       };
       return result;
     };
