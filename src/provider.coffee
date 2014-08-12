@@ -46,6 +46,7 @@ angular.module 'builder.provider', []
             placeholder: component.placeholder ? ''
             editable: component.editable ? yes
             required: component.required ? no
+            addable: component.addable ? yes
             validation: component.validation ? '/.*/'
             validationOptions: component.validationOptions ? []
             options: component.options ? []

@@ -267,7 +267,7 @@ angular.module 'builder.directive', [
             </li>
         </ul>
         <div class='form-horizontal'>
-          <div class='fb-component-container' ng-repeat="component in components | filter: {locked: '!true'}">
+          <div class='fb-component-container' ng-repeat="component in components | filter: {addable: 'true'}">
             <button class='add-to-form btn btn-xs' ng-click="addThis(component.name); $event.stopPropagation(); $event.preventDefault();">
               <span class='glyphicon glyphicon-plus'></span>
             </button>
