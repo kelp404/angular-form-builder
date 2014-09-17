@@ -1183,9 +1183,11 @@
         @param index: The form object index.
          */
         var formObjects;
-        formObjects = _this.forms[name];
-        formObjects.splice(index, 1);
-        return _this.reindexFormObject(name);
+        if (confirm("削除してもよろしいですか？")) {
+          formObjects = _this.forms[name];
+          formObjects.splice(index, 1);
+          return _this.reindexFormObject(name);
+        }
       };
     })(this);
     this.updateFormObjectIndex = (function(_this) {

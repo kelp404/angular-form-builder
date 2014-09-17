@@ -177,9 +177,10 @@ angular.module 'builder.provider', []
         @param name: The form name.
         @param index: The form object index.
         ###
-        formObjects = @forms[name]
-        formObjects.splice index, 1
-        @reindexFormObject name
+        if confirm("削除してもよろしいですか？")
+          formObjects = @forms[name]
+          formObjects.splice index, 1
+          @reindexFormObject name
 
     @updateFormObjectIndex = (name, oldIndex, newIndex) =>
         ###
