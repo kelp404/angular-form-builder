@@ -233,7 +233,7 @@
               return $(element).find('.empty').remove();
             },
             up: function(e, isHover, draggable) {
-              var formObject, newIndex, oldIndex;
+              var formItem, formObject, newIndex, oldIndex, _i, _len, _ref;
               beginMove = true;
               if (!$drag.isMouseMoved()) {
                 $(element).find('.empty').remove();
@@ -242,7 +242,14 @@
               if (!isHover && draggable.mode === 'drag') {
                 formObject = draggable.object.formObject;
                 if (formObject.editable && formObject.addable) {
-                  $builder.removeFormObject(attrs.fbBuilder, formObject.index);
+                  _ref = $builder.forms[scope.formName];
+                  for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+                    formItem = _ref[_i];
+                    if (formItem.$$hashKey === draggable.object.formObject.$$hashKey) {
+                      $builder.removeFormObject(attrs.fbBuilder, formObject.index);
+                      break;
+                    }
+                  }
                 }
               } else if (isHover) {
                 if (draggable.mode === 'mirror') {

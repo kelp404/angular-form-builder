@@ -90,6 +90,8 @@ angular.module 'app', ['builder', 'builder.components', 'validator.rules']
         options: ['Dog', 'Cat']
     $builder.addFormObject 'default',
         component: 'sampleInput'
+    $builder.addFormObject 'bob',
+        component: 'sampleInput'
     # formObjects
     $scope.form = $builder.forms['default']
 

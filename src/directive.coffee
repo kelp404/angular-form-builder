@@ -93,7 +93,10 @@ angular.module 'builder.directive', [
                     # remove the form object by draggin out
                     formObject = draggable.object.formObject
                     if formObject.editable and formObject.addable
-                        $builder.removeFormObject attrs.fbBuilder, formObject.index
+                        for formItem in $builder.forms[scope.formName]
+                            if formItem.$$hashKey == draggable.object.formObject.$$hashKey
+                                $builder.removeFormObject attrs.fbBuilder, formObject.index
+                                break
                 else if isHover
                     if draggable.mode is 'mirror'
                         # insert a form object

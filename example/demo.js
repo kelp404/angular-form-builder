@@ -56,6 +56,9 @@
       $builder.addFormObject('default', {
         component: 'sampleInput'
       });
+      $builder.addFormObject('bob', {
+        component: 'sampleInput'
+      });
       $scope.form = $builder.forms['default'];
       $scope.input = [];
       $scope.defaultValue = {};
