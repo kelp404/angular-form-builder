@@ -64,6 +64,11 @@
       $scope.defaultValue = {};
       $scope.defaultValue[textbox.id] = 'default value';
       $scope.defaultValue[checkbox.id] = [true, true];
+      $scope.$on('removalConfirmationTrigger', function(event, data) {
+        if (confirm("Really remove it??!")) {
+          return data.callback();
+        }
+      });
       return $scope.submit = function() {
         return $validator.validate($scope, 'default').success(function() {
           return console.log('success');

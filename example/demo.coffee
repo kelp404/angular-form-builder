@@ -105,6 +105,10 @@ angular.module 'app', ['builder', 'builder.components', 'validator.rules']
     $scope.defaultValue[textbox.id] = 'default value'
     $scope.defaultValue[checkbox.id] = [yes, yes]
 
+    $scope.$on('removalConfirmationTrigger', (event, data) ->
+        data.callback() if confirm("Really remove it??!")
+    )
+
     $scope.submit = ->
         $validator.validate $scope, 'default'
         .success -> console.log 'success'

@@ -16,6 +16,7 @@ angular.module 'builder.provider', []
 .provider '$builder', ->
     $injector = null
     $http = null
+    $rootScope = null
     $templateCache = null
 
     @config =
@@ -87,6 +88,7 @@ angular.module 'builder.provider', []
     @setupProviders = (injector) =>
         $injector = injector
         $http = $injector.get '$http'
+        $rootScope = $injector.get '$rootScope'
         $templateCache = $injector.get '$templateCache'
 
     @loadTemplate = (component) ->
@@ -177,10 +179,12 @@ angular.module 'builder.provider', []
         @param name: The form name.
         @param index: The form object index.
         ###
-        if confirm("削除してもよろしいですか？")
+        removeFormObjectCallback = =>
           formObjects = @forms[name]
           formObjects.splice index, 1
           @reindexFormObject name
+
+        $rootScope.$broadcast('removalConfirmationTrigger', {callback: removeFormObjectCallback})
 
     @updateFormObjectIndex = (name, oldIndex, newIndex) =>
         ###

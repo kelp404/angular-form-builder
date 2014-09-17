@@ -984,9 +984,10 @@
   var __indexOf = [].indexOf || function(item) { for (var i = 0, l = this.length; i < l; i++) { if (i in this && this[i] === item) return i; } return -1; };
 
   angular.module('builder.provider', []).provider('$builder', function() {
-    var $http, $injector, $templateCache;
+    var $http, $injector, $rootScope, $templateCache;
     $injector = null;
     $http = null;
+    $rootScope = null;
     $templateCache = null;
     this.config = {
       popoverPlacement: 'right'
@@ -1064,6 +1065,7 @@
       return function(injector) {
         $injector = injector;
         $http = $injector.get('$http');
+        $rootScope = $injector.get('$rootScope');
         return $templateCache = $injector.get('$templateCache');
       };
     })(this);
@@ -1189,12 +1191,16 @@
         @param name: The form name.
         @param index: The form object index.
          */
-        var formObjects;
-        if (confirm("削除してもよろしいですか？")) {
+        var removeFormObjectCallback;
+        removeFormObjectCallback = function() {
+          var formObjects;
           formObjects = _this.forms[name];
           formObjects.splice(index, 1);
           return _this.reindexFormObject(name);
-        }
+        };
+        return $rootScope.$broadcast('removalConfirmationTrigger', {
+          callback: removeFormObjectCallback
+        });
       };
     })(this);
     this.updateFormObjectIndex = (function(_this) {
