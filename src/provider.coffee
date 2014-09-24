@@ -48,6 +48,7 @@ angular.module 'builder.provider', []
             editable: component.editable ? yes
             required: component.required ? no
             addable: component.addable ? yes
+            effectiveDateEnabled: component.effectiveDateEnabled ? yes
             validation: component.validation ? '/.*/'
             validationOptions: component.validationOptions ? []
             options: component.options ? []
@@ -70,6 +71,7 @@ angular.module 'builder.provider', []
             component: formObject.component
             editable: formObject.editable ? component.editable
             addable: formObject.addable ? component.addable
+            effectiveDateEnabled: formObject.effectiveDateEnabled ? component.effectiveDateEnabled
             index: formObject.index ? 0
             label: formObject.label ? component.label
             description: formObject.description ? component.description

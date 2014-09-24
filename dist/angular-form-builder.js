@@ -1001,7 +1001,7 @@
       "default": []
     };
     this.convertComponent = function(name, component) {
-      var result, _ref, _ref1, _ref10, _ref2, _ref3, _ref4, _ref5, _ref6, _ref7, _ref8, _ref9;
+      var result, _ref, _ref1, _ref10, _ref11, _ref2, _ref3, _ref4, _ref5, _ref6, _ref7, _ref8, _ref9;
       result = {
         name: name,
         group: (_ref = component.group) != null ? _ref : 'Default',
@@ -1011,10 +1011,11 @@
         editable: (_ref4 = component.editable) != null ? _ref4 : true,
         required: (_ref5 = component.required) != null ? _ref5 : false,
         addable: (_ref6 = component.addable) != null ? _ref6 : true,
-        validation: (_ref7 = component.validation) != null ? _ref7 : '/.*/',
-        validationOptions: (_ref8 = component.validationOptions) != null ? _ref8 : [],
-        options: (_ref9 = component.options) != null ? _ref9 : [],
-        arrayToText: (_ref10 = component.arrayToText) != null ? _ref10 : false,
+        effectiveDateEnabled: (_ref7 = component.effectiveDateEnabled) != null ? _ref7 : true,
+        validation: (_ref8 = component.validation) != null ? _ref8 : '/.*/',
+        validationOptions: (_ref9 = component.validationOptions) != null ? _ref9 : [],
+        options: (_ref10 = component.options) != null ? _ref10 : [],
+        arrayToText: (_ref11 = component.arrayToText) != null ? _ref11 : false,
         template: component.template,
         templateUrl: component.templateUrl,
         popoverTemplate: component.popoverTemplate,
@@ -1029,7 +1030,7 @@
       return result;
     };
     this.convertFormObject = function(name, formObject) {
-      var component, result, _ref, _ref1, _ref2, _ref3, _ref4, _ref5, _ref6, _ref7, _ref8;
+      var component, result, _ref, _ref1, _ref2, _ref3, _ref4, _ref5, _ref6, _ref7, _ref8, _ref9;
       if (formObject == null) {
         formObject = {};
       }
@@ -1042,13 +1043,14 @@
         component: formObject.component,
         editable: (_ref = formObject.editable) != null ? _ref : component.editable,
         addable: (_ref1 = formObject.addable) != null ? _ref1 : component.addable,
-        index: (_ref2 = formObject.index) != null ? _ref2 : 0,
-        label: (_ref3 = formObject.label) != null ? _ref3 : component.label,
-        description: (_ref4 = formObject.description) != null ? _ref4 : component.description,
-        placeholder: (_ref5 = formObject.placeholder) != null ? _ref5 : component.placeholder,
-        options: (_ref6 = formObject.options) != null ? _ref6 : component.options,
-        required: (_ref7 = formObject.required) != null ? _ref7 : component.required,
-        validation: (_ref8 = formObject.validation) != null ? _ref8 : component.validation
+        effectiveDateEnabled: (_ref2 = formObject.effectiveDateEnabled) != null ? _ref2 : component.effectiveDateEnabled,
+        index: (_ref3 = formObject.index) != null ? _ref3 : 0,
+        label: (_ref4 = formObject.label) != null ? _ref4 : component.label,
+        description: (_ref5 = formObject.description) != null ? _ref5 : component.description,
+        placeholder: (_ref6 = formObject.placeholder) != null ? _ref6 : component.placeholder,
+        options: (_ref7 = formObject.options) != null ? _ref7 : component.options,
+        required: (_ref8 = formObject.required) != null ? _ref8 : component.required,
+        validation: (_ref9 = formObject.validation) != null ? _ref9 : component.validation
       };
       return result;
     };
