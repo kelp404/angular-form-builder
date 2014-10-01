@@ -19,6 +19,8 @@ describe 'builder.directive', ->
                 description: 'description'
                 placeholder: 'placeholder'
                 required: no
+                effectiveDateEnabled: yes
+                addable: yes
                 template:
                     """
                     <div class="form-group">
@@ -35,9 +37,10 @@ describe 'builder.directive', ->
             view = $compile(template) $scope
             $scope.$digest()
             expect($(view).find('>.form-horizontal').length).toBe 1
+            $componentContainers = $(view).find '.fb-component-container'
             $components = $(view).find '.fb-component'
-            expect($components.length).toBe 1
-            expect($components.attr('ng-repeat')).toEqual 'component in components'
+            expect($componentContainers.length).toBe 1
+            expect($componentContainers.attr('ng-repeat')).toEqual "component in components | filter: {addable: 'true'}"
             expect($components.attr('fb-component')).toEqual 'component'
 
 
@@ -58,6 +61,8 @@ describe 'builder.directive', ->
                 description: 'description'
                 placeholder: 'placeholder'
                 required: no
+                effectiveDateEnabled: yes
+                addable: yes
                 template:
                     """
                     <div class="form-group">
@@ -123,6 +128,8 @@ describe 'builder.directive', ->
                 description: 'description'
                 placeholder: 'placeholder'
                 required: no
+                effectiveDateEnabled: yes
+                addable: yes
                 template:
                     """
                     <div class="form-group">

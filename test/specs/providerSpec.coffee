@@ -1,6 +1,7 @@
 describe 'builder.provider', ->
     fakeModule = null
     builderProvider = null
+    $rootScope = null
 
     beforeEach module('builder')
     beforeEach ->
@@ -8,6 +9,8 @@ describe 'builder.provider', ->
         fakeModule.config ($builderProvider) ->
             builderProvider = $builderProvider
     beforeEach module('fakeModule')
+    beforeEach inject ($injector) ->
+      $rootScope = $injector.get('$rootScope')
 
 
     # ----------------------------------------
@@ -98,6 +101,8 @@ describe 'builder.provider', ->
                 placeholder: ''
                 editable: yes
                 required: no
+                addable: true
+                effectiveDateEnabled: true
                 validation: '/.*/'
                 validationOptions: []
                 options: []
@@ -116,6 +121,8 @@ describe 'builder.provider', ->
                 placeholder: 'placeholder'
                 editable: no
                 required: yes
+                addable: true
+                effectiveDateEnabled: true
                 validation: '/regexp/'
                 validationOptions: []
                 options: ['value one']
@@ -130,6 +137,8 @@ describe 'builder.provider', ->
                 placeholder: 'placeholder'
                 editable: no
                 required: yes
+                addable: true
+                effectiveDateEnabled: true
                 validation: '/regexp/'
                 validationOptions: []
                 options: ['value one']
@@ -157,6 +166,8 @@ describe 'builder.provider', ->
                 placeholder: 'placeholder'
                 editable: yes
                 required: yes
+                addable: true
+                effectiveDateEnabled: true
                 validation: '/regexp/'
                 options: ['value one']
                 arrayToText: yes
@@ -175,6 +186,8 @@ describe 'builder.provider', ->
                 placeholder: 'placeholder'
                 options: ['value one']
                 required: yes
+                addable: true
+                effectiveDateEnabled: true
                 validation: '/regexp/'
             .toEqual formObject
 
@@ -191,6 +204,8 @@ describe 'builder.provider', ->
                 placeholder: 'placeholder A'
                 options: ['value']
                 required: no
+                addable: true
+                effectiveDateEnabled: true
                 validation: '/.*/'
 
             expect
@@ -203,6 +218,8 @@ describe 'builder.provider', ->
                 placeholder: 'placeholder A'
                 options: ['value']
                 required: no
+                addable: true
+                effectiveDateEnabled: true
                 validation: '/.*/'
             .toEqual formObject
 
@@ -230,6 +247,8 @@ describe 'builder.provider', ->
                 placeholder: ''
                 editable: yes
                 required: no
+                addable: true
+                effectiveDateEnabled: true
                 validation: '/.*/'
                 options: []
                 arrayToText: no
@@ -244,6 +263,8 @@ describe 'builder.provider', ->
                 placeholder: ''
                 editable: yes
                 required: no
+                addable: true
+                effectiveDateEnabled: true
                 validation: '/.*/'
                 validationOptions: []
                 options: []
@@ -334,17 +355,12 @@ describe 'builder.provider', ->
                 template: "<div class='form-group'></div>"
                 popoverTemplate: "<div class='form-group'></div>"
 
-        it '$builder.removeFormObject() will call formObject.splice() and reindexFormObject()', inject ($builder) ->
-            spyOn(builderProvider.forms.default, 'splice').and.callFake (index, length, object) ->
-                expect(index).toBe 1
-                expect(length).toBe 1
-                expect(object).toBeUndefined()
-            spyOn(builderProvider, 'reindexFormObject').and.callFake (name) ->
-                expect(name).toEqual 'default'
+        it '$builder.removeFormObject() will broadcast a message to trigger confirmation dialog, with a callback', inject ($builder) ->
+            spyOn($rootScope, '$broadcast').and.callFake (message, callback) ->
+              expect(message).toEqual 'removalConfirmationTrigger'
+              expect(callback).toBeDefined()
             $builder.removeFormObject 'default', 1
-            expect(builderProvider.forms.default.splice).toHaveBeenCalled()
-            expect(builderProvider.reindexFormObject).toHaveBeenCalled()
-
+            expect($rootScope.$broadcast).toHaveBeenCalled()
 
     describe '$builder.updateFormObjectIndex()', ->
         beforeEach -> inject ($builder) ->
