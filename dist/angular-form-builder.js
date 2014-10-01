@@ -24,18 +24,19 @@
         /*
         1. Copy origin formObject (ng-repeat="object in formObjects") to scope.
         2. Setup optionsText with formObject.options.
-        3. Watch scope.label, .description, .placeholder, .required, .options then copy to origin formObject.
+        3. Watch scope.label, .description, .placeholder, .required, .effectiveDateEnabled, .options then copy to origin formObject.
         4. Watch scope.optionsText then convert to scope.options.
         5. setup validationOptions
          */
         var component;
         copyObjectToScope(formObject, $scope);
         $scope.optionsText = formObject.options.join('\n');
-        $scope.$watch('[label, description, placeholder, required, options, validation]', function() {
+        $scope.$watch('[label, description, placeholder, required, effectiveDateEnabled, options, validation]', function() {
           formObject.label = $scope.label;
           formObject.description = $scope.description;
           formObject.placeholder = $scope.placeholder;
           formObject.required = $scope.required;
+          formObject.effectiveDateEnabled = $scope.effectiveDateEnabled;
           formObject.options = $scope.options;
           return formObject.validation = $scope.validation;
         }, true);
