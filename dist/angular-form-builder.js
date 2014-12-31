@@ -373,6 +373,7 @@
             }
             $("div.fb-form-object-editable:not(." + popover.id + ")").popover('hide');
             $popover = $("form." + popover.id).closest('.popover');
+            $(element).addClass('active');
             if ($popover.length > 0) {
               elementOrigin = $(element).offset().top + $(element).height() / 2;
               popoverTop = elementOrigin - $popover.height() / 2;
@@ -407,6 +408,7 @@
               }
             }
             $popover.removeClass('in');
+            $(element).removeClass('active');
             setTimeout(function() {
               return $popover.hide();
             }, 300);
