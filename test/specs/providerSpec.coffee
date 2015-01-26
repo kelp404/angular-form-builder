@@ -125,7 +125,7 @@ describe 'builder.provider', ->
                 effectiveDateEnabled: true
                 validation: '/regexp/'
                 validationOptions: []
-                options: ['value one']
+                options: [{id: 0, value: 'value one'}]
                 arrayToText: yes
                 template: "<div class='form-group'></div>"
                 popoverTemplate: "<div class='form-group'></div>"
@@ -141,7 +141,7 @@ describe 'builder.provider', ->
                 effectiveDateEnabled: true
                 validation: '/regexp/'
                 validationOptions: []
-                options: ['value one']
+                options: [{id: 0, value: 'value one'}]
                 arrayToText: yes
                 template: "<div class='form-group'></div>"
                 templateUrl: undefined
@@ -169,7 +169,7 @@ describe 'builder.provider', ->
                 addable: true
                 effectiveDateEnabled: true
                 validation: '/regexp/'
-                options: ['value one']
+                options: [{id: 0, value: 'value one'}]
                 arrayToText: yes
                 template: "<div class='form-group'></div>"
                 popoverTemplate: "<div class='form-group'></div>"
@@ -184,7 +184,7 @@ describe 'builder.provider', ->
                 label: 'Input Text'
                 description: 'description'
                 placeholder: 'placeholder'
-                options: ['value one']
+                options: [{id: 0, value: 'value one'}]
                 required: yes
                 addable: true
                 effectiveDateEnabled: true
@@ -202,7 +202,7 @@ describe 'builder.provider', ->
                 label: 'input label'
                 description: 'description A'
                 placeholder: 'placeholder A'
-                options: ['value']
+                options: [{id: 0, value: 'value'}]
                 required: no
                 addable: true
                 effectiveDateEnabled: true
@@ -216,7 +216,7 @@ describe 'builder.provider', ->
                 label: 'input label'
                 description: 'description A'
                 placeholder: 'placeholder A'
-                options: ['value']
+                options: [{id: 0, value: 'value'}]
                 required: no
                 addable: true
                 effectiveDateEnabled: true

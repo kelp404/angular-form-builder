@@ -206,6 +206,17 @@ angular.module 'builder.directive', [
                     $event.preventDefault()
                     $(element).popover 'hide'
                 return
+            addOption: ->
+                ###
+                The create option event of the popover.
+                ###
+                scope.options.push({value:""})
+            removeOption: ($index) ->
+                ###
+                The remove option event of the popover.
+                ###
+                scope.options.splice($index, 1)
+
         # ----------------------------------------
         # popover.show
         # ----------------------------------------
