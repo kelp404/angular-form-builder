@@ -1,4 +1,4 @@
-angular.module 'builder.components', ['builder', 'validator.rules']
+angular.module 'builder.components', ['builder', 'validator.rules', 'ui.sortable']
 
 .config ['$builderProvider', ($builderProvider) ->
     # ----------------------------------------
@@ -251,8 +251,12 @@ angular.module 'builder.components', ['builder', 'validator.rules']
                 </div>
                 <div class="form-group">
                     <label class='control-label'>Options</label>
-                    <div ng-repeat="item in options"><input type="text" ng-model=item.value required/>
-                      <a class="btn btn-danger btn-xs right" type="button" ng-click="popover.removeOption($index)"><span class="glyphicon glyphicon-minus"></span></a>
+                    <div ui-sortable="{'handle': '.handle'}" ng-model="options">
+                      <div ng-repeat="item in options">
+                        <div class="handle">::</div>
+                        <input type="text" ng-model=item.value required/>
+                        <a class="btn btn-danger btn-xs right" type="button" ng-click="popover.removeOption($index)"><span class="glyphicon glyphicon-minus"></span></a>
+                      </div>
                     </div>
                 </div>
                 <div class="form-group">

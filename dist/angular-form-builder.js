@@ -362,8 +362,16 @@
               /*
               The create option event of the popover.
                */
+              var getNextId;
+              getNextId = function() {
+                var opt;
+                opt = scope.options.sort(function(a, b) {
+                  return a.id - b.id;
+                });
+                return opt[opt.length - 1].id + 1;
+              };
               return scope.options.push({
-                id: scope.options[scope.options.length - 1].id + 1,
+                id: getNextId(scope.options),
                 value: ""
               });
             },

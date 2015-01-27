@@ -210,7 +210,12 @@ angular.module 'builder.directive', [
                 ###
                 The create option event of the popover.
                 ###
-                scope.options.push({id: (scope.options[scope.options.length - 1].id + 1), value:""})
+                getNextId = ->
+                  opt = scope.options.sort( (a, b) ->
+                    a.id - b.id
+                  )
+                  opt[opt.length - 1].id + 1
+                scope.options.push({id: getNextId(scope.options), value:""})
             removeOption: ($index) ->
                 ###
                 The remove option event of the popover.
