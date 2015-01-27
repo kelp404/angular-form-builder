@@ -23,10 +23,8 @@
 
         /*
         1. Copy origin formObject (ng-repeat="object in formObjects") to scope.
-        // FIXME: no longer needed//        2. Setup optionsText with formObject.options.
-        3. Watch scope.label, .description, .placeholder, .required, .effectiveDateEnabled, .options then copy to origin formObject.
-        // FIXME: no longer needed//        4. Watch scope.optionsText then convert to scope.options.
-        5. setup validationOptions
+        2. Watch scope.label, .description, .placeholder, .required, .effectiveDateEnabled, .options then copy to origin formObject.
+        3. setup validationOptions
          */
         var component;
         copyObjectToScope(formObject, $scope);
@@ -365,6 +363,7 @@
               The create option event of the popover.
                */
               return scope.options.push({
+                id: scope.options[scope.options.length - 1].id + 1,
                 value: ""
               });
             },

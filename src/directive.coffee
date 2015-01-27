@@ -210,7 +210,7 @@ angular.module 'builder.directive', [
                 ###
                 The create option event of the popover.
                 ###
-                scope.options.push({value:""})
+                scope.options.push({id: (scope.options[scope.options.length - 1].id + 1), value:""})
             removeOption: ($index) ->
                 ###
                 The remove option event of the popover.
