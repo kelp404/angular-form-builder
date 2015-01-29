@@ -23,39 +23,25 @@
 
         /*
         1. Copy origin formObject (ng-repeat="object in formObjects") to scope.
-        2. Setup optionsText with formObject.options.
-        3. Watch scope.label, .description, .placeholder, .required, .effectiveDateEnabled, .options then copy to origin formObject.
-        4. Watch scope.optionsText then convert to scope.options.
-        5. setup validationOptions
+        2. Watch scope.label, .description, .placeholder, .required, .effectiveDateEnabled, .options then copy to origin formObject.
+        3. setup validationOptions
          */
         var component;
         copyObjectToScope(formObject, $scope);
-        $scope.optionsText = formObject.options.join('\n');
-        $scope.$watch('[label, description, placeholder, required, effectiveDateEnabled, options, validation]', function() {
+        $scope.$watch('[label, description, placeholder, required, effectiveDateEnabled, validation]', function() {
           formObject.label = $scope.label;
           formObject.description = $scope.description;
           formObject.placeholder = $scope.placeholder;
           formObject.required = $scope.required;
           formObject.effectiveDateEnabled = $scope.effectiveDateEnabled;
-          formObject.options = $scope.options;
           return formObject.validation = $scope.validation;
         }, true);
-        $scope.$watch('optionsText', function(text) {
-          var x;
-          $scope.options = (function() {
-            var _i, _len, _ref, _results;
-            _ref = text.split('\n');
-            _results = [];
-            for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-              x = _ref[_i];
-              if (x.length > 0) {
-                _results.push(x);
-              }
-            }
-            return _results;
-          })();
-          return $scope.inputText = $scope.options[0];
-        });
+        $scope.$watch('options', function() {
+          formObject.options = $scope.options;
+          if ($scope.options.length > 0) {
+            return $scope.inputText = $scope.options[0].value;
+          }
+        }, true);
         component = $builder.components[formObject.component];
         return $scope.validationOptions = component.validationOptions;
       };
@@ -71,7 +57,6 @@
             description: $scope.description,
             placeholder: $scope.placeholder,
             required: $scope.required,
-            optionsText: $scope.optionsText,
             validation: $scope.validation
           };
         },
@@ -87,7 +72,6 @@
           $scope.description = this.model.description;
           $scope.placeholder = this.model.placeholder;
           $scope.required = this.model.required;
-          $scope.optionsText = this.model.optionsText;
           return $scope.validation = this.model.validation;
         }
       };
@@ -372,6 +356,41 @@
                 $event.preventDefault();
                 $(element).popover('hide');
               }
+            },
+            addOption: function(hasId) {
+              var getNextId, option;
+              if (hasId == null) {
+                hasId = false;
+              }
+
+              /*
+              The create option event of the popover.
+               */
+              getNextId = function() {
+                var opt;
+                opt = scope.options.sort(function(a, b) {
+                  return a.id - b.id;
+                });
+                return opt[opt.length - 1].id + 1;
+              };
+              if (hasId) {
+                option = {
+                  id: getNextId(scope.options),
+                  value: ""
+                };
+              } else {
+                option = {
+                  value: ""
+                };
+              }
+              return scope.options.push(option);
+            },
+            removeOption: function($index) {
+
+              /*
+              The remove option event of the popover.
+               */
+              return scope.options.splice($index, 1);
             }
           };
           $(element).on('show.bs.popover', function() {

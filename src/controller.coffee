@@ -25,28 +25,28 @@ angular.module 'builder.controller', ['builder.provider']
     $scope.setupScope = (formObject) ->
         ###
         1. Copy origin formObject (ng-repeat="object in formObjects") to scope.
-        2. Setup optionsText with formObject.options.
-        3. Watch scope.label, .description, .placeholder, .required, .effectiveDateEnabled, .options then copy to origin formObject.
-        4. Watch scope.optionsText then convert to scope.options.
-        5. setup validationOptions
+        2. Watch scope.label, .description, .placeholder, .required, .effectiveDateEnabled, .options then copy to origin formObject.
+        3. setup validationOptions
         ###
         copyObjectToScope formObject, $scope
 
-        $scope.optionsText = formObject.options.join '\n'
+#        $scope.optionsText = formObject.options.join '\n'
 
-        $scope.$watch '[label, description, placeholder, required, effectiveDateEnabled, options, validation]', ->
+        $scope.$watch '[label, description, placeholder, required, effectiveDateEnabled, validation]', ->
             formObject.label = $scope.label
             formObject.description = $scope.description
             formObject.placeholder = $scope.placeholder
             formObject.required = $scope.required
             formObject.effectiveDateEnabled = $scope.effectiveDateEnabled
-            formObject.options = $scope.options
+#            formObject.options = $scope.options
             formObject.validation = $scope.validation
         , yes
 
-        $scope.$watch 'optionsText', (text) ->
-            $scope.options = (x for x in text.split('\n') when x.length > 0)
-            $scope.inputText = $scope.options[0]
+        $scope.$watch 'options', ->
+            formObject.options = $scope.options
+            if ($scope.options.length > 0)
+                $scope.inputText = $scope.options[0].value
+        , yes
 
         component = $builder.components[formObject.component]
         $scope.validationOptions = component.validationOptions
@@ -62,7 +62,6 @@ angular.module 'builder.controller', ['builder.provider']
                 description: $scope.description
                 placeholder: $scope.placeholder
                 required: $scope.required
-                optionsText: $scope.optionsText
                 validation: $scope.validation
         rollback: ->
             ###
@@ -73,7 +72,6 @@ angular.module 'builder.controller', ['builder.provider']
             $scope.description = @model.description
             $scope.placeholder = @model.placeholder
             $scope.required = @model.required
-            $scope.optionsText = @model.optionsText
             $scope.validation = @model.validation
 ]
 

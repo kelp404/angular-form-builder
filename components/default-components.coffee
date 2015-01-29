@@ -1,4 +1,4 @@
-angular.module 'builder.components', ['builder', 'validator.rules']
+angular.module 'builder.components', ['builder', 'validator.rules', 'ui.sortable']
 
 .config ['$builderProvider', ($builderProvider) ->
     # ----------------------------------------
@@ -175,15 +175,15 @@ angular.module 'builder.components', ['builder', 'validator.rules']
         description: 'description'
         placeholder: 'placeholder'
         required: no
-        options: ['value one', 'value two']
+        options: [{value: 'value one'}, {value: 'value two'}]
         template:
             """
             <div class="form-group">
                 <label for="{{formName+index}}" class="col-sm-4 control-label" ng-class="{'fb-required':required}">{{label}}</label>
                 <div class="col-sm-8">
                     <div class='radio' ng-repeat="item in options track by $index">
-                        <label><input name='{{formName+index}}' ng-model="$parent.inputText" validator-group="{{formName}}" value='{{item}}' type='radio'/>
-                            {{item}}
+                        <label><input name='{{formName+index}}' ng-model="$parent.inputText" validator-group="{{formName}}" value='{{item.value}}' type='radio'/>
+                            {{item.value}}
                         </label>
                     </div>
                     <p class='help-block'>{{description}}</p>
@@ -203,7 +203,16 @@ angular.module 'builder.components', ['builder', 'validator.rules']
                 </div>
                 <div class="form-group">
                     <label class='control-label'>Options</label>
-                    <textarea class="form-control" rows="3" ng-model="optionsText"/>
+                    <div ui-sortable="{'handle': '.handle'}" ng-model="options">
+                      <div ng-repeat="item in options">
+                        <div class="handle">::</div>
+                        <input type="text" ng-model="item.value" required/>
+                        <a class="btn btn-danger btn-xs right" type="button" ng-click="popover.removeOption($index)"><span class="glyphicon glyphicon-minus"></span></a>
+                      </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <button class="btn btn-primary btn-xs" type="button" ng-click="popover.addOption()"><span class="glyphicon glyphicon-plus"></span> Add Option</button>
                 </div>
 
                 <hr/>
@@ -224,13 +233,15 @@ angular.module 'builder.components', ['builder', 'validator.rules']
         description: 'description'
         placeholder: 'placeholder'
         required: no
-        options: ['value one', 'value two']
+        addable: true
+        editable: true
+        options: [{id: 0, value: 'value one'}, {id: 1, value: 'value two'}]
         template:
             """
             <div class="form-group">
                 <label for="{{formName+index}}" class="col-sm-4 control-label">{{label}}</label>
                 <div class="col-sm-8">
-                    <select ng-options="value for value in options" id="{{formName+index}}" class="form-control"
+                    <select ng-options="option.value for option in options" id="{{formName+index}}" class="form-control"
                         ng-model="inputText" ng-init="inputText = options[0]"/>
                     <p class='help-block'>{{description}}</p>
                 </div>
@@ -249,7 +260,16 @@ angular.module 'builder.components', ['builder', 'validator.rules']
                 </div>
                 <div class="form-group">
                     <label class='control-label'>Options</label>
-                    <textarea class="form-control" rows="3" ng-model="optionsText"/>
+                    <div ui-sortable="{'handle': '.handle'}" ng-model="options">
+                      <div ng-repeat="item in options">
+                        <div class="handle">::</div>
+                        <input type="text" ng-model=item.value required/>
+                        <a class="btn btn-danger btn-xs right" type="button" ng-click="popover.removeOption($index)"><span class="glyphicon glyphicon-minus"></span></a>
+                      </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <button class="btn btn-primary btn-xs" type="button" ng-click="popover.addOption(true)"><span class="glyphicon glyphicon-plus"></span> Add Option</button>
                 </div>
 
                 <hr/>
