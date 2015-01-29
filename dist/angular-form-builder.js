@@ -357,12 +357,15 @@
                 $(element).popover('hide');
               }
             },
-            addOption: function() {
+            addOption: function(hasId) {
+              var getNextId, option;
+              if (hasId == null) {
+                hasId = false;
+              }
 
               /*
               The create option event of the popover.
                */
-              var getNextId;
               getNextId = function() {
                 var opt;
                 opt = scope.options.sort(function(a, b) {
@@ -370,10 +373,17 @@
                 });
                 return opt[opt.length - 1].id + 1;
               };
-              return scope.options.push({
-                id: getNextId(scope.options),
-                value: ""
-              });
+              if (hasId) {
+                option = {
+                  id: getNextId(scope.options),
+                  value: ""
+                };
+              } else {
+                option = {
+                  value: ""
+                };
+              }
+              return scope.options.push(option);
             },
             removeOption: function($index) {
 
