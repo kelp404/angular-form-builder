@@ -379,15 +379,16 @@
               The create option event of the popover.
                */
               getNextId = function() {
-                var opt;
-                opt = scope.options.sort(function(a, b) {
+                var opt, optionsForSort;
+                optionsForSort = scope.options.slice(0);
+                opt = optionsForSort.sort(function(a, b) {
                   return a.id - b.id;
                 });
                 return opt[opt.length - 1].id + 1;
               };
               if (hasId) {
                 option = {
-                  id: getNextId(scope.options),
+                  id: getNextId(),
                   value: ""
                 };
               } else {

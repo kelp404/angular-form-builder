@@ -178,11 +178,11 @@ angular.module 'builder.directive', [
                 ###
                 $event.preventDefault()
                 if Array.isArray(scope.options)
-                  newOptions = []
-                  for option in scope.options
-                    unless option.value == ""
-                      newOptions.push(option)
-                  scope.options = newOptions
+                    newOptions = []
+                    for option in scope.options
+                        unless option.value == ""
+                            newOptions.push(option)
+                    scope.options = newOptions
                 $validator.validate(scope).success ->
                     popover.isClickedSave = yes
                     $(element).popover 'hide'
@@ -217,12 +217,13 @@ angular.module 'builder.directive', [
                 The create option event of the popover.
                 ###
                 getNextId = ->
-                  opt = scope.options.sort( (a, b) ->
+                  optionsForSort = scope.options.slice(0)
+                  opt = optionsForSort.sort( (a, b) ->
                     a.id - b.id
                   )
                   opt[opt.length - 1].id + 1
                 if hasId
-                  option = {id: getNextId(scope.options), value:""}
+                  option = {id: getNextId(), value:""}
                 else
                   option = {value: ""}
                 scope.options.push(option)
