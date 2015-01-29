@@ -177,6 +177,12 @@ angular.module 'builder.directive', [
                 The save event of the popover.
                 ###
                 $event.preventDefault()
+                if Array.isArray(scope.options)
+                  newOptions = []
+                  for option in scope.options
+                    unless option.value == ""
+                      newOptions.push(option)
+                  scope.options = newOptions
                 $validator.validate(scope).success ->
                     popover.isClickedSave = yes
                     $(element).popover 'hide'

@@ -323,7 +323,19 @@
               /*
               The save event of the popover.
                */
+              var newOptions, option, _i, _len, _ref;
               $event.preventDefault();
+              if (Array.isArray(scope.options)) {
+                newOptions = [];
+                _ref = scope.options;
+                for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+                  option = _ref[_i];
+                  if (option.value !== "") {
+                    newOptions.push(option);
+                  }
+                }
+                scope.options = newOptions;
+              }
               $validator.validate(scope).success(function() {
                 popover.isClickedSave = true;
                 return $(element).popover('hide');
