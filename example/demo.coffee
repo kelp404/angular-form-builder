@@ -97,6 +97,9 @@ angular.module 'app', ['builder', 'builder.components', 'validator.rules']
     # form
     # ----------------------------------------
     # user input value
+    $scope.pages = ['1', '2']
+    $scope.select = (page) ->
+        $scope.selected = page
     $scope.input = []
     $scope.defaultValue = {}
     # formObjectId: default value

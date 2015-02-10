@@ -57,6 +57,10 @@
         component: 'sampleInput'
       });
       $scope.form = $builder.forms['default'];
+      $scope.pages = ['1', '2'];
+      $scope.select = function(page) {
+        return $scope.selected = page;
+      };
       $scope.input = [];
       $scope.defaultValue = {};
       $scope.defaultValue[textbox.id] = 'default value';
