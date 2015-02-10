@@ -300,7 +300,7 @@ angular.module 'builder.directive', [
 ]
 
 # ----------------------------------------
-# fb-form
+# fb-multiple
 # ----------------------------------------
 .directive 'fbMultiple', ->
     restrict: 'E'

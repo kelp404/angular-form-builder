@@ -1,11 +1,8 @@
-#angular-form-builder [![Build Status](https://secure.travis-ci.org/kelp404/angular-form-builder.png?branch=master)](http://travis-ci.org/kelp404/angular-form-builder) [![devDependency Status](https://david-dm.org/kelp404/angular-form-builder/dev-status.png?branch=master)](https://david-dm.org/kelp404/angular-form-builder#info=devDependencies&view=table)
+#angular-form-builder
 
-[MIT License](http://www.opensource.org/licenses/mit-license.php)
+This is an AngularJS form builder written in [CoffeeScript](http://coffeescript.org) by [kelp404](http://kelp404.github.io/angular-form-builder/)
 
-
-This is an AngularJS form builder written in [CoffeeScript](http://coffeescript.org).
-
-
+###Added multiple form support.
 
 
 ##Frameworks
@@ -13,9 +10,6 @@ This is an AngularJS form builder written in [CoffeeScript](http://coffeescript.
 2. [jQuery](http://jquery.com/) 2.1.0
 3. [Bootstrap 3](http://getbootstrap.com/)
 4. [angular-validator](https://github.com/kelp404/angular-validator)
-
-
-
 
 ##$builder
 ```coffee
@@ -182,6 +176,29 @@ $builder.removeFormObject = (name, index) =>
 
 
 ##builder.directive
+
+####fb-multiple
+>
+```coffee
+# ----------------------------------------
+# fb-multiple
+# ----------------------------------------
+.directive 'fbMultiple', ->
+    restrict: 'E'
+    scope: {array: '='}
+    templateUrl: 'src/ngMultiple.html'
+    link: (scope, element, attrs) ->
+        scope.select = (item) ->
+            scope.selected = item
+        scope.addPage = ->
+            scope.array.push(scope.array.length + 1)
+```
+
+>
+```html
+<div fb-multiple="arrayName"></div>
+```
+
 ####fb-components
 >
 ```coffee
