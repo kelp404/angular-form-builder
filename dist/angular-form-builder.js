@@ -450,23 +450,30 @@
         }
       };
     }
-  ]).directive('fbMultiple', function() {
-    return {
-      restrict: 'E',
-      scope: {
-        array: '='
-      },
-      templateUrl: 'src/ngMultiple.html',
-      link: function(scope, element, attrs) {
-        scope.select = function(item) {
-          return scope.selected = item;
-        };
-        return scope.addPage = function() {
-          return scope.array.push(scope.array.length + 1);
-        };
-      }
-    };
-  }).directive('fbForm', [
+  ]).directive('fbMultiple', [
+    '$injector', function($injector) {
+      var $builder;
+      $builder = $injector.get('$builder');
+      return {
+        restrict: 'E',
+        scope: {
+          array: '='
+        },
+        templateUrl: 'src/ngMultiple.html',
+        link: function(scope, element, attrs) {
+          scope.seeForms = function() {
+            return console.log($builder.forms);
+          };
+          scope.select = function(item) {
+            return scope.selected = item;
+          };
+          return scope.addPage = function() {
+            return scope.array.push(scope.array.length + 1);
+          };
+        }
+      };
+    }
+  ]).directive('fbForm', [
     '$injector', function($injector) {
       return {
         restrict: 'A',

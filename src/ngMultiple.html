@@ -5,6 +5,8 @@
 		</div>
 		<hr>
 		<button class="btn btn-success" ng-click="addPage()">Add</button>
+		<button class="btn btn-default" ng-click="seeForms()">See forms</button>
+		<p class="small">Hint: Console</p>
 	</div>
 
 	<div class="col-md-5" ng-repeat="item in array" ng-if="item===selected">
@@ -24,5 +26,5 @@
 <div class="row" ng-repeat="item in array" ng-if="item===selected">
     <form class="form-horizontal">
         <div ng-model="input" fb-form="{{selected}}" fb-default="defaultValue"></div>
-    </form> 
+    </form>
 </div>

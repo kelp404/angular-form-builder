@@ -302,16 +302,20 @@ angular.module 'builder.directive', [
 # ----------------------------------------
 # fb-multiple
 # ----------------------------------------
-.directive 'fbMultiple', ->
+.directive 'fbMultiple', ['$injector', ($injector) ->
+    $builder = $injector.get '$builder'
+
     restrict: 'E'
     scope: {array: '='}
     templateUrl: 'src/ngMultiple.html'
     link: (scope, element, attrs) ->
+        scope.seeForms = ->
+            console.log $builder.forms
         scope.select = (item) ->
             scope.selected = item
         scope.addPage = ->
             scope.array.push(scope.array.length + 1)
-
+]
 # ----------------------------------------
 # fb-form
 # ----------------------------------------
