@@ -300,6 +300,20 @@ angular.module 'builder.directive', [
 ]
 
 # ----------------------------------------
+# signature pad
+# ----------------------------------------
+.directive 'signaturePad', ['$injector', ($injector) ->
+    restrict: 'E'
+    template: '<form method="post" action="" class="sigPad">
+                    <div style="border: 1px solid black">
+                        <canvas class="pad" width="198" height="100"></canvas>
+                        <input type="hidden" name="output" class="output">
+                    </div>
+                </form>'
+    link: (scope, elem, attrs) ->
+        elem.signaturePad({drawOnly: true, lineColour: '#fff'})
+]
+# ----------------------------------------
 # fb-multiple
 # ----------------------------------------
 .directive 'fbMultiple', ['$injector', ($injector) ->

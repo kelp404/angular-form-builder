@@ -26,6 +26,7 @@
     "angular-mocks": ">=1.2.18",
     "angular-validator": ">=0.2.3",
     "jquery": "~2.1.0",
-    "angular-input-date": "~1.0.4"
+    "angular-input-date": "~1.0.4",
+    "signature-pad": "~2.5.2"
   }
 }

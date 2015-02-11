@@ -450,6 +450,19 @@
         }
       };
     }
+  ]).directive('signaturePad', [
+    '$injector', function($injector) {
+      return {
+        restrict: 'E',
+        template: '<form method="post" action="" class="sigPad"> <div style="border: 1px solid black"> <canvas class="pad" width="198" height="100"></canvas> <input type="hidden" name="output" class="output"> </div> </form>',
+        link: function(scope, elem, attrs) {
+          return elem.signaturePad({
+            drawOnly: true,
+            lineColour: '#fff'
+          });
+        }
+      };
+    }
   ]).directive('fbMultiple', [
     '$injector', function($injector) {
       var $builder;
