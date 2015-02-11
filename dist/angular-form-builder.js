@@ -177,7 +177,7 @@
       return {
         restrict: 'A',
         scope: {
-          fbBuilder: '='
+          fbBuilder: '@'
         },
         template: "<div class='form-horizontal'>\n    <div class='fb-form-object-editable' ng-repeat=\"object in formObjects\"\n        fb-form-object-editable=\"object\"></div>\n</div>",
         link: function(scope, element, attrs) {
@@ -241,9 +241,6 @@
               }
               if (!isHover && draggable.mode === 'drag') {
                 formObject = draggable.object.formObject;
-                if (formObject.editable) {
-                  $builder.removeFormObject(attrs.fbBuilder, formObject.index);
-                }
               } else if (isHover) {
                 if (draggable.mode === 'mirror') {
                   $builder.insertFormObject(scope.formName, $(element).find('.empty').index('.fb-form-object-editable'), {
@@ -453,7 +450,23 @@
         }
       };
     }
-  ]).directive('fbForm', [
+  ]).directive('fbMultiple', function() {
+    return {
+      restrict: 'E',
+      scope: {
+        array: '='
+      },
+      templateUrl: 'src/ngMultiple.html',
+      link: function(scope, element, attrs) {
+        scope.select = function(item) {
+          return scope.selected = item;
+        };
+        return scope.addPage = function() {
+          return scope.array.push(scope.array.length + 1);
+        };
+      }
+    };
+  }).directive('fbForm', [
     '$injector', function($injector) {
       return {
         restrict: 'A',

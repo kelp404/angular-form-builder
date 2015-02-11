@@ -20,7 +20,7 @@ angular.module 'builder.directive', [
 
     restrict: 'A'
     scope:
-        fbBuilder: '='
+        fbBuilder: '@'
     template:
         """
         <div class='form-horizontal'>
@@ -92,8 +92,6 @@ angular.module 'builder.directive', [
                 if not isHover and draggable.mode is 'drag'
                     # remove the form object by draggin out
                     formObject = draggable.object.formObject
-                    if formObject.editable
-                        $builder.removeFormObject attrs.fbBuilder, formObject.index
                 else if isHover
                     if draggable.mode is 'mirror'
                         # insert a form object
@@ -301,6 +299,18 @@ angular.module 'builder.directive', [
             $(element).html view
 ]
 
+# ----------------------------------------
+# fb-multiple
+# ----------------------------------------
+.directive 'fbMultiple', ->
+    restrict: 'E'
+    scope: {array: '='}
+    templateUrl: 'src/ngMultiple.html'
+    link: (scope, element, attrs) ->
+        scope.select = (item) ->
+            scope.selected = item
+        scope.addPage = ->
+            scope.array.push(scope.array.length + 1)
 
 # ----------------------------------------
 # fb-form
