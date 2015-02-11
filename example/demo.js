@@ -1,31 +1,9 @@
 (function() {
   angular.module('app', ['builder', 'builder.components', 'validator.rules', 'ngInputDate']).run([
     '$builder', function($builder) {
-      return $builder.registerComponent('dateInput', {
-        group: 'Default',
-        label: 'Date',
-        description: 'Date picker',
-        placeholder: 'placeholder',
-        required: false,
-        validationOptions: [
-          {
-            label: 'none',
-            rule: '/.*/'
-          }, {
-            label: 'number',
-            rule: '[number]'
-          }, {
-            label: 'email',
-            rule: '[email]'
-          }, {
-            label: 'url',
-            rule: '[url]'
-          }
-        ],
-        templateUrl: 'example/datepickertemplate.html',
-        popoverTemplateUrl: 'example/popoverTemplate.html',
+      return {
         popoverTemplate: "<form>\n    <div class=\"form-group\">\n        <label class='control-label'>Label</label>\n        <input type='text' ng-model=\"label\" validator=\"[required]\" class='form-control'/>\n    </div>\n    <div class=\"checkbox\">\n        <label>\n            <input type='checkbox' ng-model=\"required\" />\n            Required\n        </label>\n    </div>\n\n    <hr/>\n    <div class='form-group'>\n        <input type='submit' ng-click=\"popover.save($event)\" class='btn btn-primary' value='Save'/>\n        <input type='button' ng-click=\"popover.cancel($event)\" class='btn btn-default' value='Cancel'/>\n        <input type='button' ng-click=\"popover.remove($event)\" class='btn btn-danger' value='Delete'/>\n    </div>\n</form>"
-      });
+      };
     }
   ]).controller('DemoController', [
     '$scope', '$builder', '$validator', function($scope, $builder, $validator) {

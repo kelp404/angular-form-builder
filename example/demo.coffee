@@ -19,20 +19,20 @@ angular.module 'app', ['builder', 'builder.components', 'validator.rules', 'ngIn
     # ----------------------------------------
     # datepicker
     # ----------------------------------------
-    $builder.registerComponent 'dateInput',
-        group: 'Default'
-        label: 'Date'
-        description: 'Date picker'
-        placeholder: 'placeholder'
-        required: no
-        validationOptions: [
-            {label: 'none', rule: '/.*/'}
-            {label: 'number', rule: '[number]'}
-            {label: 'email', rule: '[email]'}
-            {label: 'url', rule: '[url]'}
-        ]
-        templateUrl: 'example/datepickertemplate.html'
-        popoverTemplateUrl: 'example/popoverTemplate.html'
+    # $builder.registerComponent 'dateInput',
+    #     group: 'Default'
+    #     label: 'Date'
+    #     description: 'Date picker'
+    #     placeholder: 'placeholder'
+    #     required: no
+    #     validationOptions: [
+    #         {label: 'none', rule: '/.*/'}
+    #         {label: 'number', rule: '[number]'}
+    #         {label: 'email', rule: '[email]'}
+    #         {label: 'url', rule: '[url]'}
+    #     ]
+    #     templateUrl: 'example/datepickertemplate.html'
+    #     popoverTemplateUrl: 'example/popoverTemplate.html'
 
     # ----------------------------------------
     # two text input
