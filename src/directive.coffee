@@ -299,20 +299,14 @@ angular.module 'builder.directive', [
             $(element).html view
 ]
 
-# # ----------------------------------------
-# # email field
-# # ----------------------------------------
-# .directive 'emailField', ->
-#     restrict: 'E'
-#     template: '<input type="email" ng-model="email" placeholder="Email" class="form-control" id="email">
-#                 <input type="email" ng-model="confirmEmail" placeholder="Confirm email" class="form-control" id="confirmEmail">
-#                 <button ng-click="test()">press me</button>'
-#     link: (scope, elem, attrs) ->
-#         scope.$watch('confirm', ->
-#             console.log scope.email
-#             console.log scope.confirmEmail
-#             )
-
+# ----------------------------------------
+# email field
+# ----------------------------------------
+.directive 'emailField', ->
+    restrict: 'E'
+    template: '<input type="email" ng-model="email" placeholder="Email" class="form-control" id="email">
+                <input type="email" ng-model="confirmEmail" placeholder="Confirm email" class="form-control" id="confirmEmail">'
+                
 # ----------------------------------------
 # signature pad
 # ----------------------------------------

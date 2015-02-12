@@ -450,7 +450,12 @@
         }
       };
     }
-  ]).directive('signaturePad', [
+  ]).directive('emailField', function() {
+    return {
+      restrict: 'E',
+      template: '<input type="email" ng-model="email" placeholder="Email" class="form-control" id="email"> <input type="email" ng-model="confirmEmail" placeholder="Confirm email" class="form-control" id="confirmEmail">'
+    };
+  }).directive('signaturePad', [
     '$injector', function($injector) {
       return {
         restrict: 'E',
