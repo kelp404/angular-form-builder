@@ -993,7 +993,15 @@
 }).call(this);
 
 (function() {
-  angular.module('builder', ['builder.directive']);
+  angular.module('builder', ['builder.directive']).run(function($validator) {
+    return $validator.register('age', {
+      invoke: 'watch',
+      validator: function(value) {
+        return value > 18 && value < 76;
+      },
+      error: 'Age must be between 18 and 76'
+    });
+  });
 
 }).call(this);
 

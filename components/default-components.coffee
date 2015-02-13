@@ -210,7 +210,7 @@ angular.module 'builder.components', ['builder', 'validator.rules']
             {label: 'number', rule: '[number]'}
             {label: 'email', rule: '[email]'}
             {label: 'url', rule: '[url]'}
-            # for number min/max
+            {label: 'age', rule: '[age]'}
             # for text min-max length
         ]
         template:
@@ -246,6 +246,16 @@ angular.module 'builder.components', ['builder', 'validator.rules']
                 <div class="form-group" ng-if="validationOptions.length > 0">
                     <label class='control-label'>Validation</label>
                     <select ng-model="$parent.validation" class='form-control' ng-options="option.rule as option.label for option in validationOptions"></select>
+                </div>
+                <div class="form-group" ng-if="validation==='/.*/'">
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <input type="text" placeholder="Min length" class="form-control">
+                        </div>
+                        <div class="col-sm-6">
+                            <input type="text" placeholder="Max length" class="form-control">
+                        </div>
+                    </div>
                 </div>
 
                 <hr/>
