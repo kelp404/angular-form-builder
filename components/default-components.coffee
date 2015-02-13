@@ -9,9 +9,6 @@ angular.module 'builder.components', ['builder', 'validator.rules']
         label: 'Email Input'
         description: 'description'
         required: no
-        validationOptions: [
-            {label: 'none', rule: '/.*/'}
-        ]
         template:
             """
             <div class="form-group">
@@ -32,10 +29,6 @@ angular.module 'builder.components', ['builder', 'validator.rules']
                 <div class="form-group">
                     <label class='control-label'>Description</label>
                     <input type='text' ng-model="description" class='form-control'/>
-                </div>
-                <div class="form-group">
-                    <label class='control-label'>Placeholder</label>
-                    <input type='text' ng-model="placeholder" class='form-control'/>
                 </div>
                 <div class="checkbox">
                     <label>
@@ -62,11 +55,7 @@ angular.module 'builder.components', ['builder', 'validator.rules']
         group: 'Default'
         label: 'Upload Photo'
         description: 'description'
-        placeholder: 'placeholder'
         required: no
-        validationOptions: [
-            {label: 'none', rule: '/.*/'}
-        ]
         template:
             """
             <div class="form-group">
@@ -87,10 +76,6 @@ angular.module 'builder.components', ['builder', 'validator.rules']
                 <div class="form-group">
                     <label class='control-label'>Description</label>
                     <input type='text' ng-model="description" class='form-control'/>
-                </div>
-                <div class="form-group">
-                    <label class='control-label'>Placeholder</label>
-                    <input type='text' ng-model="placeholder" class='form-control'/>
                 </div>
                 <div class="checkbox">
                     <label>
@@ -118,11 +103,7 @@ angular.module 'builder.components', ['builder', 'validator.rules']
         group: 'Default'
         label: 'Signature Pad'
         decription: 'description'
-        placeholder: 'placeholder'
         required: no
-        validationOptions: [
-            {label: 'none', rule: '/.*/'}
-        ]
         template:
             """
             <div class="form-group">
@@ -142,10 +123,6 @@ angular.module 'builder.components', ['builder', 'validator.rules']
                 <div class="form-group">
                     <label class='control-label'>Description</label>
                     <input type='text' ng-model="description" class='form-control'/>
-                </div>
-                <div class="form-group">
-                    <label class='control-label'>Placeholder</label>
-                    <input type='text' ng-model="placeholder" class='form-control'/>
                 </div>
                 <div class="checkbox">
                     <label>
@@ -173,10 +150,11 @@ angular.module 'builder.components', ['builder', 'validator.rules']
         group: 'Default'
         label: 'Date Picker'
         description: 'description'
-        placeholder: 'placeholder'
         required: no
         validationOptions: [
             {label: 'none', rule: '/.*/'}
+            # avoid weekends
+            # min-max date
         ]
         template:
             """
@@ -198,10 +176,6 @@ angular.module 'builder.components', ['builder', 'validator.rules']
                 <div class="form-group">
                     <label class='control-label'>Description</label>
                     <input type='text' ng-model="description" class='form-control'/>
-                </div>
-                <div class="form-group">
-                    <label class='control-label'>Placeholder</label>
-                    <input type='text' ng-model="placeholder" class='form-control'/>
                 </div>
                 <div class="checkbox">
                     <label>
@@ -232,10 +206,12 @@ angular.module 'builder.components', ['builder', 'validator.rules']
         placeholder: 'placeholder'
         required: no
         validationOptions: [
-            {label: 'none', rule: '/.*/'}
+            {label: 'text', rule: '/.*/'}
             {label: 'number', rule: '[number]'}
             {label: 'email', rule: '[email]'}
             {label: 'url', rule: '[url]'}
+            # for number min/max
+            # for text min-max length
         ]
         template:
             """
@@ -446,6 +422,10 @@ angular.module 'builder.components', ['builder', 'validator.rules']
         placeholder: 'placeholder'
         required: no
         options: ['value one', 'value two']
+        validationOptions: [
+            {label: 'single select', rule: '/.*/'}
+            # multiselect options
+        ]
         template:
             """
             <div class="form-group">
@@ -471,6 +451,10 @@ angular.module 'builder.components', ['builder', 'validator.rules']
                 <div class="form-group">
                     <label class='control-label'>Options</label>
                     <textarea class="form-control" rows="3" ng-model="optionsText"/>
+                </div>
+                <div class="form-group" ng-if="validationOptions.length > 0">
+                    <label class='control-label'>Validation</label>
+                    <select ng-model="$parent.validation" class='form-control' ng-options="option.rule as option.label for option in validationOptions"></select>
                 </div>
 
                 <hr/>
