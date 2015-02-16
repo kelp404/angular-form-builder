@@ -206,12 +206,11 @@ angular.module 'builder.components', ['builder', 'validator.rules']
         placeholder: 'placeholder'
         required: no
         validationOptions: [
-            {label: 'text', rule: '/.*/'}
+            {label: 'text', rule: '[text]'}
             {label: 'number', rule: '[number]'}
             {label: 'email', rule: '[email]'}
             {label: 'url', rule: '[url]'}
             {label: 'age', rule: '[age]'}
-            # for text min-max length
         ]
         template:
             """
@@ -247,17 +246,16 @@ angular.module 'builder.components', ['builder', 'validator.rules']
                     <label class='control-label'>Validation</label>
                     <select ng-model="$parent.validation" class='form-control' ng-options="option.rule as option.label for option in validationOptions"></select>
                 </div>
-                <div class="form-group" ng-if="validation==='/.*/'">
+                <div class="form-group" ng-if="validation==='[text]'">
                     <div class="row">
                         <div class="col-sm-6">
-                            <input type="text" placeholder="Min length" class="form-control">
+                            <input type="text" ng-model="$root.minLength" placeholder="Min length" class="form-control">
                         </div>
                         <div class="col-sm-6">
-                            <input type="text" placeholder="Max length" class="form-control">
+                            <input type="text" ng-model="$root.maxLength" placeholder="Max length" class="form-control">
                         </div>
                     </div>
                 </div>
-
                 <hr/>
                 <div class='form-group'>
                     <input type='submit' ng-click="popover.save($event)" class='btn btn-primary' value='Save'/>
@@ -434,7 +432,7 @@ angular.module 'builder.components', ['builder', 'validator.rules']
         options: ['value one', 'value two']
         validationOptions: [
             {label: 'single select', rule: '/.*/'}
-            # multiselect options
+            {label: 'multiple select', rule: ['multiselect']}
         ]
         template:
             """

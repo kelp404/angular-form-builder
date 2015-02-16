@@ -6,3 +6,9 @@ angular.module 'builder', ['builder.directive']
                     value>18 and value<76
                 error: 'Age must be between 18 and 76'
             })
+        $validator.register('text', {
+                invoke: 'watch'
+                validator: (value, scope, element, attrs, $injector) ->
+                    scope.$parent.minLength > 2
+                error: 'Length'
+            })

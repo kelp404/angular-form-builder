@@ -994,12 +994,19 @@
 
 (function() {
   angular.module('builder', ['builder.directive']).run(function($validator) {
-    return $validator.register('age', {
+    $validator.register('age', {
       invoke: 'watch',
       validator: function(value) {
         return value > 18 && value < 76;
       },
       error: 'Age must be between 18 and 76'
+    });
+    return $validator.register('text', {
+      invoke: 'watch',
+      validator: function(value, scope, element, attrs, $injector) {
+        return scope.$parent.minLength > 2;
+      },
+      error: 'Length'
     });
   });
 
