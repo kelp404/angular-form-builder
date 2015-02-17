@@ -306,7 +306,7 @@ angular.module 'builder.directive', [
     restrict: 'E'
     template: '<input type="email" ng-model="email" placeholder="Email" class="form-control" id="email">
                 <input type="email" ng-model="confirmEmail" placeholder="Confirm email" class="form-control" id="confirmEmail">'
-                
+
 # ----------------------------------------
 # signature pad
 # ----------------------------------------

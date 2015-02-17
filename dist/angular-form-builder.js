@@ -31,13 +31,16 @@
         var component;
         copyObjectToScope(formObject, $scope);
         $scope.optionsText = formObject.options.join('\n');
-        $scope.$watch('[label, description, placeholder, required, options, validation]', function() {
+        $scope.$watch('[label, description, placeholder, required, options, validation, multiple, minLength, maxLength]', function() {
           formObject.label = $scope.label;
           formObject.description = $scope.description;
           formObject.placeholder = $scope.placeholder;
           formObject.required = $scope.required;
           formObject.options = $scope.options;
-          return formObject.validation = $scope.validation;
+          formObject.multiple = $scope.multiple;
+          formObject.validation = $scope.validation;
+          formObject.minLength = $scope.minLength;
+          return formObject.maxLength = $scope.maxLength;
         }, true);
         $scope.$watch('optionsText', function(text) {
           var x;
@@ -71,7 +74,10 @@
             placeholder: $scope.placeholder,
             required: $scope.required,
             optionsText: $scope.optionsText,
-            validation: $scope.validation
+            validation: $scope.validation,
+            multiple: $scope.multiple,
+            minLength: $scope.minLength,
+            maxLength: $scope.maxLength
           };
         },
         rollback: function() {
@@ -87,7 +93,10 @@
           $scope.placeholder = this.model.placeholder;
           $scope.required = this.model.required;
           $scope.optionsText = this.model.optionsText;
-          return $scope.validation = this.model.validation;
+          $scope.validation = this.model.validation;
+          $scope.multiple = this.model.multiple;
+          $scope.minLength = this.model.minLength;
+          return $scope.maxLength = this.model.maxLength;
         }
       };
     }
@@ -993,7 +1002,22 @@
 }).call(this);
 
 (function() {
-  angular.module('builder', ['builder.directive']);
+  angular.module('builder', ['builder.directive']).run(function($validator) {
+    $validator.register('age', {
+      invoke: 'watch',
+      validator: function(value) {
+        return value > 18 && value < 76;
+      },
+      error: 'Age must be between 18 and 76'
+    });
+    return $validator.register('text', {
+      invoke: 'watch',
+      validator: function(value, scope, element, attrs, $injector) {
+        return scope.minLength === 0 || (value.length >= scope.minLength && value.length <= scope.maxLength);
+      },
+      error: 'There\'s a length restriction on this field'
+    });
+  });
 
 }).call(this);
 
