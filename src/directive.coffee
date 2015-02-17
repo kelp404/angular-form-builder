@@ -9,6 +9,27 @@ angular.module 'builder.directive', [
     'validator'
 ]
 
+# ----------------------------------------
+# fb-builder
+# ----------------------------------------
+.directive 'uiDate', ['$injector', ($injector) ->
+    restrict: 'E'
+    template:
+        """
+        <div style="display:inline-block; min-height:290px;">
+            <datepicker id="datepicker" ng-model="dt" min-date="minDate" show-weeks="true" date-disabled="disabled(date, mode)" class="well well-sm"></datepicker>
+        </div>
+        """
+    link: (scope, element, attrs) ->
+        scope.$watch('disableWeekends', ->
+            if scope.disableWeekends
+                scope.disabled = (date, mode) ->
+                    mode is 'day' && ( date.getDay() is 0 || date.getDay() is 6 )
+            else
+                scope.disabled = (date, mode) ->
+            )
+
+]
 
 # ----------------------------------------
 # fb-builder
@@ -338,6 +359,7 @@ angular.module 'builder.directive', [
         scope.addPage = ->
             scope.array.push(scope.array.length + 1)
 ]
+
 # ----------------------------------------
 # fb-form
 # ----------------------------------------

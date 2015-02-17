@@ -151,20 +151,15 @@ angular.module 'builder.components', ['builder', 'validator.rules']
         label: 'Date Picker'
         description: 'description'
         required: no
-        validationOptions: [
-            {label: 'none', rule: '/.*/'}
-            # avoid weekends
-            # min-max date
-            # use ui-bootstrap as datepicker
-            # example to avoid weekends: http://plnkr.co/edit/gGAU0L?p=preview
-        ]
+        disableWeekends: no
+        # min-max date
         template:
             """
-            <div class="form-group">
+            <div class="form-group" ng-init="disableWeekends=false">
                 <label for="{{formName+index}}" class="col-sm-4 control-label" ng-class="{'fb-required':required}">{{label}}</label>
                 <div class="col-sm-8">
-                    <input type=date ng-model=dateObject>
                     <p class='help-block'>{{description}}</p>
+                    <ui-date weekends="{{disableWeekends}}"></ui-date>
                 </div>
             </div>
             """
@@ -183,6 +178,11 @@ angular.module 'builder.components', ['builder', 'validator.rules']
                     <label>
                         <input type='checkbox' ng-model="required" />
                         Required</label>
+                </div>
+                <div class="checkbox">
+                    <label>
+                        <input type='checkbox' ng-model="disableWeekends" />
+                        Disable Weekends</label>
                 </div>
                 <div class="form-group" ng-if="validationOptions.length > 0">
                     <label class='control-label'>Validation</label>
