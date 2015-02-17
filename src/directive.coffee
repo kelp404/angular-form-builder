@@ -17,12 +17,9 @@ angular.module 'builder.directive', [
     template:
         """
         <div style="display:inline-block; min-height:290px;">
-            <datepicker ng-model="dt" min-date="minDate" show-weeks="true" date-disabled="disabled(date, mode)" class="well well-sm"></datepicker>
+            <datepicker id="datepicker" ng-model="dt" min-date="minDate" show-weeks="true" date-disabled="disabled(date, mode)" class="well well-sm"></datepicker>
         </div>
         """
-    # controller: ($scope) ->
-    #     $scope.disabled = (date, mode) ->
-    #         mode is 'day' && ( date.getDay() is 0 || date.getDay() is 6 )
     link: (scope, element, attrs) ->
         scope.$watch('disableWeekends', ->
             if scope.disableWeekends

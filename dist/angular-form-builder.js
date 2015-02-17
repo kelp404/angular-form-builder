@@ -185,7 +185,7 @@
     '$injector', function($injector) {
       return {
         restrict: 'E',
-        template: "<div style=\"display:inline-block; min-height:290px;\">\n    <datepicker ng-model=\"dt\" min-date=\"minDate\" show-weeks=\"true\" date-disabled=\"disabled(date, mode)\" class=\"well well-sm\"></datepicker>\n</div>",
+        template: "<div style=\"display:inline-block; min-height:290px;\">\n    <datepicker id=\"datepicker\" ng-model=\"dt\" min-date=\"minDate\" show-weeks=\"true\" date-disabled=\"disabled(date, mode)\" class=\"well well-sm\"></datepicker>\n</div>",
         link: function(scope, element, attrs) {
           return scope.$watch('disableWeekends', function() {
             if (scope.disableWeekends) {
@@ -195,7 +195,6 @@
             } else {
               return scope.disabled = function(date, mode) {};
             }
-            scope.$apply();
           });
         }
       };

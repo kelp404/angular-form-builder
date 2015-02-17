@@ -152,11 +152,7 @@ angular.module 'builder.components', ['builder', 'validator.rules']
         description: 'description'
         required: no
         disableWeekends: no
-        # validationOptions: [
-        #     {label: 'none', rule: '/.*/'}
-        #     # min-max date
-        #     # example to avoid weekends: http://plnkr.co/edit/gGAU0L?p=preview
-        # ]
+        # min-max date
         template:
             """
             <div class="form-group" ng-init="disableWeekends=false">
