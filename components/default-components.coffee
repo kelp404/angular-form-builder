@@ -5,7 +5,7 @@ angular.module 'builder.components', ['builder', 'validator.rules']
     # email field
     # ----------------------------------------
     $builderProvider.registerComponent 'emailInput',
-        group: 'Default'
+        group: 'Basic'
         label: 'Email Input'
         description: 'description'
         required: no
@@ -52,7 +52,7 @@ angular.module 'builder.components', ['builder', 'validator.rules']
     # upload photo button
     # ----------------------------------------
     $builderProvider.registerComponent 'uploadPhoto',
-        group: 'Default'
+        group: 'Advanced'
         label: 'Upload Photo'
         description: 'description'
         required: no
@@ -100,7 +100,7 @@ angular.module 'builder.components', ['builder', 'validator.rules']
     # signature pad
     # ----------------------------------------
     $builderProvider.registerComponent 'signaturePad',
-        group: 'Default'
+        group: 'Advanced'
         label: 'Signature Pad'
         decription: 'description'
         required: no
@@ -147,7 +147,7 @@ angular.module 'builder.components', ['builder', 'validator.rules']
     # date picker
     # ----------------------------------------
     $builderProvider.registerComponent 'datePicker',
-        group: 'Default'
+        group: 'Basic'
         label: 'Date Picker'
         description: 'description'
         required: no
@@ -155,6 +155,8 @@ angular.module 'builder.components', ['builder', 'validator.rules']
             {label: 'none', rule: '/.*/'}
             # avoid weekends
             # min-max date
+            # use ui-bootstrap as datepicker
+            # example to avoid weekends: http://plnkr.co/edit/gGAU0L?p=preview
         ]
         template:
             """
@@ -200,7 +202,7 @@ angular.module 'builder.components', ['builder', 'validator.rules']
     # text input
     # ----------------------------------------
     $builderProvider.registerComponent 'textInput',
-        group: 'Default'
+        group: 'Basic'
         label: 'Text Input'
         description: 'description'
         placeholder: 'placeholder'
@@ -269,7 +271,7 @@ angular.module 'builder.components', ['builder', 'validator.rules']
     # Text area
     # ----------------------------------------
     $builderProvider.registerComponent 'textArea',
-        group: 'Default'
+        group: 'Basic'
         label: 'Text Area'
         description: 'description'
         placeholder: 'placeholder'
@@ -318,7 +320,7 @@ angular.module 'builder.components', ['builder', 'validator.rules']
     # checkbox
     # ----------------------------------------
     $builderProvider.registerComponent 'checkbox',
-        group: 'Default'
+        group: 'Choice'
         label: 'Checkbox'
         description: 'description'
         placeholder: 'placeholder'
@@ -375,7 +377,7 @@ angular.module 'builder.components', ['builder', 'validator.rules']
     # radio
     # ----------------------------------------
     $builderProvider.registerComponent 'radio',
-        group: 'Default'
+        group: 'Choice'
         label: 'Radio'
         description: 'description'
         placeholder: 'placeholder'
@@ -424,24 +426,27 @@ angular.module 'builder.components', ['builder', 'validator.rules']
     # select
     # ----------------------------------------
     $builderProvider.registerComponent 'select',
-        group: 'Default'
+        group: 'Choice'
         label: 'Select'
         description: 'description'
         placeholder: 'placeholder'
-        required: no
+        multiple: no
         options: ['value one', 'value two']
-        validationOptions: [
-            {label: 'single select', rule: '/.*/'}
-            {label: 'multiple select', rule: ['multiselect']}
-        ]
+        # multiple: no
+        # validationOptions: [
+        #     {label: 'single select', rule: '/.*/'}
+        #     {label: 'multiple select', rule: ['multiselect']}
+        # ]
         template:
             """
             <div class="form-group">
                 <label for="{{formName+index}}" class="col-sm-4 control-label">{{label}}</label>
                 <div class="col-sm-8">
-                    <select ng-options="value for value in options" id="{{formName+index}}" class="form-control"
+                    <select ng-hide="multiple" ng-options="value for value in options" id="{{formName+index}}" class="form-control"
                         ng-model="inputText" ng-init="inputText = options[0]"/>
                     <p class='help-block'>{{description}}</p>
+                    <select ng-show="multiple" ng-options="value for value in options" id="{{formName+index}}" class="form-control"
+                        ng-model="inputText" multiple ng-init="inputText = options[0]"/>
                 </div>
             </div>
             """
@@ -463,6 +468,11 @@ angular.module 'builder.components', ['builder', 'validator.rules']
                 <div class="form-group" ng-if="validationOptions.length > 0">
                     <label class='control-label'>Validation</label>
                     <select ng-model="$parent.validation" class='form-control' ng-options="option.rule as option.label for option in validationOptions"></select>
+                </div>
+                <div class="checkbox">
+                    <label>
+                        <input type='checkbox' ng-model="multiple" />
+                        Multiple Select</label>
                 </div>
 
                 <hr/>
