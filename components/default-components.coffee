@@ -250,11 +250,13 @@ angular.module 'builder.components', ['builder', 'validator.rules']
                     <label class='control-label'>Validation</label>
                     <select ng-model="$parent.validation" class='form-control' ng-options="option.rule as option.label for option in validationOptions"></select>
                 </div>
-                <div class="form-group">
-                    <input type="text" class="form-control" ng-model="minLength">
-                </div>
-                <div class="form-group">
-                    <input type="text" class="form-control" ng-model="maxLength">
+                <div class="row" ng-show="validation==='[text]'">
+                    <div class="form-group col-sm-6">
+                        <input type="text" class="form-control" ng-model="minLength" placeholder="Min Length">
+                    </div>
+                    <div class="form-group col-sm-6">
+                        <input type="text" class="form-control" ng-model="maxLength" placeholder="Max Length">
+                    </div>
                 </div>
                 <hr/>
                 <div class='form-group'>
