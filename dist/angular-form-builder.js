@@ -31,7 +31,7 @@
         var component;
         copyObjectToScope(formObject, $scope);
         $scope.optionsText = formObject.options.join('\n');
-        $scope.$watch('[label, description, placeholder, required, options, validation, multiple, minLength, maxLength]', function() {
+        $scope.$watch('[label, description, placeholder, required, options, validation, multiple, minLength, maxLength, disableWeekends]', function() {
           formObject.label = $scope.label;
           formObject.description = $scope.description;
           formObject.placeholder = $scope.placeholder;
@@ -40,7 +40,8 @@
           formObject.multiple = $scope.multiple;
           formObject.validation = $scope.validation;
           formObject.minLength = $scope.minLength;
-          return formObject.maxLength = $scope.maxLength;
+          formObject.maxLength = $scope.maxLength;
+          return formObject.disableWeekends = $scope.disableWeekends;
         }, true);
         $scope.$watch('optionsText', function(text) {
           var x;
@@ -77,7 +78,8 @@
             validation: $scope.validation,
             multiple: $scope.multiple,
             minLength: $scope.minLength,
-            maxLength: $scope.maxLength
+            maxLength: $scope.maxLength,
+            disableWeekends: $scope.disableWeekends
           };
         },
         rollback: function() {
@@ -96,7 +98,8 @@
           $scope.validation = this.model.validation;
           $scope.multiple = this.model.multiple;
           $scope.minLength = this.model.minLength;
-          return $scope.maxLength = this.model.maxLength;
+          $scope.maxLength = this.model.maxLength;
+          return $scope.disableWeekends = this.model.disableWeekends;
         }
       };
     }
@@ -178,7 +181,26 @@
 }).call(this);
 
 (function() {
-  angular.module('builder.directive', ['builder.provider', 'builder.controller', 'builder.drag', 'validator']).directive('fbBuilder', [
+  angular.module('builder.directive', ['builder.provider', 'builder.controller', 'builder.drag', 'validator']).directive('uiDate', [
+    '$injector', function($injector) {
+      return {
+        restrict: 'E',
+        template: "<div style=\"display:inline-block; min-height:290px;\">\n    <datepicker ng-model=\"dt\" min-date=\"minDate\" show-weeks=\"true\" date-disabled=\"disabled(date, mode)\" class=\"well well-sm\"></datepicker>\n</div>",
+        link: function(scope, element, attrs) {
+          return scope.$watch('disableWeekends', function() {
+            if (scope.disableWeekends) {
+              return scope.disabled = function(date, mode) {
+                return mode === 'day' && (date.getDay() === 0 || date.getDay() === 6);
+              };
+            } else {
+              return scope.disabled = function(date, mode) {};
+            }
+            scope.$apply();
+          });
+        }
+      };
+    }
+  ]).directive('fbBuilder', [
     '$injector', function($injector) {
       var $builder, $drag;
       $builder = $injector.get('$builder');
