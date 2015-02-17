@@ -153,9 +153,7 @@ angular.module 'builder.components', ['builder', 'validator.rules']
         required: no
         validationOptions: [
             {label: 'none', rule: '/.*/'}
-            # avoid weekends
             # min-max date
-            # use ui-bootstrap as datepicker
             # example to avoid weekends: http://plnkr.co/edit/gGAU0L?p=preview
         ]
         template:
@@ -163,8 +161,10 @@ angular.module 'builder.components', ['builder', 'validator.rules']
             <div class="form-group">
                 <label for="{{formName+index}}" class="col-sm-4 control-label" ng-class="{'fb-required':required}">{{label}}</label>
                 <div class="col-sm-8">
-                    <input type=date ng-model=dateObject>
                     <p class='help-block'>{{description}}</p>
+                    <div style="display:inline-block; min-height:290px;">
+                        <datepicker ng-model="dt" min-date="minDate" show-weeks="true" class="well well-sm"></datepicker>
+                    </div>
                 </div>
             </div>
             """
