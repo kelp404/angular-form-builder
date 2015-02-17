@@ -206,6 +206,8 @@ angular.module 'builder.components', ['builder', 'validator.rules']
         label: 'Text Input'
         description: 'description'
         placeholder: 'placeholder'
+        minLength: 0
+        maxLength: 999
         required: no
         validationOptions: [
             {label: 'text', rule: '[text]'}
@@ -219,7 +221,7 @@ angular.module 'builder.components', ['builder', 'validator.rules']
             <div class="form-group">
                 <label for="{{formName+index}}" class="col-sm-4 control-label" ng-class="{'fb-required':required}">{{label}}</label>
                 <div class="col-sm-8">
-                    <input type="text" ng-model="inputText" validator-required="{{required}}" validator-group="{{formName}}" id="{{formName+index}}" class="form-control" placeholder="{{placeholder}}"/>
+                    <input type="text" ng-bind="minLenth + '_' + maxLength" ng-model="inputText" validator-required="{{required}}" validator-group="{{formName}}" id="{{formName+index}}" class="form-control" placeholder="{{placeholder}}"/>
                     <p class='help-block'>{{description}}</p>
                 </div>
             </div>
@@ -248,15 +250,11 @@ angular.module 'builder.components', ['builder', 'validator.rules']
                     <label class='control-label'>Validation</label>
                     <select ng-model="$parent.validation" class='form-control' ng-options="option.rule as option.label for option in validationOptions"></select>
                 </div>
-                <div class="form-group" ng-if="validation==='[text]'">
-                    <div class="row">
-                        <div class="col-sm-6">
-                            <input type="text" ng-model="$root.minLength" placeholder="Min length" class="form-control">
-                        </div>
-                        <div class="col-sm-6">
-                            <input type="text" ng-model="$root.maxLength" placeholder="Max length" class="form-control">
-                        </div>
-                    </div>
+                <div class="form-group">
+                    <input type="text" class="form-control" ng-model="minLength">
+                </div>
+                <div class="form-group">
+                    <input type="text" class="form-control" ng-model="maxLength">
                 </div>
                 <hr/>
                 <div class='form-group'>

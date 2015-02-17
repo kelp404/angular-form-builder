@@ -31,14 +31,16 @@
         var component;
         copyObjectToScope(formObject, $scope);
         $scope.optionsText = formObject.options.join('\n');
-        $scope.$watch('[label, description, placeholder, required, options, validation, multiple]', function() {
+        $scope.$watch('[label, description, placeholder, required, options, validation, multiple, minLength, maxLength]', function() {
           formObject.label = $scope.label;
           formObject.description = $scope.description;
           formObject.placeholder = $scope.placeholder;
           formObject.required = $scope.required;
           formObject.options = $scope.options;
           formObject.multiple = $scope.multiple;
-          return formObject.validation = $scope.validation;
+          formObject.validation = $scope.validation;
+          formObject.minLength = $scope.minLength;
+          return formObject.maxLength = $scope.maxLength;
         }, true);
         $scope.$watch('optionsText', function(text) {
           var x;
@@ -73,7 +75,9 @@
             required: $scope.required,
             optionsText: $scope.optionsText,
             validation: $scope.validation,
-            multiple: $scope.multiple
+            multiple: $scope.multiple,
+            minLength: $scope.minLength,
+            maxLength: $scope.maxLength
           };
         },
         rollback: function() {
@@ -90,7 +94,9 @@
           $scope.required = this.model.required;
           $scope.optionsText = this.model.optionsText;
           $scope.validation = this.model.validation;
-          return $scope.multiple = this.model.multiple;
+          $scope.multiple = this.model.multiple;
+          $scope.minLength = this.model.minLength;
+          return $scope.maxLength = this.model.maxLength;
         }
       };
     }
@@ -1007,9 +1013,9 @@
     return $validator.register('text', {
       invoke: 'watch',
       validator: function(value, scope, element, attrs, $injector) {
-        return scope.$parent.minLength > 2;
+        return scope.minLength === 0 || (value.length >= scope.minLength && value.length <= scope.maxLength);
       },
-      error: 'Length'
+      error: 'There\'s a length restriction on this field'
     });
   });
 

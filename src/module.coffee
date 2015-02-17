@@ -9,6 +9,6 @@ angular.module 'builder', ['builder.directive']
         $validator.register('text', {
                 invoke: 'watch'
                 validator: (value, scope, element, attrs, $injector) ->
-                    scope.$parent.minLength > 2
-                error: 'Length'
+                    scope.minLength is 0 || (value.length >= scope.minLength && value.length <= scope.maxLength)
+                error: 'There\'s a length restriction on this field'
             })

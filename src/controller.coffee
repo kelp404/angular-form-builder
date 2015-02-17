@@ -34,7 +34,7 @@ angular.module 'builder.controller', ['builder.provider']
 
         $scope.optionsText = formObject.options.join '\n'
 
-        $scope.$watch '[label, description, placeholder, required, options, validation, multiple]', ->
+        $scope.$watch '[label, description, placeholder, required, options, validation, multiple, minLength, maxLength]', ->
             formObject.label = $scope.label
             formObject.description = $scope.description
             formObject.placeholder = $scope.placeholder
@@ -42,6 +42,8 @@ angular.module 'builder.controller', ['builder.provider']
             formObject.options = $scope.options
             formObject.multiple = $scope.multiple
             formObject.validation = $scope.validation
+            formObject.minLength = $scope.minLength
+            formObject.maxLength = $scope.maxLength
 
         , yes
 
@@ -66,6 +68,8 @@ angular.module 'builder.controller', ['builder.provider']
                 optionsText: $scope.optionsText
                 validation: $scope.validation
                 multiple: $scope.multiple
+                minLength: $scope.minLength
+                maxLength: $scope.maxLength
         rollback: ->
             ###
             Rollback input value.
@@ -78,6 +82,8 @@ angular.module 'builder.controller', ['builder.provider']
             $scope.optionsText = @model.optionsText
             $scope.validation = @model.validation
             $scope.multiple = @model.multiple
+            $scope.minLength = @model.minLength
+            $scope.maxLength = @model.maxLength
 ]
 
 
