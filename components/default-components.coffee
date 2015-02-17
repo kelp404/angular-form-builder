@@ -156,7 +156,7 @@ angular.module 'builder.components', ['builder', 'validator.rules']
         maxDate: '2100-01-01'
         template:
             """
-            <div class="form-group" ng-init="disableWeekends=false">
+            <div class="form-group">
                 <label for="{{formName+index}}" class="col-sm-4 control-label" ng-class="{'fb-required':required}">{{label}}</label>
                 <div class="col-sm-8">
                     <p class='help-block'>{{description}}</p>
