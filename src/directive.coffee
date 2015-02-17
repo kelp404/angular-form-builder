@@ -10,30 +10,34 @@ angular.module 'builder.directive', [
 ]
 
 # ----------------------------------------
-# fb-builder
+# date picker directive
 # ----------------------------------------
 .directive 'uiDate', ['$injector', ($injector) ->
     restrict: 'E'
     template:
         """
-        <h4>Popup</h4>
-    <div class="row">
-        <div class="col-md-6">
-            <p class="input-group">
-              <input type="text" class="form-control" datepicker-popup="{{format}}" ng-model="dt" is-open="opened" min-date="minDate" max-date="'2015-06-22'" datepicker-options="dateOptions" date-disabled="disabled(date, mode)" ng-required="true" close-text="Close" />
-              <span class="input-group-btn">
-                <button type="button" class="btn btn-default" ng-click="open($event)"><i class="glyphicon glyphicon-calendar"></i></button>
-              </span>
-            </p>
-        </div>
-    </div>
+        <p class="input-group">
+          <input type="text" class="form-control" min-date="min" max-date="max" datepicker-popup="{{format}}" ng-model="dt" is-open="opened" min-date="minDate" max-date="'2015-06-22'" datepicker-options="dateOptions" date-disabled="disabled(date, mode)" ng-required="true" close-text="Close" />
+          <span class="input-group-btn">
+            <button type="button" class="btn btn-default" ng-click="open($event)"><i class="glyphicon glyphicon-calendar"></i></button>
+          </span>
+        </p>
         """
     link: (scope, element, attrs) ->
+        scope.min = '2000-01-01'
+        scope.max = '2100-01-01'
+
         scope.open = ($event) ->
             $event.preventDefault()
             $event.stopPropagation()
             scope.opened = yes
 
+        scope.$watch('minDate', ->
+            scope.min = scope.minDate
+            )
+        scope.$watch('maxDate', ->
+            scope.max = scope.maxDate
+            )
 
         scope.$watch('disableWeekends', ->
             if scope.disableWeekends

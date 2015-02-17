@@ -152,7 +152,8 @@ angular.module 'builder.components', ['builder', 'validator.rules']
         description: 'description'
         required: no
         disableWeekends: no
-        # min-max date
+        minDate: '2000-01-01'
+        maxDate: '2100-01-01'
         template:
             """
             <div class="form-group" ng-init="disableWeekends=false">
@@ -188,7 +189,14 @@ angular.module 'builder.components', ['builder', 'validator.rules']
                     <label class='control-label'>Validation</label>
                     <select ng-model="$parent.validation" class='form-control' ng-options="option.rule as option.label for option in validationOptions"></select>
                 </div>
-
+                <div class="row">
+                    <div class="col-sm-6 form-group">
+                        <input type="text" placeholder="Min Date" ng-model="minDate" class="form-control">
+                    </div>
+                    <div class="col-sm-6 form-group">
+                        <input type="text" placeholder="Max Date" ng-model="maxDate" class="form-control">
+                    </div>
+                </div>
                 <hr/>
                 <div class='form-group'>
                     <input type='submit' ng-click="popover.save($event)" class='btn btn-primary' value='Save'/>
@@ -221,7 +229,7 @@ angular.module 'builder.components', ['builder', 'validator.rules']
             <div class="form-group">
                 <label for="{{formName+index}}" class="col-sm-4 control-label" ng-class="{'fb-required':required}">{{label}}</label>
                 <div class="col-sm-8">
-                    <input type="text" ng-bind="minLenth + '_' + maxLength" ng-model="inputText" validator-required="{{required}}" validator-group="{{formName}}" id="{{formName+index}}" class="form-control" placeholder="{{placeholder}}"/>
+                    <input type="text" ng-model="inputText" validator-required="{{required}}" validator-group="{{formName}}" id="{{formName+index}}" class="form-control" placeholder="{{placeholder}}"/>
                     <p class='help-block'>{{description}}</p>
                 </div>
             </div>
