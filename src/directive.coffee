@@ -16,11 +16,25 @@ angular.module 'builder.directive', [
     restrict: 'E'
     template:
         """
-        <div style="display:inline-block; min-height:290px;">
-            <datepicker id="datepicker" ng-model="dt" min-date="minDate" show-weeks="true" date-disabled="disabled(date, mode)" class="well well-sm"></datepicker>
+        <h4>Popup</h4>
+    <div class="row">
+        <div class="col-md-6">
+            <p class="input-group">
+              <input type="text" class="form-control" datepicker-popup="{{format}}" ng-model="dt" is-open="opened" min-date="minDate" max-date="'2015-06-22'" datepicker-options="dateOptions" date-disabled="disabled(date, mode)" ng-required="true" close-text="Close" />
+              <span class="input-group-btn">
+                <button type="button" class="btn btn-default" ng-click="open($event)"><i class="glyphicon glyphicon-calendar"></i></button>
+              </span>
+            </p>
         </div>
+    </div>
         """
     link: (scope, element, attrs) ->
+        scope.open = ($event) ->
+            $event.preventDefault()
+            $event.stopPropagation()
+            scope.opened = yes
+
+
         scope.$watch('disableWeekends', ->
             if scope.disableWeekends
                 scope.disabled = (date, mode) ->

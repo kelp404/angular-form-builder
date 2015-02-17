@@ -185,8 +185,13 @@
     '$injector', function($injector) {
       return {
         restrict: 'E',
-        template: "<div style=\"display:inline-block; min-height:290px;\">\n    <datepicker id=\"datepicker\" ng-model=\"dt\" min-date=\"minDate\" show-weeks=\"true\" date-disabled=\"disabled(date, mode)\" class=\"well well-sm\"></datepicker>\n</div>",
+        template: "    <h4>Popup</h4>\n<div class=\"row\">\n    <div class=\"col-md-6\">\n        <p class=\"input-group\">\n          <input type=\"text\" class=\"form-control\" datepicker-popup=\"{{format}}\" ng-model=\"dt\" is-open=\"opened\" min-date=\"minDate\" max-date=\"'2015-06-22'\" datepicker-options=\"dateOptions\" date-disabled=\"disabled(date, mode)\" ng-required=\"true\" close-text=\"Close\" />\n          <span class=\"input-group-btn\">\n            <button type=\"button\" class=\"btn btn-default\" ng-click=\"open($event)\"><i class=\"glyphicon glyphicon-calendar\"></i></button>\n          </span>\n        </p>\n    </div>\n</div>",
         link: function(scope, element, attrs) {
+          scope.open = function($event) {
+            $event.preventDefault();
+            $event.stopPropagation();
+            return scope.opened = true;
+          };
           return scope.$watch('disableWeekends', function() {
             if (scope.disableWeekends) {
               return scope.disabled = function(date, mode) {
