@@ -1,6 +1,12 @@
 (function() {
   angular.module('builder.components', ['builder', 'validator.rules']).config([
     '$builderProvider', function($builderProvider) {
+      $builderProvider.registerComponent('textMessage', {
+        group: 'Basic',
+        placeholder: 'Text Message',
+        template: "<div class=\"form-group text-center\">\n    <p><b>{{placeholder}}</b></p>\n</div>",
+        popoverTemplate: "<form>\n    <div class=\"form-group\">\n        <label class='control-label'>Placeholder</label>\n        <input type='text' ng-model=\"placeholder\" class='form-control'/>\n    </div>\n    <hr/>\n    <div class='form-group'>\n        <input type='submit' ng-click=\"popover.save($event)\" class='btn btn-primary' value='Save'/>\n        <input type='button' ng-click=\"popover.cancel($event)\" class='btn btn-default' value='Cancel'/>\n        <input type='button' ng-click=\"popover.remove($event)\" class='btn btn-danger' value='Delete'/>\n    </div>\n</form>"
+      });
       $builderProvider.registerComponent('emailInput', {
         group: 'Basic',
         label: 'Email Input',

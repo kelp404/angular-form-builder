@@ -1,6 +1,35 @@
 angular.module 'builder.components', ['builder', 'validator.rules']
 
 .config ['$builderProvider', ($builderProvider) ->
+
+    # ----------------------------------------
+    # static text field
+    # ----------------------------------------
+    $builderProvider.registerComponent 'textMessage',
+        group: 'Basic'
+        placeholder: 'Text Message'
+        template:
+            """
+            <div class="form-group text-center">
+                <p><b>{{placeholder}}</b></p>
+            </div>
+            """
+        popoverTemplate:
+            """
+            <form>
+                <div class="form-group">
+                    <label class='control-label'>Placeholder</label>
+                    <input type='text' ng-model="placeholder" class='form-control'/>
+                </div>
+                <hr/>
+                <div class='form-group'>
+                    <input type='submit' ng-click="popover.save($event)" class='btn btn-primary' value='Save'/>
+                    <input type='button' ng-click="popover.cancel($event)" class='btn btn-default' value='Cancel'/>
+                    <input type='button' ng-click="popover.remove($event)" class='btn btn-danger' value='Delete'/>
+                </div>
+            </form>
+            """
+
     # ----------------------------------------
     # email field
     # ----------------------------------------
