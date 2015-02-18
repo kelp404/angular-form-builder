@@ -31,7 +31,7 @@
         var component;
         copyObjectToScope(formObject, $scope);
         $scope.optionsText = formObject.options.join('\n');
-        $scope.$watch('[label, description, placeholder, required, options, validation, multiple, minLength, maxLength, disableWeekends, minDate, maxDate]', function() {
+        $scope.$watch('[label, description, placeholder, required, options, validation, multiple, minLength, maxLength, disableWeekends, minDate, maxDate, readOnly]', function() {
           formObject.label = $scope.label;
           formObject.description = $scope.description;
           formObject.placeholder = $scope.placeholder;
@@ -43,7 +43,8 @@
           formObject.maxLength = $scope.maxLength;
           formObject.disableWeekends = $scope.disableWeekends;
           formObject.minDate = $scope.minDate;
-          return formObject.maxDate = $scope.maxDate;
+          formObject.maxDate = $scope.maxDate;
+          return formObject.readOnly = $scope.readOnly;
         }, true);
         $scope.$watch('optionsText', function(text) {
           var x;
@@ -83,7 +84,8 @@
             maxLength: $scope.maxLength,
             disableWeekends: $scope.disableWeekends,
             minDate: $scope.minDate,
-            maxDate: $scope.maxDate
+            maxDate: $scope.maxDate,
+            readOnly: $scope.readOnly
           };
         },
         rollback: function() {
@@ -105,7 +107,8 @@
           $scope.maxLength = this.model.maxLength;
           $scope.disableWeekends = this.model.disableWeekends;
           $scope.minDate = this.model.minDate;
-          return $scope.maxDate = this.model.maxDate;
+          $scope.maxDate = this.model.maxDate;
+          return $scope.readOnly = this.model.readOnly;
         }
       };
     }

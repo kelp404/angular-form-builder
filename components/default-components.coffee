@@ -245,6 +245,7 @@ angular.module 'builder.components', ['builder', 'validator.rules']
         placeholder: 'placeholder'
         minLength: 0
         maxLength: 999
+        readOnly: no
         required: no
         validationOptions: [
             {label: 'text', rule: '[text]'}
@@ -258,7 +259,8 @@ angular.module 'builder.components', ['builder', 'validator.rules']
             <div class="form-group">
                 <label for="{{formName+index}}" class="col-sm-4 control-label" ng-class="{'fb-required':required}">{{label}}</label>
                 <div class="col-sm-8">
-                    <input type="text" ng-model="inputText" validator-required="{{required}}" validator-group="{{formName}}" id="{{formName+index}}" class="form-control" placeholder="{{placeholder}}"/>
+                    <input type="text" ng-if="!readOnly" ng-model="inputText" validator-required="{{required}}" validator-group="{{formName}}" id="{{formName+index}}" class="form-control" placeholder="{{placeholder}}"/>
+                    <input type="text" ng-if="readOnly" ng-model="inputText" validator-required="{{required}}" validator-group="{{formName}}" id="{{formName+index}}" class="form-control" placeholder="{{placeholder}}" disabled/>
                     <p class='help-block'>{{description}}</p>
                 </div>
             </div>
@@ -282,6 +284,11 @@ angular.module 'builder.components', ['builder', 'validator.rules']
                     <label>
                         <input type='checkbox' ng-model="required" />
                         Required</label>
+                </div>
+                <div class="checkbox">
+                    <label>
+                        <input type='checkbox' ng-model="readOnly" />
+                        Read Only</label>
                 </div>
                 <div class="form-group" ng-if="validationOptions.length > 0">
                     <label class='control-label'>Validation</label>
