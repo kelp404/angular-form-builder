@@ -17,10 +17,30 @@ angular.module 'builder.components', ['builder', 'validator.rules']
         popoverTemplate:
             """
             <form>
-                <div class="form-group">
-                    <label class='control-label'>Placeholder</label>
-                    <input type='text' ng-model="placeholder" class='form-control'/>
+
+                <div role="tabpanel">
+
+                    <!-- Nav tabs -->
+                    <ul class="nav nav-justified" role="tablist" style="margin-left:-10px">
+                        <li role="presentation" class="active"><a href="#properties" aria-controls="properties" role="tab" data-toggle="tab">Properties</a></li>
+                        <li role="presentation"><a href="#validations" aria-controls="validations" role="tab" data-toggle="tab">Validations</a></li>
+                        <li role="presentation"><a href="#logic" aria-controls="logic" role="tab" data-toggle="tab">Logic</a></li>
+                    </ul>
+
+                    <!-- Tab panes -->
+                    <div class="tab-content">
+                        <div role="tabpanel" class="tab-pane active" id="properties">
+                            <div class="form-group">
+                                <label class='control-label'>Placeholder</label>
+                                <input type='text' ng-model="placeholder" class='form-control'/>
+                            </div>
+                        </div>
+                        <div role="tabpanel" class="tab-pane" id="validations">
+                        </div>
+                        <div role="tabpanel" class="tab-pane" id="logic"></div>
+                    </div>
                 </div>
+
                 <hr/>
                 <div class='form-group'>
                     <input type='submit' ng-click="popover.save($event)" class='btn btn-primary' value='Save'/>
@@ -53,27 +73,46 @@ angular.module 'builder.components', ['builder', 'validator.rules']
         popoverTemplate:
             """
             <form>
-                <div class="form-group">
-                    <label class='control-label'>Label</label>
-                    <input type='text' ng-model="label" validator="[required]" class='form-control'/>
-                </div>
-                <div class="form-group">
-                    <label class='control-label'>Description</label>
-                    <input type='text' ng-model="description" class='form-control'/>
-                </div>
-                <div class="checkbox">
-                    <label>
-                        <input type='checkbox' ng-model="required" />
-                        Required</label>
-                </div>
-                <div class="checkbox">
-                    <label>
-                        <input type='checkbox' ng-model="requireConfirmation" />
-                        Require Email Confirmation</label>
-                </div>
-                <div class="form-group" ng-if="validationOptions.length > 0">
-                    <label class='control-label'>Validation</label>
-                    <select ng-model="$parent.validation" class='form-control' ng-options="option.rule as option.label for option in validationOptions"></select>
+
+                <div role="tabpanel">
+
+                    <!-- Nav tabs -->
+                    <ul class="nav nav-justified" role="tablist" style="margin-left:-10px">
+                        <li role="presentation" class="active"><a href="#properties" aria-controls="properties" role="tab" data-toggle="tab">Properties</a></li>
+                        <li role="presentation"><a href="#validations" aria-controls="validations" role="tab" data-toggle="tab">Validations</a></li>
+                        <li role="presentation"><a href="#logic" aria-controls="logic" role="tab" data-toggle="tab">Logic</a></li>
+                    </ul>
+
+                    <!-- Tab panes -->
+                    <div class="tab-content">
+                        <div role="tabpanel" class="tab-pane active" id="properties">
+                            <div class="form-group">
+                                <label class='control-label'>Label</label>
+                                <input type='text' ng-model="label" validator="[required]" class='form-control'/>
+                            </div>
+                            <div class="form-group">
+                                <label class='control-label'>Description</label>
+                                <input type='text' ng-model="description" class='form-control'/>
+                            </div>
+                        </div>
+                        <div role="tabpanel" class="tab-pane" id="validations">
+                            <div class="checkbox">
+                                <label>
+                                    <input type='checkbox' ng-model="required" />
+                                    Required</label>
+                            </div>
+                            <div class="checkbox">
+                                <label>
+                                    <input type='checkbox' ng-model="requireConfirmation" />
+                                    Require Email Confirmation</label>
+                            </div>
+                            <div class="form-group" ng-if="validationOptions.length > 0">
+                                <label class='control-label'>Validation</label>
+                                <select ng-model="$parent.validation" class='form-control' ng-options="option.rule as option.label for option in validationOptions"></select>
+                            </div>
+                        </div>
+                        <div role="tabpanel" class="tab-pane" id="logic"></div>
+                    </div>
                 </div>
 
                 <hr/>
@@ -105,22 +144,41 @@ angular.module 'builder.components', ['builder', 'validator.rules']
         popoverTemplate:
             """
             <form>
-                <div class="form-group">
-                    <label class='control-label'>Label</label>
-                    <input type='text' ng-model="label" validator="[required]" class='form-control'/>
-                </div>
-                <div class="form-group">
-                    <label class='control-label'>Description</label>
-                    <input type='text' ng-model="description" class='form-control'/>
-                </div>
-                <div class="checkbox">
-                    <label>
-                        <input type='checkbox' ng-model="required" />
-                        Required</label>
-                </div>
-                <div class="form-group" ng-if="validationOptions.length > 0">
-                    <label class='control-label'>Validation</label>
-                    <select ng-model="$parent.validation" class='form-control' ng-options="option.rule as option.label for option in validationOptions"></select>
+
+                <div role="tabpanel">
+
+                    <!-- Nav tabs -->
+                    <ul class="nav nav-justified" role="tablist" style="margin-left:-10px">
+                        <li role="presentation" class="active"><a href="#properties" aria-controls="properties" role="tab" data-toggle="tab">Properties</a></li>
+                        <li role="presentation"><a href="#validations" aria-controls="validations" role="tab" data-toggle="tab">Validations</a></li>
+                        <li role="presentation"><a href="#logic" aria-controls="logic" role="tab" data-toggle="tab">Logic</a></li>
+                    </ul>
+
+                    <!-- Tab panes -->
+                    <div class="tab-content">
+                        <div role="tabpanel" class="tab-pane active" id="properties">
+                            <div class="form-group">
+                                <label class='control-label'>Label</label>
+                                <input type='text' ng-model="label" validator="[required]" class='form-control'/>
+                            </div>
+                            <div class="form-group">
+                                <label class='control-label'>Description</label>
+                                <input type='text' ng-model="description" class='form-control'/>
+                            </div>
+                        </div>
+                        <div role="tabpanel" class="tab-pane" id="validations">
+                            <div class="checkbox">
+                                <label>
+                                    <input type='checkbox' ng-model="required" />
+                                    Required</label>
+                            </div>
+                            <div class="form-group" ng-if="validationOptions.length > 0">
+                                <label class='control-label'>Validation</label>
+                                <select ng-model="$parent.validation" class='form-control' ng-options="option.rule as option.label for option in validationOptions"></select>
+                            </div>
+                        </div>
+                        <div role="tabpanel" class="tab-pane" id="logic"></div>
+                    </div>
                 </div>
 
                 <hr/>
@@ -152,19 +210,39 @@ angular.module 'builder.components', ['builder', 'validator.rules']
         popoverTemplate:
             """
             <form>
-                <div class="form-group">
-                    <label class='control-label'>Label</label>
-                    <input type='text' ng-model="label" validator="[required]" class='form-control'/>
+
+                <div role="tabpanel">
+
+                    <!-- Nav tabs -->
+                    <ul class="nav nav-justified" role="tablist" style="margin-left:-10px">
+                        <li role="presentation" class="active"><a href="#properties" aria-controls="properties" role="tab" data-toggle="tab">Properties</a></li>
+                        <li role="presentation"><a href="#validations" aria-controls="validations" role="tab" data-toggle="tab">Validations</a></li>
+                        <li role="presentation"><a href="#logic" aria-controls="logic" role="tab" data-toggle="tab">Logic</a></li>
+                    </ul>
+
+                    <!-- Tab panes -->
+                    <div class="tab-content">
+                        <div role="tabpanel" class="tab-pane active" id="properties">
+                            <div class="form-group">
+                                <label class='control-label'>Label</label>
+                                <input type='text' ng-model="label" validator="[required]" class='form-control'/>
+                            </div>
+                            <div class="form-group">
+                                <label class='control-label'>Description</label>
+                                <input type='text' ng-model="description" class='form-control'/>
+                            </div>
+                        </div>
+                        <div role="tabpanel" class="tab-pane" id="validations">
+                            <div class="checkbox">
+                                <label>
+                                    <input type='checkbox' ng-model="required" />
+                                    Required</label>
+                            </div>
+                        </div>
+                        <div role="tabpanel" class="tab-pane" id="logic"></div>
+                    </div>
                 </div>
-                <div class="form-group">
-                    <label class='control-label'>Description</label>
-                    <input type='text' ng-model="description" class='form-control'/>
-                </div>
-                <div class="checkbox">
-                    <label>
-                        <input type='checkbox' ng-model="required" />
-                        Required</label>
-                </div>
+
                 <div class="form-group" ng-if="validationOptions.length > 0">
                     <label class='control-label'>Validation</label>
                     <select ng-model="$parent.validation" class='form-control' ng-options="option.rule as option.label for option in validationOptions"></select>
@@ -203,36 +281,56 @@ angular.module 'builder.components', ['builder', 'validator.rules']
         popoverTemplate:
             """
             <form>
-                <div class="form-group">
-                    <label class='control-label'>Label</label>
-                    <input type='text' ng-model="label" validator="[required]" class='form-control'/>
-                </div>
-                <div class="form-group">
-                    <label class='control-label'>Description</label>
-                    <input type='text' ng-model="description" class='form-control'/>
-                </div>
-                <div class="checkbox">
-                    <label>
-                        <input type='checkbox' ng-model="required" />
-                        Required</label>
-                </div>
-                <div class="checkbox">
-                    <label>
-                        <input type='checkbox' ng-model="disableWeekends" />
-                        Disable Weekends</label>
-                </div>
-                <div class="form-group" ng-if="validationOptions.length > 0">
-                    <label class='control-label'>Validation</label>
-                    <select ng-model="$parent.validation" class='form-control' ng-options="option.rule as option.label for option in validationOptions"></select>
-                </div>
-                <div class="row">
-                    <div class="col-sm-6 form-group">
-                        <input type="text" placeholder="Min Date" ng-model="minDate" class="form-control">
+
+                <div role="tabpanel">
+
+                    <!-- Nav tabs -->
+                    <ul class="nav nav-justified" role="tablist" style="margin-left:-10px">
+                        <li role="presentation" class="active"><a href="#properties" aria-controls="properties" role="tab" data-toggle="tab">Properties</a></li>
+                        <li role="presentation"><a href="#validations" aria-controls="validations" role="tab" data-toggle="tab">Validations</a></li>
+                        <li role="presentation"><a href="#logic" aria-controls="logic" role="tab" data-toggle="tab">Logic</a></li>
+                    </ul>
+
+                    <!-- Tab panes -->
+                    <div class="tab-content">
+                        <div role="tabpanel" class="tab-pane active" id="properties">
+                            <div class="form-group">
+                                <label class='control-label'>Label</label>
+                                <input type='text' ng-model="label" validator="[required]" class='form-control'/>
+                            </div>
+                            <div class="form-group">
+                                <label class='control-label'>Description</label>
+                                <input type='text' ng-model="description" class='form-control'/>
+                            </div>
+                        </div>
+                        <div role="tabpanel" class="tab-pane" id="validations">
+                            <div class="checkbox">
+                                <label>
+                                    <input type='checkbox' ng-model="required" />
+                                    Required</label>
+                            </div>
+                            <div class="checkbox">
+                                <label>
+                                    <input type='checkbox' ng-model="disableWeekends" />
+                                    Disable Weekends</label>
+                            </div>
+                            <div class="form-group" ng-if="validationOptions.length > 0">
+                                <label class='control-label'>Validation</label>
+                                <select ng-model="$parent.validation" class='form-control' ng-options="option.rule as option.label for option in validationOptions"></select>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-6 form-group">
+                                    <input type="text" placeholder="Min Date" ng-model="minDate" class="form-control">
+                                </div>
+                                <div class="col-sm-6 form-group">
+                                    <input type="text" placeholder="Max Date" ng-model="maxDate" class="form-control">
+                                </div>
+                            </div>
+                        </div>
+                        <div role="tabpanel" class="tab-pane" id="logic"></div>
                     </div>
-                    <div class="col-sm-6 form-group">
-                        <input type="text" placeholder="Max Date" ng-model="maxDate" class="form-control">
-                    </div>
                 </div>
+
                 <hr/>
                 <div class='form-group'>
                     <input type='submit' ng-click="popover.save($event)" class='btn btn-primary' value='Save'/>
@@ -275,40 +373,60 @@ angular.module 'builder.components', ['builder', 'validator.rules']
         popoverTemplate:
             """
             <form>
-                <div class="form-group">
-                    <label class='control-label'>Label</label>
-                    <input type='text' ng-model="label" validator="[required]" class='form-control'/>
-                </div>
-                <div class="form-group">
-                    <label class='control-label'>Description</label>
-                    <input type='text' ng-model="description" class='form-control'/>
-                </div>
-                <div class="form-group">
-                    <label class='control-label'>Placeholder</label>
-                    <input type='text' ng-model="placeholder" class='form-control'/>
-                </div>
-                <div class="checkbox">
-                    <label>
-                        <input type='checkbox' ng-model="required" />
-                        Required</label>
-                </div>
-                <div class="checkbox">
-                    <label>
-                        <input type='checkbox' ng-model="readOnly" />
-                        Read Only</label>
-                </div>
-                <div class="form-group" ng-if="validationOptions.length > 0">
-                    <label class='control-label'>Validation</label>
-                    <select ng-model="$parent.validation" class='form-control' ng-options="option.rule as option.label for option in validationOptions"></select>
-                </div>
-                <div class="row" ng-show="validation==='[text]'">
-                    <div class="form-group col-sm-6">
-                        <input type="text" class="form-control" ng-model="minLength" placeholder="Min Length">
+
+                <div role="tabpanel">
+
+                    <!-- Nav tabs -->
+                    <ul class="nav nav-justified" role="tablist" style="margin-left:-10px">
+                        <li role="presentation" class="active"><a href="#properties" aria-controls="properties" role="tab" data-toggle="tab">Properties</a></li>
+                        <li role="presentation"><a href="#validations" aria-controls="validations" role="tab" data-toggle="tab">Validations</a></li>
+                        <li role="presentation"><a href="#logic" aria-controls="logic" role="tab" data-toggle="tab">Logic</a></li>
+                    </ul>
+
+                    <!-- Tab panes -->
+                    <div class="tab-content">
+                        <div role="tabpanel" class="tab-pane active" id="properties">
+                            <div class="form-group">
+                                <label class='control-label'>Label</label>
+                                <input type='text' ng-model="label" validator="[required]" class='form-control'/>
+                            </div>
+                            <div class="form-group">
+                                <label class='control-label'>Description</label>
+                                <input type='text' ng-model="description" class='form-control'/>
+                            </div>
+                            <div class="form-group">
+                                <label class='control-label'>Placeholder</label>
+                                <input type='text' ng-model="placeholder" class='form-control'/>
+                            </div>
+                        </div>
+                        <div role="tabpanel" class="tab-pane" id="validations">
+                            <div class="checkbox">
+                                <label>
+                                    <input type='checkbox' ng-model="required" />
+                                    Required</label>
+                            </div>
+                            <div class="checkbox">
+                                <label>
+                                    <input type='checkbox' ng-model="readOnly" />
+                                    Read Only</label>
+                            </div>
+                            <div class="form-group" ng-if="validationOptions.length > 0">
+                                <label class='control-label'>Validation</label>
+                                <select ng-model="$parent.validation" class='form-control' ng-options="option.rule as option.label for option in validationOptions"></select>
+                            </div>
+                            <div class="row" ng-show="validation==='[text]'">
+                                <div class="form-group col-sm-6">
+                                    <input type="text" class="form-control" ng-model="minLength" placeholder="Min Length">
+                                </div>
+                                <div class="form-group col-sm-6">
+                                    <input type="text" class="form-control" ng-model="maxLength" placeholder="Max Length">
+                                </div>
+                            </div>
+                        </div>
+                        <div role="tabpanel" class="tab-pane" id="logic"></div>
                     </div>
-                    <div class="form-group col-sm-6">
-                        <input type="text" class="form-control" ng-model="maxLength" placeholder="Max Length">
-                    </div>
                 </div>
+
                 <hr/>
                 <div class='form-group'>
                     <input type='submit' ng-click="popover.save($event)" class='btn btn-primary' value='Save'/>
@@ -340,22 +458,41 @@ angular.module 'builder.components', ['builder', 'validator.rules']
         popoverTemplate:
             """
             <form>
-                <div class="form-group">
-                    <label class='control-label'>Label</label>
-                    <input type='text' ng-model="label" validator="[required]" class='form-control'/>
-                </div>
-                <div class="form-group">
-                    <label class='control-label'>Description</label>
-                    <input type='text' ng-model="description" class='form-control'/>
-                </div>
-                <div class="form-group">
-                    <label class='control-label'>Placeholder</label>
-                    <input type='text' ng-model="placeholder" class='form-control'/>
-                </div>
-                <div class="checkbox">
-                    <label>
-                        <input type='checkbox' ng-model="required" />
-                        Required</label>
+
+                <div role="tabpanel">
+
+                    <!-- Nav tabs -->
+                    <ul class="nav nav-justified" role="tablist" style="margin-left:-10px">
+                        <li role="presentation" class="active"><a href="#properties" aria-controls="properties" role="tab" data-toggle="tab">Properties</a></li>
+                        <li role="presentation"><a href="#validations" aria-controls="validations" role="tab" data-toggle="tab">Validations</a></li>
+                        <li role="presentation"><a href="#logic" aria-controls="logic" role="tab" data-toggle="tab">Logic</a></li>
+                    </ul>
+
+                    <!-- Tab panes -->
+                    <div class="tab-content">
+                        <div role="tabpanel" class="tab-pane active" id="properties">
+                            <div class="form-group">
+                                <label class='control-label'>Label</label>
+                                <input type='text' ng-model="label" validator="[required]" class='form-control'/>
+                            </div>
+                            <div class="form-group">
+                                <label class='control-label'>Description</label>
+                                <input type='text' ng-model="description" class='form-control'/>
+                            </div>
+                            <div class="form-group">
+                                <label class='control-label'>Placeholder</label>
+                                <input type='text' ng-model="placeholder" class='form-control'/>
+                            </div>
+                        </div>
+                        <div role="tabpanel" class="tab-pane" id="validations">
+                            <div class="checkbox">
+                                <label>
+                                    <input type='checkbox' ng-model="required" />
+                                    Required</label>
+                            </div>
+                        </div>
+                        <div role="tabpanel" class="tab-pane" id="logic"></div>
+                    </div>
                 </div>
 
                 <hr/>
@@ -396,23 +533,42 @@ angular.module 'builder.components', ['builder', 'validator.rules']
         popoverTemplate:
             """
             <form>
-                <div class="form-group">
-                    <label class='control-label'>Label</label>
-                    <input type='text' ng-model="label" validator="[required]" class='form-control'/>
-                </div>
-                <div class="form-group">
-                    <label class='control-label'>Description</label>
-                    <input type='text' ng-model="description" class='form-control'/>
-                </div>
-                <div class="form-group">
-                    <label class='control-label'>Options</label>
-                    <textarea class="form-control" rows="3" ng-model="optionsText"/>
-                </div>
-                <div class="checkbox">
-                    <label>
-                        <input type='checkbox' ng-model="required" />
-                        Required
-                    </label>
+
+                <div role="tabpanel">
+
+                    <!-- Nav tabs -->
+                    <ul class="nav nav-justified" role="tablist" style="margin-left:-10px">
+                        <li role="presentation" class="active"><a href="#properties" aria-controls="properties" role="tab" data-toggle="tab">Properties</a></li>
+                        <li role="presentation"><a href="#validations" aria-controls="validations" role="tab" data-toggle="tab">Validations</a></li>
+                        <li role="presentation"><a href="#logic" aria-controls="logic" role="tab" data-toggle="tab">Logic</a></li>
+                    </ul>
+
+                    <!-- Tab panes -->
+                    <div class="tab-content">
+                        <div role="tabpanel" class="tab-pane active" id="properties">
+                            <div class="form-group">
+                                <label class='control-label'>Label</label>
+                                <input type='text' ng-model="label" validator="[required]" class='form-control'/>
+                            </div>
+                            <div class="form-group">
+                                <label class='control-label'>Description</label>
+                                <input type='text' ng-model="description" class='form-control'/>
+                            </div>
+                            <div class="form-group">
+                                <label class='control-label'>Options</label>
+                                <textarea class="form-control" rows="3" ng-model="optionsText"/>
+                            </div>
+                        </div>
+                        <div role="tabpanel" class="tab-pane" id="validations">
+                            <div class="checkbox">
+                                <label>
+                                    <input type='checkbox' ng-model="required" />
+                                    Required
+                                </label>
+                            </div>
+                        </div>
+                        <div role="tabpanel" class="tab-pane" id="logic"></div>
+                    </div>
                 </div>
 
                 <hr/>
@@ -451,17 +607,36 @@ angular.module 'builder.components', ['builder', 'validator.rules']
         popoverTemplate:
             """
             <form>
-                <div class="form-group">
-                    <label class='control-label'>Label</label>
-                    <input type='text' ng-model="label" validator="[required]" class='form-control'/>
-                </div>
-                <div class="form-group">
-                    <label class='control-label'>Description</label>
-                    <input type='text' ng-model="description" class='form-control'/>
-                </div>
-                <div class="form-group">
-                    <label class='control-label'>Options</label>
-                    <textarea class="form-control" rows="3" ng-model="optionsText"/>
+
+                <div role="tabpanel">
+
+                    <!-- Nav tabs -->
+                    <ul class="nav nav-justified" role="tablist" style="margin-left:-10px">
+                        <li role="presentation" class="active"><a href="#properties" aria-controls="properties" role="tab" data-toggle="tab">Properties</a></li>
+                        <li role="presentation"><a href="#validations" aria-controls="validations" role="tab" data-toggle="tab">Validations</a></li>
+                        <li role="presentation"><a href="#logic" aria-controls="logic" role="tab" data-toggle="tab">Logic</a></li>
+                    </ul>
+
+                    <!-- Tab panes -->
+                    <div class="tab-content">
+                        <div role="tabpanel" class="tab-pane active" id="properties">
+                            <div class="form-group">
+                                <label class='control-label'>Label</label>
+                                <input type='text' ng-model="label" validator="[required]" class='form-control'/>
+                            </div>
+                            <div class="form-group">
+                                <label class='control-label'>Description</label>
+                                <input type='text' ng-model="description" class='form-control'/>
+                            </div>
+                            <div class="form-group">
+                                <label class='control-label'>Options</label>
+                                <textarea class="form-control" rows="3" ng-model="optionsText"/>
+                            </div>
+                        </div>
+                        <div role="tabpanel" class="tab-pane" id="validations">
+                        </div>
+                        <div role="tabpanel" class="tab-pane" id="logic"></div>
+                    </div>
                 </div>
 
                 <hr/>
@@ -504,26 +679,45 @@ angular.module 'builder.components', ['builder', 'validator.rules']
         popoverTemplate:
             """
             <form>
-                <div class="form-group">
-                    <label class='control-label'>Label</label>
-                    <input type='text' ng-model="label" validator="[required]" class='form-control'/>
-                </div>
-                <div class="form-group">
-                    <label class='control-label'>Description</label>
-                    <input type='text' ng-model="description" class='form-control'/>
-                </div>
-                <div class="form-group">
-                    <label class='control-label'>Options</label>
-                    <textarea class="form-control" rows="3" ng-model="optionsText"/>
-                </div>
-                <div class="form-group" ng-if="validationOptions.length > 0">
-                    <label class='control-label'>Validation</label>
-                    <select ng-model="$parent.validation" class='form-control' ng-options="option.rule as option.label for option in validationOptions"></select>
-                </div>
-                <div class="checkbox">
-                    <label>
-                        <input type='checkbox' ng-model="multiple" />
-                        Multiple Select</label>
+
+                <div role="tabpanel">
+
+                    <!-- Nav tabs -->
+                    <ul class="nav nav-justified" role="tablist" style="margin-left:-10px">
+                        <li role="presentation" class="active"><a href="#properties" aria-controls="properties" role="tab" data-toggle="tab">Properties</a></li>
+                        <li role="presentation"><a href="#validations" aria-controls="validations" role="tab" data-toggle="tab">Validations</a></li>
+                        <li role="presentation"><a href="#logic" aria-controls="logic" role="tab" data-toggle="tab">Logic</a></li>
+                    </ul>
+
+                    <!-- Tab panes -->
+                    <div class="tab-content">
+                        <div role="tabpanel" class="tab-pane active" id="properties">
+                            <div class="form-group">
+                                <label class='control-label'>Label</label>
+                                <input type='text' ng-model="label" validator="[required]" class='form-control'/>
+                            </div>
+                            <div class="form-group">
+                                <label class='control-label'>Description</label>
+                                <input type='text' ng-model="description" class='form-control'/>
+                            </div>
+                            <div class="form-group">
+                                <label class='control-label'>Options</label>
+                                <textarea class="form-control" rows="3" ng-model="optionsText"/>
+                            </div>
+                        </div>
+                        <div role="tabpanel" class="tab-pane" id="validations">
+                            <div class="form-group" ng-if="validationOptions.length > 0">
+                                <label class='control-label'>Validation</label>
+                                <select ng-model="$parent.validation" class='form-control' ng-options="option.rule as option.label for option in validationOptions"></select>
+                            </div>
+                            <div class="checkbox">
+                                <label>
+                                    <input type='checkbox' ng-model="multiple" />
+                                    Multiple Select</label>
+                            </div>
+                        </div>
+                        <div role="tabpanel" class="tab-pane" id="logic"></div>
+                    </div>
                 </div>
 
                 <hr/>
@@ -562,23 +756,44 @@ angular.module 'builder.components', ['builder', 'validator.rules']
             popoverTemplate:
                 """
                 <form>
-                    <div class="form-group">
-                        <label class='control-label'>Label</label>
-                        <input type='text' ng-model="label" validator="[required]" class='form-control'/>
+
+                    <div role="tabpanel">
+
+                        <!-- Nav tabs -->
+                        <ul class="nav nav-justified" role="tablist" style="margin-left:-10px">
+                            <li role="presentation" class="active"><a href="#properties" aria-controls="properties" role="tab" data-toggle="tab">Properties</a></li>
+                            <li role="presentation"><a href="#validations" aria-controls="validations" role="tab" data-toggle="tab">Validations</a></li>
+                            <li role="presentation"><a href="#logic" aria-controls="logic" role="tab" data-toggle="tab">Logic</a></li>
+                        </ul>
+
+                        <!-- Tab panes -->
+                        <div class="tab-content">
+                            <div role="tabpanel" class="tab-pane active" id="properties">
+                                <div class="form-group">
+                                    <label class='control-label'>Label</label>
+                                    <input type='text' ng-model="label" validator="[required]" class='form-control'/>
+                                </div>
+                                <div class="form-group">
+                                    <label class='control-label'>Description</label>
+                                    <input type='text' ng-model="description" class='form-control'/>
+                                </div>
+                            </div>
+                            <div role="tabpanel" class="tab-pane" id="validations">
+                                <div class="checkbox">
+                                    <label>
+                                        <input type='checkbox' ng-model="required" />
+                                        Required</label>
+                                </div>
+                                <div class="form-group" ng-if="validationOptions.length > 0">
+                                    <label class='control-label'>Validation</label>
+                                    <select ng-model="$parent.validation" class='form-control' ng-options="option.rule as option.label for option in validationOptions"></select>
+                                </div>
+                            </div>
+                            <div role="tabpanel" class="tab-pane" id="logic"></div>
+                        </div>
+
                     </div>
-                    <div class="form-group">
-                        <label class='control-label'>Description</label>
-                        <input type='text' ng-model="description" class='form-control'/>
-                    </div>
-                    <div class="checkbox">
-                        <label>
-                            <input type='checkbox' ng-model="required" />
-                            Required</label>
-                    </div>
-                    <div class="form-group" ng-if="validationOptions.length > 0">
-                        <label class='control-label'>Validation</label>
-                        <select ng-model="$parent.validation" class='form-control' ng-options="option.rule as option.label for option in validationOptions"></select>
-                    </div>
+
                     <hr/>
                     <div class='form-group'>
                         <input type='submit' ng-click="popover.save($event)" class='btn btn-primary' value='Save'/>
