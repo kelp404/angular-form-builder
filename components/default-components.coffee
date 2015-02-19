@@ -37,13 +37,15 @@ angular.module 'builder.components', ['builder', 'validator.rules']
         group: 'Basic'
         label: 'Email Input'
         description: 'description'
+        requireConfirmation: no
         required: no
         template:
             """
             <div class="form-group">
                 <label for="{{formName+index}}" class="col-sm-4 control-label" ng-class="{'fb-required':required}">{{label}}</label>
                 <div class="col-sm-8">
-                    <email-field></email-field>
+                    <input type="email" ng-model="email" placeholder="Email" class="form-control" id="email">
+                                <input type="email" ng-if="requireConfirmation" ng-model="confirmEmail" placeholder="Confirm email" class="form-control" id="confirmEmail">
                     <p class='help-block'>{{description}}</p>
                 </div>
             </div>
@@ -63,6 +65,11 @@ angular.module 'builder.components', ['builder', 'validator.rules']
                     <label>
                         <input type='checkbox' ng-model="required" />
                         Required</label>
+                </div>
+                <div class="checkbox">
+                    <label>
+                        <input type='checkbox' ng-model="requireConfirmation" />
+                        Require Email Confirmation</label>
                 </div>
                 <div class="form-group" ng-if="validationOptions.length > 0">
                     <label class='control-label'>Validation</label>
