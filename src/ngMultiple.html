@@ -1,0 +1,30 @@
+<div class="row">
+	<div class="col-md-1">
+		<div ng-repeat="item in array">
+		    <button ng-click="select(item)" class="btn btn-default">{{item}}</button>
+		</div>
+		<hr>
+		<button class="btn btn-success" ng-click="addPage()">Add</button>
+		<button class="btn btn-default" ng-click="seeForms()">See forms</button>
+		<p class="small">Hint: Console</p>
+	</div>
+
+	<div class="col-md-5" ng-repeat="item in array" ng-if="item===selected">
+	    <div class="panel panel-default">
+	        <div class="panel-heading">
+	            <h3 class="panel-title">Builder</h3>
+	        </div>
+	        <div fb-builder="{{selected}}"></div>
+	    </div>
+	</div>
+
+	<div class="col-md-4" ng-repeat="item in array" ng-if="item===selected">
+        <div fb-components></div>
+    </div>
+</div>
+
+<div class="row" ng-repeat="item in array" ng-if="item===selected">
+    <form class="form-horizontal">
+        <div ng-model="input" fb-form="{{selected}}" fb-default="defaultValue"></div>
+    </form>
+</div>

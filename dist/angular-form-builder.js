@@ -31,13 +31,21 @@
         var component;
         copyObjectToScope(formObject, $scope);
         $scope.optionsText = formObject.options.join('\n');
-        $scope.$watch('[label, description, placeholder, required, options, validation]', function() {
+        $scope.$watch('[label, description, placeholder, required, options, validation, multiple, minLength, maxLength, disableWeekends, minDate, maxDate, readOnly, requireConfirmation]', function() {
           formObject.label = $scope.label;
           formObject.description = $scope.description;
           formObject.placeholder = $scope.placeholder;
           formObject.required = $scope.required;
           formObject.options = $scope.options;
-          return formObject.validation = $scope.validation;
+          formObject.multiple = $scope.multiple;
+          formObject.validation = $scope.validation;
+          formObject.minLength = $scope.minLength;
+          formObject.maxLength = $scope.maxLength;
+          formObject.disableWeekends = $scope.disableWeekends;
+          formObject.minDate = $scope.minDate;
+          formObject.maxDate = $scope.maxDate;
+          formObject.readOnly = $scope.readOnly;
+          return formObject.requireConfirmation = $scope.requireConfirmation;
         }, true);
         $scope.$watch('optionsText', function(text) {
           var x;
@@ -71,7 +79,15 @@
             placeholder: $scope.placeholder,
             required: $scope.required,
             optionsText: $scope.optionsText,
-            validation: $scope.validation
+            validation: $scope.validation,
+            multiple: $scope.multiple,
+            minLength: $scope.minLength,
+            maxLength: $scope.maxLength,
+            disableWeekends: $scope.disableWeekends,
+            minDate: $scope.minDate,
+            maxDate: $scope.maxDate,
+            readOnly: $scope.readOnly,
+            requireConfirmation: $scope.requireConfirmation
           };
         },
         rollback: function() {
@@ -87,7 +103,15 @@
           $scope.placeholder = this.model.placeholder;
           $scope.required = this.model.required;
           $scope.optionsText = this.model.optionsText;
-          return $scope.validation = this.model.validation;
+          $scope.validation = this.model.validation;
+          $scope.multiple = this.model.multiple;
+          $scope.minLength = this.model.minLength;
+          $scope.maxLength = this.model.maxLength;
+          $scope.disableWeekends = this.model.disableWeekends;
+          $scope.minDate = this.model.minDate;
+          $scope.maxDate = this.model.maxDate;
+          $scope.readOnly = this.model.readOnly;
+          return $scope.requireConfirmation = this.model.requireConfirmation;
         }
       };
     }
@@ -169,7 +193,38 @@
 }).call(this);
 
 (function() {
-  angular.module('builder.directive', ['builder.provider', 'builder.controller', 'builder.drag', 'validator']).directive('fbBuilder', [
+  angular.module('builder.directive', ['builder.provider', 'builder.controller', 'builder.drag', 'validator']).directive('uiDate', [
+    '$injector', function($injector) {
+      return {
+        restrict: 'E',
+        template: "<p class=\"input-group\">\n  <input type=\"text\" class=\"form-control\" min-date=\"min\" max-date=\"max\" datepicker-popup=\"{{format}}\" ng-model=\"dt\" is-open=\"opened\" min-date=\"minDate\" max-date=\"'2015-06-22'\" datepicker-options=\"dateOptions\" date-disabled=\"disabled(date, mode)\" ng-required=\"true\" close-text=\"Close\"/>\n  <span class=\"input-group-btn\">\n    <button type=\"button\" class=\"btn btn-default\" ng-click=\"open($event)\"><i class=\"glyphicon glyphicon-calendar\"></i></button>\n  </span>\n</p>",
+        link: function(scope, element, attrs) {
+          scope.min = '2000-01-01';
+          scope.max = '2100-01-01';
+          scope.open = function($event) {
+            $event.preventDefault();
+            $event.stopPropagation();
+            return scope.opened = true;
+          };
+          scope.$watch('minDate', function() {
+            return scope.min = scope.minDate;
+          });
+          scope.$watch('maxDate', function() {
+            return scope.max = scope.maxDate;
+          });
+          return scope.$watch('disableWeekends', function() {
+            if (scope.disableWeekends) {
+              return scope.disabled = function(date, mode) {
+                return mode === 'day' && (date.getDay() === 0 || date.getDay() === 6);
+              };
+            } else {
+              return scope.disabled = function(date, mode) {};
+            }
+          });
+        }
+      };
+    }
+  ]).directive('fbBuilder', [
     '$injector', function($injector) {
       var $builder, $drag;
       $builder = $injector.get('$builder');
@@ -177,7 +232,7 @@
       return {
         restrict: 'A',
         scope: {
-          fbBuilder: '='
+          fbBuilder: '@'
         },
         template: "<div class='form-horizontal'>\n    <div class='fb-form-object-editable' ng-repeat=\"object in formObjects\"\n        fb-form-object-editable=\"object\"></div>\n</div>",
         link: function(scope, element, attrs) {
@@ -241,9 +296,6 @@
               }
               if (!isHover && draggable.mode === 'drag') {
                 formObject = draggable.object.formObject;
-                if (formObject.editable) {
-                  $builder.removeFormObject(attrs.fbBuilder, formObject.index);
-                }
               } else if (isHover) {
                 if (draggable.mode === 'mirror') {
                   $builder.insertFormObject(scope.formName, $(element).find('.empty').index('.fb-form-object-editable'), {
@@ -450,6 +502,42 @@
             view = $compile(template)(scope);
             return $(element).html(view);
           });
+        }
+      };
+    }
+  ]).directive('signaturePad', [
+    '$injector', function($injector) {
+      return {
+        restrict: 'E',
+        template: '<form method="post" action="" class="sigPad"> <div style="border: 1px solid black"> <canvas class="pad" width="198" height="100"></canvas> <input type="hidden" name="output" class="output"> </div> </form>',
+        link: function(scope, elem, attrs) {
+          return elem.signaturePad({
+            drawOnly: true,
+            lineColour: '#fff'
+          });
+        }
+      };
+    }
+  ]).directive('fbMultiple', [
+    '$injector', function($injector) {
+      var $builder;
+      $builder = $injector.get('$builder');
+      return {
+        restrict: 'E',
+        scope: {
+          array: '='
+        },
+        templateUrl: 'src/ngMultiple.html',
+        link: function(scope, element, attrs) {
+          scope.seeForms = function() {
+            return console.log($builder.forms);
+          };
+          scope.select = function(item) {
+            return scope.selected = item;
+          };
+          return scope.addPage = function() {
+            return scope.array.push(scope.array.length + 1);
+          };
         }
       };
     }
@@ -955,7 +1043,22 @@
 }).call(this);
 
 (function() {
-  angular.module('builder', ['builder.directive']);
+  angular.module('builder', ['builder.directive']).run(function($validator) {
+    $validator.register('age', {
+      invoke: 'watch',
+      validator: function(value) {
+        return value > 18 && value < 76;
+      },
+      error: 'Age must be between 18 and 76'
+    });
+    return $validator.register('text', {
+      invoke: 'watch',
+      validator: function(value, scope, element, attrs, $injector) {
+        return scope.minLength === 0 || (value.length >= scope.minLength && value.length <= scope.maxLength);
+      },
+      error: 'There\'s a length restriction on this field'
+    });
+  });
 
 }).call(this);
 

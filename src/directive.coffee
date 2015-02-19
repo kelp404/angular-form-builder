@@ -9,6 +9,45 @@ angular.module 'builder.directive', [
     'validator'
 ]
 
+# ----------------------------------------
+# date picker directive
+# ----------------------------------------
+.directive 'uiDate', ['$injector', ($injector) ->
+    restrict: 'E'
+    template:
+        """
+        <p class="input-group">
+          <input type="text" class="form-control" min-date="min" max-date="max" datepicker-popup="{{format}}" ng-model="dt" is-open="opened" min-date="minDate" max-date="'2015-06-22'" datepicker-options="dateOptions" date-disabled="disabled(date, mode)" ng-required="true" close-text="Close"/>
+          <span class="input-group-btn">
+            <button type="button" class="btn btn-default" ng-click="open($event)"><i class="glyphicon glyphicon-calendar"></i></button>
+          </span>
+        </p>
+        """
+    link: (scope, element, attrs) ->
+        scope.min = '2000-01-01'
+        scope.max = '2100-01-01'
+
+        scope.open = ($event) ->
+            $event.preventDefault()
+            $event.stopPropagation()
+            scope.opened = yes
+
+        scope.$watch('minDate', ->
+            scope.min = scope.minDate
+            )
+        scope.$watch('maxDate', ->
+            scope.max = scope.maxDate
+            )
+
+        scope.$watch('disableWeekends', ->
+            if scope.disableWeekends
+                scope.disabled = (date, mode) ->
+                    mode is 'day' && ( date.getDay() is 0 || date.getDay() is 6 )
+            else
+                scope.disabled = (date, mode) ->
+            )
+
+]
 
 # ----------------------------------------
 # fb-builder
@@ -20,7 +59,7 @@ angular.module 'builder.directive', [
 
     restrict: 'A'
     scope:
-        fbBuilder: '='
+        fbBuilder: '@'
     template:
         """
         <div class='form-horizontal'>
@@ -92,8 +131,6 @@ angular.module 'builder.directive', [
                 if not isHover and draggable.mode is 'drag'
                     # remove the form object by draggin out
                     formObject = draggable.object.formObject
-                    if formObject.editable
-                        $builder.removeFormObject attrs.fbBuilder, formObject.index
                 else if isHover
                     if draggable.mode is 'mirror'
                         # insert a form object
@@ -301,6 +338,37 @@ angular.module 'builder.directive', [
             $(element).html view
 ]
 
+# ----------------------------------------
+# signature pad
+# ----------------------------------------
+.directive 'signaturePad', ['$injector', ($injector) ->
+    restrict: 'E'
+    template: '<form method="post" action="" class="sigPad">
+                    <div style="border: 1px solid black">
+                        <canvas class="pad" width="198" height="100"></canvas>
+                        <input type="hidden" name="output" class="output">
+                    </div>
+                </form>'
+    link: (scope, elem, attrs) ->
+        elem.signaturePad({drawOnly: true, lineColour: '#fff'})
+]
+# ----------------------------------------
+# fb-multiple
+# ----------------------------------------
+.directive 'fbMultiple', ['$injector', ($injector) ->
+    $builder = $injector.get '$builder'
+
+    restrict: 'E'
+    scope: {array: '='}
+    templateUrl: 'src/ngMultiple.html'
+    link: (scope, element, attrs) ->
+        scope.seeForms = ->
+            console.log $builder.forms
+        scope.select = (item) ->
+            scope.selected = item
+        scope.addPage = ->
+            scope.array.push(scope.array.length + 1)
+]
 
 # ----------------------------------------
 # fb-form
