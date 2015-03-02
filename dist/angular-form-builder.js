@@ -168,8 +168,16 @@
 
 }).call(this);
 
+angular.module('templates-formbuilder', ['component.html']);
+angular.module("component.html", []).run(["$templateCache", function($templateCache) {
+  $templateCache.put("component.html",
+    "<div class='form-horizontal'>\n" +
+        "<div class='fb-form-object-editable' ng-repeat=\"object in formObjects\"\n fb-form-object-editable=\"object\"></div>\n" +
+    "</div>");
+}]);
+
 (function() {
-  angular.module('builder.directive', ['builder.provider', 'builder.controller', 'builder.drag', 'validator']).directive('fbBuilder', [
+  angular.module('builder.directive', ['builder.provider', 'builder.controller', 'builder.drag', 'validator', 'templates-formbuilder']).directive('fbBuilder', [
     '$injector', function($injector) {
       var $builder, $drag;
       $builder = $injector.get('$builder');
@@ -179,7 +187,9 @@
         scope: {
           fbBuilder: '='
         },
-        template: "<div class='form-horizontal'>\n    <div class='fb-form-object-editable' ng-repeat=\"object in formObjects\"\n        fb-form-object-editable=\"object\"></div>\n</div>",
+        templateUrl: function(element, attributes) {
+          return attributes.template || "component.html";
+        },
         link: function(scope, element, attrs) {
           var beginMove, _base, _name;
           scope.formName = attrs.fbBuilder;
