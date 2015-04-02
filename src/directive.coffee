@@ -20,7 +20,7 @@ angular.module 'builder.directive', [
 
     restrict: 'A'
     scope:
-        fbBuilder: '='
+        fbBuilder: '@'
     template:
         """
         <div class='form-horizontal'>
