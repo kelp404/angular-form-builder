@@ -263,18 +263,18 @@ angular.module 'builder.components', ['builder', 'validator.rules', 'ui.sortable
                     <div ui-sortable="{'handle': '.handle'}" ng-model="options">
                       <div ng-repeat="item in options">
                         <div class="handle">::</div>
-                        <input type="text" ng-model=item.value required/>
+                        <input type="text" ng-model="item.value" required/>
                         <a class="btn btn-danger btn-xs right" type="button" ng-click="popover.removeOption($index)"><span class="glyphicon glyphicon-minus"></span></a>
                       </div>
                     </div>
                 </div>
                 <div class="form-group">
-                    <button class="btn btn-primary btn-xs" type="button" ng-click="popover.addOption(true)"><span class="glyphicon glyphicon-plus"></span> Add Option</button>
+                    <button class="btn btn-primary btn-xs" type="button" ng-click="popover.addOption()"><span class="glyphicon glyphicon-plus"></span> Add Option</button>
                 </div>
 
                 <hr/>
                 <div class='form-group'>
-                    <input type='submit' ng-click="popover.save($event)" class='btn btn-primary' value='Save'/>
+                    <input type='submit' ng-click="popover.save($event)" class='btn btn-primary' ng-disabled="popover.saveDisabled()" value='Save'/>
                     <input type='button' ng-click="popover.cancel($event)" class='btn btn-default' value='Cancel'/>
                     <input type='button' ng-click="popover.remove($event)" class='btn btn-danger' value='Delete'/>
                 </div>

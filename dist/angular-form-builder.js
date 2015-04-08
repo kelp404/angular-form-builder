@@ -369,34 +369,15 @@
                 $(element).popover('hide');
               }
             },
-            addOption: function(hasId) {
-              var getNextId, option;
-              if (hasId == null) {
-                hasId = false;
-              }
+            addOption: function() {
 
               /*
               The create option event of the popover.
                */
-              getNextId = function() {
-                var opt, optionsForSort;
-                optionsForSort = scope.options.slice(0);
-                opt = optionsForSort.sort(function(a, b) {
-                  return a.id - b.id;
-                });
-                return opt[opt.length - 1].id + 1;
-              };
-              if (hasId) {
-                option = {
-                  id: getNextId(),
-                  value: ""
-                };
-              } else {
-                option = {
-                  value: ""
-                };
-              }
-              return scope.options.push(option);
+              return scope.options.push({
+                id: null,
+                value: ""
+              });
             },
             removeOption: function($index) {
 
@@ -404,6 +385,13 @@
               The remove option event of the popover.
                */
               return scope.options.splice($index, 1);
+            },
+            saveDisabled: function() {
+
+              /*
+              Disable the Save button if the options list is empty
+               */
+              return scope.options.length === 0;
             }
           };
           $(element).on('show.bs.popover', function() {
