@@ -63,6 +63,7 @@ angular.module 'builder.controller', ['builder.provider']
                 placeholder: $scope.placeholder
                 required: $scope.required
                 validation: $scope.validation
+                options: angular.copy($scope.options)
         rollback: ->
             ###
             Rollback input value.
@@ -73,6 +74,7 @@ angular.module 'builder.controller', ['builder.provider']
             $scope.placeholder = @model.placeholder
             $scope.required = @model.required
             $scope.validation = @model.validation
+            $scope.options = angular.copy(@model.options)
 ]
 
 

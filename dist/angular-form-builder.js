@@ -57,7 +57,8 @@
             description: $scope.description,
             placeholder: $scope.placeholder,
             required: $scope.required,
-            validation: $scope.validation
+            validation: $scope.validation,
+            options: angular.copy($scope.options)
           };
         },
         rollback: function() {
@@ -72,7 +73,8 @@
           $scope.description = this.model.description;
           $scope.placeholder = this.model.placeholder;
           $scope.required = this.model.required;
-          return $scope.validation = this.model.validation;
+          $scope.validation = this.model.validation;
+          return $scope.options = angular.copy(this.model.options);
         }
       };
     }
