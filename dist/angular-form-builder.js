@@ -371,15 +371,12 @@
                 $(element).popover('hide');
               }
             },
-            addOption: function() {
+            addOption: function(optionObject) {
 
               /*
               The create option event of the popover.
                */
-              return scope.options.push({
-                id: null,
-                value: ""
-              });
+              return scope.options.push(optionObject);
             },
             removeOption: function($index) {
 
