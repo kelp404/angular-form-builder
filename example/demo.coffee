@@ -92,6 +92,14 @@ angular.module 'app', ['builder', 'builder.components', 'validator.rules']
         component: 'sampleInput'
     $builder.addFormObject 'bob',
         component: 'sampleInput'
+    $builder.addFormObject 'bob',
+        component: 'sampleInput'
+        label: 'Bob 1'
+        description: 'Bob 1 description'
+    $builder.addFormObject 'bob',
+        component: 'sampleInput'
+        label: 'Bob 2'
+        description: 'Bob 2 description'
     # formObjects
     $scope.form = $builder.forms['default']
 

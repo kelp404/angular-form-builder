@@ -100,12 +100,12 @@ angular.module 'builder.directive', [
                 else if isHover
                     if draggable.mode is 'mirror'
                         # insert a form object
-                        $builder.insertFormObject scope.formName, $(element).find('.empty').index('.fb-form-object-editable'),
+                        $builder.insertFormObject scope.formName, $(element).find('.empty').index(),
                             component: draggable.object.componentName
                     if draggable.mode is 'drag'
                         # update the index of form objects
                         oldIndex = draggable.object.formObject.index
-                        newIndex = $(element).find('.empty').index('.fb-form-object-editable')
+                        newIndex = $(element).find('.empty').index()
                         newIndex-- if oldIndex < newIndex
                         $builder.updateFormObjectIndex scope.formName, oldIndex, newIndex
                 $(element).find('.empty').remove()

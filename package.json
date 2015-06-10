@@ -1,11 +1,11 @@
 {
   "name": "angular-form-builder",
-  "version": "0.1.1",
-  "description": "AngularJS form builder.",
-  "homepage": "https://github.com/kelp404/angular-form-builder",
+  "version": "0.1.2",
+  "description": "AngularJS form builder, forked from kelp404/angular-form-builder",
+  "homepage": "https://github.com/aqworks/angular-form-builder",
   "repository": {
     "type": "git",
-    "url": "git://github.com/gueorgui/angular-form-builder.git"
+    "url": "git://github.com/aqworks/angular-form-builder.git"
   },
   "keywords": [
     "AngularJS",
@@ -28,7 +28,7 @@
     }
   ],
   "bugs": {
-    "url": "https://github.com/kelp404/angular-form-builder/issues"
+    "url": "https://github.com/aqworks/angular-form-builder/issues"
   },
   "devDependencies": {
     "grunt": "~0.4.2",

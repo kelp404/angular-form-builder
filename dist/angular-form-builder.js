@@ -240,13 +240,13 @@
                 }
               } else if (isHover) {
                 if (draggable.mode === 'mirror') {
-                  $builder.insertFormObject(scope.formName, $(element).find('.empty').index('.fb-form-object-editable'), {
+                  $builder.insertFormObject(scope.formName, $(element).find('.empty').index(), {
                     component: draggable.object.componentName
                   });
                 }
                 if (draggable.mode === 'drag') {
                   oldIndex = draggable.object.formObject.index;
-                  newIndex = $(element).find('.empty').index('.fb-form-object-editable');
+                  newIndex = $(element).find('.empty').index();
                   if (oldIndex < newIndex) {
                     newIndex--;
                   }
