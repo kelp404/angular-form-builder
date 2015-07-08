@@ -99,6 +99,7 @@ describe 'builder.controller', ->
                     description: 'description'
                     placeholder: 'placeholder'
                     required: no
+                    options: [{id: 0, value: 'value one'}, {id: 1, value: 'two'}]
                     validation: '/.*/'
                 .toEqual $scope.data.model
 
