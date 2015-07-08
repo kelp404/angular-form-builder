@@ -32,7 +32,7 @@ angular.module 'builder.controller', ['builder.provider']
 
 #        $scope.optionsText = formObject.options.join '\n'
 
-        $scope.$watch '[label, description, placeholder, required, effectiveDateEnabled, validation]', ->
+        $scope.$watch '[label, description, placeholder, required, effectiveDateEnabled, validation, variables]', ->
             formObject.label = $scope.label
             formObject.description = $scope.description
             formObject.placeholder = $scope.placeholder
@@ -40,6 +40,7 @@ angular.module 'builder.controller', ['builder.provider']
             formObject.effectiveDateEnabled = $scope.effectiveDateEnabled
 #            formObject.options = $scope.options
             formObject.validation = $scope.validation
+            formObject.variables = $scope.variables
         , yes
 
         $scope.$watch 'options', ->
@@ -64,6 +65,7 @@ angular.module 'builder.controller', ['builder.provider']
                 required: $scope.required
                 validation: $scope.validation
                 options: angular.copy($scope.options)
+                variables: angular.copy($scope.variables)
         rollback: ->
             ###
             Rollback input value.
@@ -75,6 +77,7 @@ angular.module 'builder.controller', ['builder.provider']
             $scope.required = @model.required
             $scope.validation = @model.validation
             $scope.options = angular.copy(@model.options)
+            $scope.variables = angular.copy(@model.variables)
 ]
 
 

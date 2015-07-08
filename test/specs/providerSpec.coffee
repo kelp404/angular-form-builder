@@ -106,6 +106,7 @@ describe 'builder.provider', ->
                 validation: '/.*/'
                 validationOptions: []
                 options: []
+                variables: {}
                 arrayToText: no
                 template: "<div class='form-group'></div>"
                 templateUrl: undefined

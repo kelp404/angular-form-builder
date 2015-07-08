@@ -28,13 +28,14 @@
          */
         var component;
         copyObjectToScope(formObject, $scope);
-        $scope.$watch('[label, description, placeholder, required, effectiveDateEnabled, validation]', function() {
+        $scope.$watch('[label, description, placeholder, required, effectiveDateEnabled, validation, variables]', function() {
           formObject.label = $scope.label;
           formObject.description = $scope.description;
           formObject.placeholder = $scope.placeholder;
           formObject.required = $scope.required;
           formObject.effectiveDateEnabled = $scope.effectiveDateEnabled;
-          return formObject.validation = $scope.validation;
+          formObject.validation = $scope.validation;
+          return formObject.variables = $scope.variables;
         }, true);
         $scope.$watch('options', function() {
           formObject.options = $scope.options;
@@ -58,7 +59,8 @@
             placeholder: $scope.placeholder,
             required: $scope.required,
             validation: $scope.validation,
-            options: angular.copy($scope.options)
+            options: angular.copy($scope.options),
+            variables: angular.copy($scope.variables)
           };
         },
         rollback: function() {
@@ -74,7 +76,8 @@
           $scope.placeholder = this.model.placeholder;
           $scope.required = this.model.required;
           $scope.validation = this.model.validation;
-          return $scope.options = angular.copy(this.model.options);
+          $scope.options = angular.copy(this.model.options);
+          return $scope.variables = angular.copy(this.model.variables);
         }
       };
     }
@@ -1021,7 +1024,7 @@
       "default": []
     };
     this.convertComponent = function(name, component) {
-      var result, _ref, _ref1, _ref10, _ref11, _ref2, _ref3, _ref4, _ref5, _ref6, _ref7, _ref8, _ref9;
+      var result, _ref, _ref1, _ref10, _ref11, _ref12, _ref2, _ref3, _ref4, _ref5, _ref6, _ref7, _ref8, _ref9;
       result = {
         name: name,
         group: (_ref = component.group) != null ? _ref : 'Default',
@@ -1035,7 +1038,8 @@
         validation: (_ref8 = component.validation) != null ? _ref8 : '/.*/',
         validationOptions: (_ref9 = component.validationOptions) != null ? _ref9 : [],
         options: (_ref10 = component.options) != null ? _ref10 : [],
-        arrayToText: (_ref11 = component.arrayToText) != null ? _ref11 : false,
+        variables: (_ref11 = component.variables) != null ? _ref11 : {},
+        arrayToText: (_ref12 = component.arrayToText) != null ? _ref12 : false,
         template: component.template,
         templateUrl: component.templateUrl,
         popoverTemplate: component.popoverTemplate,
@@ -1050,7 +1054,7 @@
       return result;
     };
     this.convertFormObject = function(name, formObject) {
-      var component, result, _ref, _ref1, _ref2, _ref3, _ref4, _ref5, _ref6, _ref7, _ref8, _ref9;
+      var component, result, _ref, _ref1, _ref10, _ref2, _ref3, _ref4, _ref5, _ref6, _ref7, _ref8, _ref9;
       if (formObject == null) {
         formObject = {};
       }
@@ -1070,7 +1074,8 @@
         placeholder: (_ref6 = formObject.placeholder) != null ? _ref6 : component.placeholder,
         options: (_ref7 = formObject.options) != null ? _ref7 : component.options,
         required: (_ref8 = formObject.required) != null ? _ref8 : component.required,
-        validation: (_ref9 = formObject.validation) != null ? _ref9 : component.validation
+        validation: (_ref9 = formObject.validation) != null ? _ref9 : component.validation,
+        variables: (_ref10 = formObject.variables) != null ? _ref10 : component.variables
       };
       return result;
     };
