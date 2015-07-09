@@ -23,38 +23,26 @@
 
         /*
         1. Copy origin formObject (ng-repeat="object in formObjects") to scope.
-        2. Setup optionsText with formObject.options.
-        3. Watch scope.label, .description, .placeholder, .required, .options then copy to origin formObject.
-        4. Watch scope.optionsText then convert to scope.options.
-        5. setup validationOptions
+        2. Watch scope.label, .description, .placeholder, .required, .effectiveDateEnabled, .options then copy to origin formObject.
+        3. setup validationOptions
          */
         var component;
         copyObjectToScope(formObject, $scope);
-        $scope.optionsText = formObject.options.join('\n');
-        $scope.$watch('[label, description, placeholder, required, options, validation]', function() {
+        $scope.$watch('[label, description, placeholder, required, effectiveDateEnabled, validation, variables]', function() {
           formObject.label = $scope.label;
           formObject.description = $scope.description;
           formObject.placeholder = $scope.placeholder;
           formObject.required = $scope.required;
-          formObject.options = $scope.options;
-          return formObject.validation = $scope.validation;
+          formObject.effectiveDateEnabled = $scope.effectiveDateEnabled;
+          formObject.validation = $scope.validation;
+          return formObject.variables = $scope.variables;
         }, true);
-        $scope.$watch('optionsText', function(text) {
-          var x;
-          $scope.options = (function() {
-            var _i, _len, _ref, _results;
-            _ref = text.split('\n');
-            _results = [];
-            for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-              x = _ref[_i];
-              if (x.length > 0) {
-                _results.push(x);
-              }
-            }
-            return _results;
-          })();
-          return $scope.inputText = $scope.options[0];
-        });
+        $scope.$watch('options', function() {
+          formObject.options = $scope.options;
+          if ($scope.options.length > 0) {
+            return $scope.inputText = $scope.options[0].value;
+          }
+        }, true);
         component = $builder.components[formObject.component];
         return $scope.validationOptions = component.validationOptions;
       };
@@ -70,8 +58,9 @@
             description: $scope.description,
             placeholder: $scope.placeholder,
             required: $scope.required,
-            optionsText: $scope.optionsText,
-            validation: $scope.validation
+            validation: $scope.validation,
+            options: angular.copy($scope.options),
+            variables: angular.copy($scope.variables)
           };
         },
         rollback: function() {
@@ -86,8 +75,9 @@
           $scope.description = this.model.description;
           $scope.placeholder = this.model.placeholder;
           $scope.required = this.model.required;
-          $scope.optionsText = this.model.optionsText;
-          return $scope.validation = this.model.validation;
+          $scope.validation = this.model.validation;
+          $scope.options = angular.copy(this.model.options);
+          return $scope.variables = angular.copy(this.model.variables);
         }
       };
     }
@@ -177,7 +167,7 @@
       return {
         restrict: 'A',
         scope: {
-          fbBuilder: '='
+          fbBuilder: '@'
         },
         template: "<div class='form-horizontal'>\n    <div class='fb-form-object-editable' ng-repeat=\"object in formObjects\"\n        fb-form-object-editable=\"object\"></div>\n</div>",
         link: function(scope, element, attrs) {
@@ -233,7 +223,7 @@
               return $(element).find('.empty').remove();
             },
             up: function(e, isHover, draggable) {
-              var formObject, newIndex, oldIndex;
+              var formItem, formObject, newIndex, oldIndex, _i, _len, _ref;
               beginMove = true;
               if (!$drag.isMouseMoved()) {
                 $(element).find('.empty').remove();
@@ -241,18 +231,25 @@
               }
               if (!isHover && draggable.mode === 'drag') {
                 formObject = draggable.object.formObject;
-                if (formObject.editable) {
-                  $builder.removeFormObject(attrs.fbBuilder, formObject.index);
+                if (formObject.editable && formObject.addable) {
+                  _ref = $builder.forms[scope.formName];
+                  for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+                    formItem = _ref[_i];
+                    if (formItem.$$hashKey === draggable.object.formObject.$$hashKey) {
+                      $builder.removeFormObject(attrs.fbBuilder, formObject.index);
+                      break;
+                    }
+                  }
                 }
               } else if (isHover) {
                 if (draggable.mode === 'mirror') {
-                  $builder.insertFormObject(scope.formName, $(element).find('.empty').index('.fb-form-object-editable'), {
+                  $builder.insertFormObject(scope.formName, $(element).find('.empty').index(), {
                     component: draggable.object.componentName
                   });
                 }
                 if (draggable.mode === 'drag') {
                   oldIndex = draggable.object.formObject.index;
-                  newIndex = $(element).find('.empty').index('.fb-form-object-editable');
+                  newIndex = $(element).find('.empty').index();
                   if (oldIndex < newIndex) {
                     newIndex--;
                   }
@@ -331,7 +328,19 @@
               /*
               The save event of the popover.
                */
+              var newOptions, option, _i, _len, _ref;
               $event.preventDefault();
+              if (Array.isArray(scope.options)) {
+                newOptions = [];
+                _ref = scope.options;
+                for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+                  option = _ref[_i];
+                  if (option.value !== "") {
+                    newOptions.push(option);
+                  }
+                }
+                scope.options = newOptions;
+              }
               $validator.validate(scope).success(function() {
                 popover.isClickedSave = true;
                 return $(element).popover('hide');
@@ -364,6 +373,27 @@
                 $event.preventDefault();
                 $(element).popover('hide');
               }
+            },
+            addOption: function(optionObject) {
+
+              /*
+              The create option event of the popover.
+               */
+              return scope.options.push(optionObject);
+            },
+            removeOption: function($index) {
+
+              /*
+              The remove option event of the popover.
+               */
+              return scope.options.splice($index, 1);
+            },
+            saveDisabled: function() {
+
+              /*
+              Disable the Save button if the options list is empty
+               */
+              return scope.options.length === 0;
             }
           };
           $(element).on('show.bs.popover', function() {
@@ -418,7 +448,7 @@
   ]).directive('fbComponents', function() {
     return {
       restrict: 'A',
-      template: "<ul ng-if=\"groups.length > 1\" class=\"nav nav-tabs nav-justified\">\n    <li ng-repeat=\"group in groups\" ng-class=\"{active:activeGroup==group}\">\n        <a href='#' ng-click=\"selectGroup($event, group)\">{{group}}</a>\n    </li>\n</ul>\n<div class='form-horizontal'>\n    <div class='fb-component' ng-repeat=\"component in components\"\n        fb-component=\"component\"></div>\n</div>",
+      template: "<ul ng-if=\"groups.length > 1\" class=\"nav nav-tabs nav-justified\">\n    <li ng-repeat=\"group in groups\" ng-class=\"{active:activeGroup==group}\">\n        <a href='#' ng-click=\"selectGroup($event, group)\">{{group}}</a>\n    </li>\n</ul>\n<div class='form-horizontal'>\n  <div class='fb-component-container' ng-repeat=\"component in components | filter: {addable: 'true'}\">\n    <button class='add-to-form btn btn-xs' ng-click=\"addThis(component.name); $event.stopPropagation(); $event.preventDefault();\">\n      <span class='glyphicon glyphicon-plus'></span>\n    </button>\n    <div class='fb-component' fb-component=\"component\"></div>\n  </div>\n</div>",
       controller: 'fbComponentsController'
     };
   }).directive('fbComponent', [
@@ -977,9 +1007,10 @@
   var __indexOf = [].indexOf || function(item) { for (var i = 0, l = this.length; i < l; i++) { if (i in this && this[i] === item) return i; } return -1; };
 
   angular.module('builder.provider', []).provider('$builder', function() {
-    var $http, $injector, $templateCache;
+    var $http, $injector, $rootScope, $templateCache;
     $injector = null;
     $http = null;
+    $rootScope = null;
     $templateCache = null;
     this.config = {
       popoverPlacement: 'right'
@@ -993,7 +1024,7 @@
       "default": []
     };
     this.convertComponent = function(name, component) {
-      var result, _ref, _ref1, _ref2, _ref3, _ref4, _ref5, _ref6, _ref7, _ref8, _ref9;
+      var result, _ref, _ref1, _ref10, _ref11, _ref12, _ref2, _ref3, _ref4, _ref5, _ref6, _ref7, _ref8, _ref9;
       result = {
         name: name,
         group: (_ref = component.group) != null ? _ref : 'Default',
@@ -1002,10 +1033,13 @@
         placeholder: (_ref3 = component.placeholder) != null ? _ref3 : '',
         editable: (_ref4 = component.editable) != null ? _ref4 : true,
         required: (_ref5 = component.required) != null ? _ref5 : false,
-        validation: (_ref6 = component.validation) != null ? _ref6 : '/.*/',
-        validationOptions: (_ref7 = component.validationOptions) != null ? _ref7 : [],
-        options: (_ref8 = component.options) != null ? _ref8 : [],
-        arrayToText: (_ref9 = component.arrayToText) != null ? _ref9 : false,
+        addable: (_ref6 = component.addable) != null ? _ref6 : true,
+        effectiveDateEnabled: (_ref7 = component.effectiveDateEnabled) != null ? _ref7 : true,
+        validation: (_ref8 = component.validation) != null ? _ref8 : '/.*/',
+        validationOptions: (_ref9 = component.validationOptions) != null ? _ref9 : [],
+        options: (_ref10 = component.options) != null ? _ref10 : [],
+        variables: (_ref11 = component.variables) != null ? _ref11 : {},
+        arrayToText: (_ref12 = component.arrayToText) != null ? _ref12 : false,
         template: component.template,
         templateUrl: component.templateUrl,
         popoverTemplate: component.popoverTemplate,
@@ -1020,7 +1054,7 @@
       return result;
     };
     this.convertFormObject = function(name, formObject) {
-      var component, result, _ref, _ref1, _ref2, _ref3, _ref4, _ref5, _ref6, _ref7;
+      var component, result, _ref, _ref1, _ref10, _ref2, _ref3, _ref4, _ref5, _ref6, _ref7, _ref8, _ref9;
       if (formObject == null) {
         formObject = {};
       }
@@ -1032,13 +1066,16 @@
         id: formObject.id,
         component: formObject.component,
         editable: (_ref = formObject.editable) != null ? _ref : component.editable,
-        index: (_ref1 = formObject.index) != null ? _ref1 : 0,
-        label: (_ref2 = formObject.label) != null ? _ref2 : component.label,
-        description: (_ref3 = formObject.description) != null ? _ref3 : component.description,
-        placeholder: (_ref4 = formObject.placeholder) != null ? _ref4 : component.placeholder,
-        options: (_ref5 = formObject.options) != null ? _ref5 : component.options,
-        required: (_ref6 = formObject.required) != null ? _ref6 : component.required,
-        validation: (_ref7 = formObject.validation) != null ? _ref7 : component.validation
+        addable: (_ref1 = formObject.addable) != null ? _ref1 : component.addable,
+        effectiveDateEnabled: (_ref2 = formObject.effectiveDateEnabled) != null ? _ref2 : component.effectiveDateEnabled,
+        index: (_ref3 = formObject.index) != null ? _ref3 : 0,
+        label: (_ref4 = formObject.label) != null ? _ref4 : component.label,
+        description: (_ref5 = formObject.description) != null ? _ref5 : component.description,
+        placeholder: (_ref6 = formObject.placeholder) != null ? _ref6 : component.placeholder,
+        options: (_ref7 = formObject.options) != null ? _ref7 : component.options,
+        required: (_ref8 = formObject.required) != null ? _ref8 : component.required,
+        validation: (_ref9 = formObject.validation) != null ? _ref9 : component.validation,
+        variables: (_ref10 = formObject.variables) != null ? _ref10 : component.variables
       };
       return result;
     };
@@ -1055,6 +1092,7 @@
       return function(injector) {
         $injector = injector;
         $http = $injector.get('$http');
+        $rootScope = $injector.get('$rootScope');
         return $templateCache = $injector.get('$templateCache');
       };
     })(this);
@@ -1180,10 +1218,16 @@
         @param name: The form name.
         @param index: The form object index.
          */
-        var formObjects;
-        formObjects = _this.forms[name];
-        formObjects.splice(index, 1);
-        return _this.reindexFormObject(name);
+        var removeFormObjectCallback;
+        removeFormObjectCallback = function() {
+          var formObjects;
+          formObjects = _this.forms[name];
+          formObjects.splice(index, 1);
+          return _this.reindexFormObject(name);
+        };
+        return $rootScope.$broadcast('removalConfirmationTrigger', {
+          callback: removeFormObjectCallback
+        });
       };
     })(this);
     this.updateFormObjectIndex = (function(_this) {

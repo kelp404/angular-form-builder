@@ -56,11 +56,29 @@
       $builder.addFormObject('default', {
         component: 'sampleInput'
       });
+      $builder.addFormObject('bob', {
+        component: 'sampleInput'
+      });
+      $builder.addFormObject('bob', {
+        component: 'sampleInput',
+        label: 'Bob 1',
+        description: 'Bob 1 description'
+      });
+      $builder.addFormObject('bob', {
+        component: 'sampleInput',
+        label: 'Bob 2',
+        description: 'Bob 2 description'
+      });
       $scope.form = $builder.forms['default'];
       $scope.input = [];
       $scope.defaultValue = {};
       $scope.defaultValue[textbox.id] = 'default value';
       $scope.defaultValue[checkbox.id] = [true, true];
+      $scope.$on('removalConfirmationTrigger', function(event, data) {
+        if (confirm("Really remove it??!")) {
+          return data.callback();
+        }
+      });
       return $scope.submit = function() {
         return $validator.validate($scope, 'default').success(function() {
           return console.log('success');

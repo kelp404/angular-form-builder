@@ -16,6 +16,7 @@ angular.module 'builder.provider', []
 .provider '$builder', ->
     $injector = null
     $http = null
+    $rootScope = null
     $templateCache = null
 
     @config =
@@ -46,9 +47,12 @@ angular.module 'builder.provider', []
             placeholder: component.placeholder ? ''
             editable: component.editable ? yes
             required: component.required ? no
+            addable: component.addable ? yes
+            effectiveDateEnabled: component.effectiveDateEnabled ? yes
             validation: component.validation ? '/.*/'
             validationOptions: component.validationOptions ? []
             options: component.options ? []
+            variables: component.variables ? {}
             arrayToText: component.arrayToText ? no
             template: component.template
             templateUrl: component.templateUrl
@@ -67,6 +71,8 @@ angular.module 'builder.provider', []
             id: formObject.id
             component: formObject.component
             editable: formObject.editable ? component.editable
+            addable: formObject.addable ? component.addable
+            effectiveDateEnabled: formObject.effectiveDateEnabled ? component.effectiveDateEnabled
             index: formObject.index ? 0
             label: formObject.label ? component.label
             description: formObject.description ? component.description
@@ -74,6 +80,7 @@ angular.module 'builder.provider', []
             options: formObject.options ? component.options
             required: formObject.required ? component.required
             validation: formObject.validation ? component.validation
+            variables: formObject.variables ? component.variables
         result
 
     @reindexFormObject = (name) =>
@@ -85,6 +92,7 @@ angular.module 'builder.provider', []
     @setupProviders = (injector) =>
         $injector = injector
         $http = $injector.get '$http'
+        $rootScope = $injector.get '$rootScope'
         $templateCache = $injector.get '$templateCache'
 
     @loadTemplate = (component) ->
@@ -175,9 +183,12 @@ angular.module 'builder.provider', []
         @param name: The form name.
         @param index: The form object index.
         ###
-        formObjects = @forms[name]
-        formObjects.splice index, 1
-        @reindexFormObject name
+        removeFormObjectCallback = =>
+          formObjects = @forms[name]
+          formObjects.splice index, 1
+          @reindexFormObject name
+
+        $rootScope.$broadcast('removalConfirmationTrigger', {callback: removeFormObjectCallback})
 
     @updateFormObjectIndex = (name, oldIndex, newIndex) =>
         ###
