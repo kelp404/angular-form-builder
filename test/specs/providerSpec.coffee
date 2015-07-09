@@ -106,6 +106,7 @@ describe 'builder.provider', ->
                 validation: '/.*/'
                 validationOptions: []
                 options: []
+                variables: {}
                 arrayToText: no
                 template: "<div class='form-group'></div>"
                 templateUrl: undefined
@@ -126,6 +127,7 @@ describe 'builder.provider', ->
                 validation: '/regexp/'
                 validationOptions: []
                 options: [{id: 0, value: 'value one'}]
+                variables: {defaultValue: 'Default'}
                 arrayToText: yes
                 template: "<div class='form-group'></div>"
                 popoverTemplate: "<div class='form-group'></div>"
@@ -142,6 +144,8 @@ describe 'builder.provider', ->
                 validation: '/regexp/'
                 validationOptions: []
                 options: [{id: 0, value: 'value one'}]
+                variables:
+                    defaultValue: 'Default'
                 arrayToText: yes
                 template: "<div class='form-group'></div>"
                 templateUrl: undefined
@@ -170,6 +174,8 @@ describe 'builder.provider', ->
                 effectiveDateEnabled: true
                 validation: '/regexp/'
                 options: [{id: 0, value: 'value one'}]
+                variables:
+                    defaultValue: 'Default'
                 arrayToText: yes
                 template: "<div class='form-group'></div>"
                 popoverTemplate: "<div class='form-group'></div>"
@@ -189,6 +195,8 @@ describe 'builder.provider', ->
                 addable: true
                 effectiveDateEnabled: true
                 validation: '/regexp/'
+                variables:
+                    defaultValue: 'Default'
             .toEqual formObject
 
         it '$builderProvider.convertFormObject()', inject ($builder) ->
@@ -207,6 +215,8 @@ describe 'builder.provider', ->
                 addable: true
                 effectiveDateEnabled: true
                 validation: '/.*/'
+                variables:
+                    defaultValue: 'Default'
 
             expect
                 id: undefined
@@ -221,6 +231,8 @@ describe 'builder.provider', ->
                 addable: true
                 effectiveDateEnabled: true
                 validation: '/.*/'
+                variables:
+                    defaultValue: 'Default'
             .toEqual formObject
 
 
@@ -251,6 +263,7 @@ describe 'builder.provider', ->
                 effectiveDateEnabled: true
                 validation: '/.*/'
                 options: []
+                variables: {}
                 arrayToText: no
                 template: "<div class='form-group'></div>"
                 popoverTemplate: "<div class='form-group'></div>"
@@ -268,6 +281,7 @@ describe 'builder.provider', ->
                 validation: '/.*/'
                 validationOptions: []
                 options: []
+                variables: {}
                 arrayToText: no
                 template: "<div class='form-group'></div>"
                 templateUrl: undefined

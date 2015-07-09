@@ -52,6 +52,7 @@ angular.module 'builder.provider', []
             validation: component.validation ? '/.*/'
             validationOptions: component.validationOptions ? []
             options: component.options ? []
+            variables: component.variables ? {}
             arrayToText: component.arrayToText ? no
             template: component.template
             templateUrl: component.templateUrl
@@ -79,6 +80,7 @@ angular.module 'builder.provider', []
             options: formObject.options ? component.options
             required: formObject.required ? component.required
             validation: formObject.validation ? component.validation
+            variables: formObject.variables ? component.variables
         result
 
     @reindexFormObject = (name) =>

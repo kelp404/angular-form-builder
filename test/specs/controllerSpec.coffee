@@ -87,6 +87,8 @@ describe 'builder.controller', ->
                     required: no
                     options: [{id: 0, value: 'value one'}, {id: 1, value: 'two'}]
                     validation: '/.*/'
+                    variables:
+                        defaultValue: 'Default'
                 $scope.setupScope formObject
 
             it '$scope.data.model is null', ->
@@ -99,7 +101,10 @@ describe 'builder.controller', ->
                     description: 'description'
                     placeholder: 'placeholder'
                     required: no
+                    options: [{id: 0, value: 'value one'}, {id: 1, value: 'two'}]
                     validation: '/.*/'
+                    variables:
+                        defaultValue: 'Default'
                 .toEqual $scope.data.model
 
             it '$scope after call $scope.data.rollback()', ->

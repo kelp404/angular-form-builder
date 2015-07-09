@@ -16,6 +16,9 @@ angular.module 'builder.components', ['builder', 'validator.rules', 'ui.sortable
             {label: 'email', rule: '[email]'}
             {label: 'url', rule: '[url]'}
         ]
+        variables: {
+            defaultValue: 'default'
+        }
         template:
             """
             <div class="form-group">
@@ -32,6 +35,10 @@ angular.module 'builder.components', ['builder', 'validator.rules', 'ui.sortable
                 <div class="form-group">
                     <label class='control-label'>Label</label>
                     <input type='text' ng-model="label" validator="[required]" class='form-control'/>
+                </div>
+                <div class="form-group">
+                    <label class='control-label'>Label</label>
+                    <input type='text' ng-model="variables.defaultValue" validator="[required]" class='form-control'/>
                 </div>
                 <div class="form-group">
                     <label class='control-label'>Description</label>
