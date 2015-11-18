@@ -21,8 +21,10 @@
   ],
   "dependencies": {
     "angular": ">=1.2.18",
-    "angular-mocks": ">=1.2.18",
     "angular-validator": ">=0.2.3",
     "jquery": "~2.1.0"
+  },
+  "devDependencies": {
+    "angular-mocks": ">=1.2.18"
   }
 }
