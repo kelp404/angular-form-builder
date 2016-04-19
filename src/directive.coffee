@@ -359,7 +359,7 @@ angular.module 'builder.directive', [
                 checked = []
                 for index of scope.inputArray when scope.inputArray[index]
                     checked.push scope.options[index] ? scope.inputArray[index]
-                scope.inputText = checked.join ', '
+                scope.inputText = checked
             , yes
         scope.$watch 'inputText', -> scope.updateInput scope.inputText
         # watch (management updated form objects
@@ -383,10 +383,19 @@ angular.module 'builder.directive', [
             scope.inputText = scope.formObject.options[0]
 
         # set default value
-        scope.$watch "default['#{scope.formObject.id}']", (value) ->
+        for index in [0...scope.default.length] by 1
+            if scope.default[index].id == scope.formObject.id
+                break
+
+        scope.$watch "default["+index+"]", (value) ->
             return if not value
             if scope.$component.arrayToText
-                scope.inputArray = value
+                for i in [0...scope.formObject.options.length] by 1
+                    if scope.formObject.options[i] in value.value
+                      scope.inputArray.push scope.formObject.options[i]
+                    else
+                        scope.inputArray.push null
+                scope.inputArray;
             else
                 scope.inputText = value
 ]
