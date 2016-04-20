@@ -276,7 +276,7 @@ angular.module 'builder.components', ['builder', 'validator.rules', 'ui.sortable
                     </div>
                 </div>
                 <div class="form-group">
-                    <button class="btn btn-primary btn-xs" type="button" ng-click="popover.addOption()"><span class="glyphicon glyphicon-plus"></span> Add Option</button>
+                    <button class="btn btn-primary btn-xs" type="button" ng-click="popover.addOption({value:'', deletable: true})"><span class="glyphicon glyphicon-plus"></span> Add Option</button>
                 </div>
 
                 <hr/>

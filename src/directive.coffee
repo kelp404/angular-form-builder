@@ -408,7 +408,7 @@ angular.module 'builder.directive', [
             $(element).html view
 
         # select the first option
-        if not scope.$component.arrayToText and scope.formObject.options.length > 0
+        if not scope.$component.arrayToText and scope.formObject.options?.length > 0
             scope.inputText = scope.formObject.options[0]
 
         # set default value

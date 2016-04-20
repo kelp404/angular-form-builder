@@ -1,5 +1,5 @@
 (function() {
-  var copyObjectToScope;
+  var copyObjectOptionsToScopeOptions, copyObjectToScope;
 
   copyObjectToScope = function(object, scope) {
 
@@ -10,9 +10,34 @@
     for (key in object) {
       value = object[key];
       if (key !== '$$hashKey') {
-        scope[key] = value;
+        if (key !== 'options') {
+          scope[key] = value;
+        } else {
+          copyObjectOptionsToScopeOptions(value, scope);
+        }
       }
     }
+  };
+
+  copyObjectOptionsToScopeOptions = function(options, scope) {
+    var key, newOption, option, value, _i, _len, _results;
+    scope.options = [];
+    _results = [];
+    for (_i = 0, _len = options.length; _i < _len; _i++) {
+      option = options[_i];
+      newOption = option;
+      if (!(typeof option === 'string' || option instanceof String)) {
+        newOption = {};
+        for (key in option) {
+          value = option[key];
+          if (key !== '$$hashKey') {
+            newOption[key] = value;
+          }
+        }
+      }
+      _results.push(scope.options.push(newOption));
+    }
+    return _results;
   };
 
   angular.module('builder.controller', ['builder.provider']).controller('fbFormObjectEditableController', [
@@ -38,8 +63,9 @@
           return formObject.variables = $scope.variables;
         }, true);
         $scope.$watch('options', function() {
+          var _ref;
           formObject.options = $scope.options;
-          if ($scope.options.length > 0) {
+          if (((_ref = $scope.options) != null ? _ref.length : void 0) > 0) {
             return $scope.inputText = $scope.options[0].value;
           }
         }, true);
@@ -515,6 +541,7 @@
         restrict: 'A',
         controller: 'fbFormObjectController',
         link: function(scope, element, attrs) {
+          var _ref;
           scope.formObject = $parse(attrs.fbFormObject)(scope);
           scope.$component = $builder.components[scope.formObject.component];
           scope.$on($builder.broadcastChannel.updateInput, function() {
@@ -555,7 +582,7 @@
             view = $compile($template)(scope);
             return $(element).html(view);
           });
-          if (!scope.$component.arrayToText && scope.formObject.options.length > 0) {
+          if (!scope.$component.arrayToText && ((_ref = scope.formObject.options) != null ? _ref.length : void 0) > 0) {
             scope.inputText = scope.formObject.options[0];
           }
           return scope.$watch("default['" + scope.formObject.id + "']", function(value) {
