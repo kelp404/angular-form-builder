@@ -546,12 +546,12 @@
                 if (_ref2 = scope.formObject.options[i], __indexOf.call(value.value, _ref2) >= 0) {
                   scope.inputArray.push(scope.formObject.options[i]);
                 } else {
-                  scope.inputArray.push(null);
+                  scope.inputArray.push(false);
                 }
               }
               return scope.inputArray;
             } else {
-              return scope.inputText = value;
+              return scope.inputText = value.value;
             }
           });
         }

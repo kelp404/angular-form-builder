@@ -394,8 +394,8 @@ angular.module 'builder.directive', [
                     if scope.formObject.options[i] in value.value
                       scope.inputArray.push scope.formObject.options[i]
                     else
-                        scope.inputArray.push null
+                        scope.inputArray.push false
                 scope.inputArray;
             else
-                scope.inputText = value
+                scope.inputText = value.value
 ]
