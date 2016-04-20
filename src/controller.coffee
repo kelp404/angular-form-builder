@@ -7,9 +7,22 @@ copyObjectToScope = (object, scope) ->
     ###
     for key, value of object when key isnt '$$hashKey'
         # copy object.{} to scope.{}
-        scope[key] = value
+        if key != 'options'
+            scope[key] = value
+        else
+            copyObjectOptionsToScopeOptions(value, scope)
     return
 
+copyObjectOptionsToScopeOptions = (options, scope) ->
+    scope.options = []
+    for option in options
+        newOption = option
+        unless typeof option == 'string' || option instanceof String
+            newOption = {}
+            for key, value of option when key isnt '$$hashKey'
+                newOption[key] = value
+              
+        scope.options.push(newOption)
 
 # ----------------------------------------
 # builder.controller
@@ -45,7 +58,7 @@ angular.module 'builder.controller', ['builder.provider']
 
         $scope.$watch 'options', ->
             formObject.options = $scope.options
-            if ($scope.options.length > 0)
+            if ($scope.options?.length > 0)
                 $scope.inputText = $scope.options[0].value
         , yes
 
