@@ -169,6 +169,8 @@
 }).call(this);
 
 (function() {
+  var __indexOf = [].indexOf || function(item) { for (var i = 0, l = this.length; i < l; i++) { if (i in this && this[i] === item) return i; } return -1; };
+
   angular.module('builder.directive', ['builder.provider', 'builder.controller', 'builder.drag', 'validator']).directive('fbBuilder', [
     '$injector', function($injector) {
       var $builder, $drag;
@@ -485,6 +487,7 @@
         restrict: 'A',
         controller: 'fbFormObjectController',
         link: function(scope, element, attrs) {
+          var index, _i, _ref;
           scope.formObject = $parse(attrs.fbFormObject)(scope);
           scope.$component = $builder.components[scope.formObject.component];
           scope.$on($builder.broadcastChannel.updateInput, function() {
@@ -503,7 +506,7 @@
                   checked.push((_ref = scope.options[index]) != null ? _ref : scope.inputArray[index]);
                 }
               }
-              return scope.inputText = checked.join(', ');
+              return scope.inputText = checked;
             }, true);
           }
           scope.$watch('inputText', function() {
@@ -528,14 +531,27 @@
           if (!scope.$component.arrayToText && scope.formObject.options.length > 0) {
             scope.inputText = scope.formObject.options[0];
           }
-          return scope.$watch("default['" + scope.formObject.id + "']", function(value) {
+          for (index = _i = 0, _ref = scope["default"].length; _i < _ref; index = _i += 1) {
+            if (scope["default"][index].id === scope.formObject.id) {
+              break;
+            }
+          }
+          return scope.$watch("default[" + index + "]", function(value) {
+            var i, _j, _ref1, _ref2;
             if (!value) {
               return;
             }
             if (scope.$component.arrayToText) {
-              return scope.inputArray = value;
+              for (i = _j = 0, _ref1 = scope.formObject.options.length; _j < _ref1; i = _j += 1) {
+                if (_ref2 = scope.formObject.options[i], __indexOf.call(value.value, _ref2) >= 0) {
+                  scope.inputArray.push(scope.formObject.options[i]);
+                } else {
+                  scope.inputArray.push(false);
+                }
+              }
+              return scope.inputArray;
             } else {
-              return scope.inputText = value;
+              return scope.inputText = value.value;
             }
           });
         }
