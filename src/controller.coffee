@@ -26,7 +26,7 @@ angular.module 'builder.controller', ['builder.provider']
         ###
         1. Copy origin formObject (ng-repeat="object in formObjects") to scope.
         2. Setup optionsText with formObject.options.
-        3. Watch scope.label, .description, .placeholder, .required, .options then copy to origin formObject.
+        3. Watch scope.label, .description, .placeholder, .required, .inline, .options then copy to origin formObject.
         4. Watch scope.optionsText then convert to scope.options.
         5. setup validationOptions
         ###
@@ -34,11 +34,12 @@ angular.module 'builder.controller', ['builder.provider']
 
         $scope.optionsText = formObject.options.join '\n'
 
-        $scope.$watch '[label, description, placeholder, required, options, validation]', ->
+        $scope.$watch '[label, description, placeholder, required, inline, options, validation]', ->
             formObject.label = $scope.label
             formObject.description = $scope.description
             formObject.placeholder = $scope.placeholder
             formObject.required = $scope.required
+            formObject.inline = $scope.inline
             formObject.options = $scope.options
             formObject.validation = $scope.validation
         , yes
@@ -61,6 +62,7 @@ angular.module 'builder.controller', ['builder.provider']
                 description: $scope.description
                 placeholder: $scope.placeholder
                 required: $scope.required
+                inline: $scope.inline
                 optionsText: $scope.optionsText
                 validation: $scope.validation
         rollback: ->
@@ -72,6 +74,7 @@ angular.module 'builder.controller', ['builder.provider']
             $scope.description = @model.description
             $scope.placeholder = @model.placeholder
             $scope.required = @model.required
+            $scope.inline = @model.inline
             $scope.optionsText = @model.optionsText
             $scope.validation = @model.validation
 ]

@@ -46,6 +46,7 @@ angular.module 'builder.provider', []
             placeholder: component.placeholder ? ''
             editable: component.editable ? yes
             required: component.required ? no
+            inline: component.inline ? no
             validation: component.validation ? '/.*/'
             validationOptions: component.validationOptions ? []
             options: component.options ? []
@@ -73,6 +74,7 @@ angular.module 'builder.provider', []
             placeholder: formObject.placeholder ? component.placeholder
             options: formObject.options ? component.options
             required: formObject.required ? component.required
+            inline: formObject.inline ? component.inline
             validation: formObject.validation ? component.validation
         result
 
@@ -117,6 +119,7 @@ angular.module 'builder.provider', []
             placeholder: {string} The placeholder of the input.
             editable: {bool} Is the form object editable?
             required: {bool} Is the form object required?
+            inline: {bool} Is the form object inline?
             validation: {string} angular-validator. "/regex/" or "[rule1, rule2]". (default is RegExp(.*))
             validationOptions: {array} [{rule: angular-validator, label: 'option label'}] the options for the validation. (default is [])
             options: {array} The input options.
@@ -158,6 +161,7 @@ angular.module 'builder.provider', []
             placeholder: {string} The form object placeholder.
             options: {array} The form object options.
             required: {bool} Is the form object required? (default is no)
+            inline: {bool} Is the form object inline? (default is no)
             validation: {string} angular-validator. "/regex/" or "[rule1, rule2]".
             [index]: {int} The form object index. It will be updated by $builder.
         @return: The form object.
