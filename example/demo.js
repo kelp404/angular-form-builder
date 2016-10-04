@@ -36,31 +36,201 @@
     }
   ]).controller('DemoController', [
     '$scope', '$builder', '$validator', function($scope, $builder, $validator) {
-      var checkbox, textbox;
-      textbox = $builder.addFormObject('default', {
-        id: 'textbox',
-        component: 'textInput',
-        label: 'Name',
-        description: 'Your name',
-        placeholder: 'Your name',
-        required: true,
-        editable: false
+      var button, divider, radio0, radio1, radio2, radio3;
+      divider = $builder.addFormObject('default', {
+        id: 'divider',
+        component: 'divider',
+        label: 'Building elevation A'
       });
-      checkbox = $builder.addFormObject('default', {
-        id: 'checkbox',
-        component: 'checkbox',
-        label: 'Pets',
-        description: 'Do you have any pets?',
-        options: ['Dog', 'Cat']
+      radio0 = $builder.addFormObject('default', {
+        id: 'radio0',
+        component: 'radio',
+        inline: true,
+        label: 'What is the condition of the sign can?',
+        description: '',
+        options: ['1', '2', '3', '4', 5]
       });
-      $builder.addFormObject('default', {
-        component: 'sampleInput'
+      radio1 = $builder.addFormObject('default', {
+        id: 'radio1',
+        component: 'radio',
+        inline: true,
+        label: 'What is the condition of the sign face?',
+        description: '',
+        options: [1, 2, 3, 4, 5]
+      });
+      radio2 = $builder.addFormObject('default', {
+        id: 'radio2',
+        component: 'radio',
+        inline: true,
+        label: 'Observed while illumination on?',
+        description: '',
+        options: ['Yes', 'No']
+      });
+      radio3 = $builder.addFormObject('default', {
+        id: 'radio2',
+        component: 'radio',
+        inline: true,
+        label: 'If yes, were there any problems with illumination?',
+        description: '',
+        options: ['Yes', 'No']
+      });
+      divider = $builder.addFormObject('default', {
+        id: 'divider',
+        component: 'divider',
+        label: 'Building elevation B'
+      });
+      radio0 = $builder.addFormObject('default', {
+        id: 'radio0',
+        component: 'radio',
+        inline: true,
+        label: 'What is the condition of the sign can?',
+        description: '',
+        options: ['1', '2', '3', '4', 5]
+      });
+      radio1 = $builder.addFormObject('default', {
+        id: 'radio1',
+        component: 'radio',
+        inline: true,
+        label: 'What is the condition of the sign face?',
+        description: '',
+        options: [1, 2, 3, 4, 5]
+      });
+      radio2 = $builder.addFormObject('default', {
+        id: 'radio2',
+        component: 'radio',
+        inline: true,
+        label: 'Observed while illumination on?',
+        description: '',
+        options: ['Yes', 'No']
+      });
+      radio3 = $builder.addFormObject('default', {
+        id: 'radio2',
+        component: 'radio',
+        inline: true,
+        label: 'If yes, were there any problems with illumination?',
+        description: '',
+        options: ['Yes', 'No']
+      });
+      divider = $builder.addFormObject('default', {
+        id: 'divider',
+        component: 'divider',
+        label: 'Building elevation C'
+      });
+      radio0 = $builder.addFormObject('default', {
+        id: 'radio0',
+        component: 'radio',
+        inline: true,
+        label: 'What is the condition of the sign can?',
+        description: '',
+        options: ['1', '2', '3', '4', 5]
+      });
+      radio1 = $builder.addFormObject('default', {
+        id: 'radio1',
+        component: 'radio',
+        inline: true,
+        label: 'What is the condition of the sign face?',
+        description: '',
+        options: [1, 2, 3, 4, 5]
+      });
+      radio2 = $builder.addFormObject('default', {
+        id: 'radio2',
+        component: 'radio',
+        inline: true,
+        label: 'Observed while illumination on?',
+        description: '',
+        options: ['Yes', 'No']
+      });
+      radio3 = $builder.addFormObject('default', {
+        id: 'radio2',
+        component: 'radio',
+        inline: true,
+        label: 'If yes, were there any problems with illumination?',
+        description: '',
+        options: ['Yes', 'No']
+      });
+      divider = $builder.addFormObject('default', {
+        id: 'divider',
+        component: 'divider',
+        label: 'Building elevation D'
+      });
+      radio0 = $builder.addFormObject('default', {
+        id: 'radio0',
+        component: 'radio',
+        inline: true,
+        label: 'What is the condition of the sign can?',
+        description: '',
+        options: ['1', '2', '3', '4', 5]
+      });
+      radio1 = $builder.addFormObject('default', {
+        id: 'radio1',
+        component: 'radio',
+        inline: true,
+        label: 'What is the condition of the sign face?',
+        description: '',
+        options: [1, 2, 3, 4, 5]
+      });
+      radio2 = $builder.addFormObject('default', {
+        id: 'radio2',
+        component: 'radio',
+        inline: true,
+        label: 'Observed while illumination on?',
+        description: '',
+        options: ['Yes', 'No']
+      });
+      radio3 = $builder.addFormObject('default', {
+        id: 'radio2',
+        component: 'radio',
+        inline: true,
+        label: 'If yes, were there any problems with illumination?',
+        description: '',
+        options: ['Yes', 'No']
+      });
+      divider = $builder.addFormObject('default', {
+        id: 'divider',
+        component: 'divider',
+        label: 'Site signage'
+      });
+      radio0 = $builder.addFormObject('default', {
+        id: 'radio0',
+        component: 'radio',
+        inline: true,
+        label: 'What is the condition of the sign support?',
+        description: '',
+        options: ['1', '2', '3', '4', 5]
+      });
+      radio1 = $builder.addFormObject('default', {
+        id: 'radio1',
+        component: 'radio',
+        inline: true,
+        label: 'What is the condition of the sign face?',
+        description: '',
+        options: [1, 2, 3, 4, 5]
+      });
+      radio3 = $builder.addFormObject('default', {
+        id: 'radio2',
+        component: 'radio',
+        inline: true,
+        label: 'Observed while illumination on?',
+        description: '',
+        options: ['Yes', 'No']
+      });
+      radio3 = $builder.addFormObject('default', {
+        id: 'radio2',
+        component: 'radio',
+        inline: true,
+        label: 'If yes, were there any problems with illumination?',
+        description: '',
+        options: ['Yes', 'No']
+      });
+      button = $builder.addFormObject('default', {
+        id: 'button',
+        component: 'button',
+        label: 'ADD A SIGN',
+        description: 'primary'
       });
       $scope.form = $builder.forms['default'];
       $scope.input = [];
       $scope.defaultValue = {};
-      $scope.defaultValue[textbox.id] = 'default value';
-      $scope.defaultValue[checkbox.id] = [true, true];
       return $scope.submit = function() {
         return $validator.validate($scope, 'default').success(function() {
           return console.log('success');
