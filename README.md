@@ -31,15 +31,6 @@ This is an AngularJS form builder written in [CoffeeScript](http://coffeescript.
 
 
 
-##Unit Test
->
-```bash
-$ grunt test
-```
-
-
-
-
 ##Development
 ```bash
 # install node modules
@@ -52,6 +43,13 @@ $ bower install
 $ grunt dev
 # compile coffee script and minify
 $ grunt build
+```
+
+
+##Unit Test
+>
+```bash
+$ grunt test
 ```
 
 
