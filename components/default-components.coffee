@@ -40,14 +40,15 @@ angular.module 'builder.components', ['builder', 'validator.rules']
 		$builderProvider.registerComponent 'button',
 				group: 'Default'
 				label: 'Button'
-				description: 'primary'
+				description: ""
 		#				required: no
-		#				options: ['value one', 'value two']
+				options: ['default', 'primary', 'success', 'warning', 'danger']
+				arrayToText: yes
 				template:
 						"""
-						<p>
-								<button type="button" class="btn btn-{{description}}">{{label}}</button>
-						</p>
+						<p></p>
+								<button type="button" class="btn btn-{{description||'default'}}">{{label}}</button>
+						<p></p>
 						"""
 				popoverTemplate:
 						"""
@@ -56,10 +57,11 @@ angular.module 'builder.components', ['builder', 'validator.rules']
                     <label class='control-label'>Label</label>
                     <input type='text' ng-model="label" validator="[required]" class='form-control'/>
                 </div>
-                <div class="form-group">
-                    <label class='control-label'>Style: default/primary/success/ warning/danger</label>
-                    <input type='text' ng-model="description" class='form-control'/>
-                </div>
+								<div class="form-group">
+                    <label class='control-label'>Style</label>
+										<select ng-options="value for value in options" id="{{formName+index}}" class="form-control"
+												ng-model="description" ng-init="description = options[0]"/>
+								</div>
 
                 <hr/>
                 <div class='form-group'>

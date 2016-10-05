@@ -31,6 +31,7 @@
     "url": "https://github.com/kelp404/angular-form-builder/issues"
   },
   "devDependencies": {
+    "connect-livereload": "^0.6.0",
     "grunt": "~0.4.2",
     "grunt-contrib-coffee": "^0.12.0",
     "grunt-contrib-compass": "^1.0.1",

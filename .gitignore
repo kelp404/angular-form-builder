@@ -15,4 +15,4 @@ bower_components
 .sass-cache
 
 #Test
-/test
+/test/*

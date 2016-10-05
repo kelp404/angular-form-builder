@@ -10,9 +10,11 @@
       $builderProvider.registerComponent('button', {
         group: 'Default',
         label: 'Button',
-        description: 'primary',
-        template: "<p>\n		<button type=\"button\" class=\"btn btn-{{description}}\">{{label}}</button>\n</p>",
-        popoverTemplate: "<form>\n    <div class=\"form-group\">\n        <label class='control-label'>Label</label>\n        <input type='text' ng-model=\"label\" validator=\"[required]\" class='form-control'/>\n    </div>\n    <div class=\"form-group\">\n        <label class='control-label'>Style: default/primary/success/ warning/danger</label>\n        <input type='text' ng-model=\"description\" class='form-control'/>\n    </div>\n\n    <hr/>\n    <div class='form-group'>\n        <input type='submit' ng-click=\"popover.save($event)\" class='btn btn-primary' value='Save'/>\n        <input type='button' ng-click=\"popover.cancel($event)\" class='btn btn-default' value='Cancel'/>\n        <input type='button' ng-click=\"popover.remove($event)\" class='btn btn-danger' value='Delete'/>\n    </div>\n</form>"
+        description: "",
+        options: ['default', 'primary', 'success', 'warning', 'danger'],
+        arrayToText: true,
+        template: "<p></p>\n		<button type=\"button\" class=\"btn btn-{{description||'default'}}\">{{label}}</button>\n<p></p>",
+        popoverTemplate: "            <form>\n                <div class=\"form-group\">\n                    <label class='control-label'>Label</label>\n                    <input type='text' ng-model=\"label\" validator=\"[required]\" class='form-control'/>\n                </div>\n<div class=\"form-group\">\n                    <label class='control-label'>Style</label>\n		<select ng-options=\"value for value in options\" id=\"{{formName+index}}\" class=\"form-control\"\n				ng-model=\"description\" ng-init=\"description = options[0]\"/>\n</div>\n\n                <hr/>\n                <div class='form-group'>\n                    <input type='submit' ng-click=\"popover.save($event)\" class='btn btn-primary' value='Save'/>\n                    <input type='button' ng-click=\"popover.cancel($event)\" class='btn btn-default' value='Cancel'/>\n                    <input type='button' ng-click=\"popover.remove($event)\" class='btn btn-danger' value='Delete'/>\n                </div>\n            </form>"
       });
       $builderProvider.registerComponent('textInput', {
         group: 'Default',
