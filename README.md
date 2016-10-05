@@ -286,6 +286,9 @@ a.directive 'fbForm', fbForm
 + checkbox
 + radio
 + select
++ button
++ divider
++ ... new coming soon
 
 
 
