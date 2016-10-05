@@ -8,7 +8,7 @@ This is an AngularJS form builder written in [CoffeeScript](http://coffeescript.
 
 
 
-##Frameworks
+##Used
 1. [AngularJS](http://angularjs.org/) 1.2.18
 2. [jQuery](http://jquery.com/) 2.1.0
 3. [Bootstrap 3](http://getbootstrap.com/)
