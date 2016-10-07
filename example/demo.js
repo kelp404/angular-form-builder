@@ -36,13 +36,13 @@
     }
   ]).controller('DemoController', [
     '$scope', '$builder', '$validator', function($scope, $builder, $validator) {
-      var button, divider, radio0, radio1, radio2, radio3;
+      var button, divider, radio;
       divider = $builder.addFormObject('default', {
         id: 'divider',
         component: 'divider',
         label: 'Building elevation A'
       });
-      radio0 = $builder.addFormObject('default', {
+      radio = $builder.addFormObject('default', {
         id: 'radio0',
         component: 'radio',
         inline: true,
@@ -50,7 +50,7 @@
         description: '',
         options: ['1', '2', '3', '4', 5]
       });
-      radio1 = $builder.addFormObject('default', {
+      radio = $builder.addFormObject('default', {
         id: 'radio1',
         component: 'radio',
         inline: true,
@@ -58,7 +58,7 @@
         description: '',
         options: [1, 2, 3, 4, 5]
       });
-      radio2 = $builder.addFormObject('default', {
+      radio = $builder.addFormObject('default', {
         id: 'radio2',
         component: 'radio',
         inline: true,
@@ -66,7 +66,7 @@
         description: '',
         options: ['Yes', 'No']
       });
-      radio3 = $builder.addFormObject('default', {
+      radio = $builder.addFormObject('default', {
         id: 'radio2',
         component: 'radio',
         inline: true,
@@ -79,7 +79,7 @@
         component: 'divider',
         label: 'Building elevation B'
       });
-      radio0 = $builder.addFormObject('default', {
+      radio = $builder.addFormObject('default', {
         id: 'radio0',
         component: 'radio',
         inline: true,
@@ -87,7 +87,7 @@
         description: '',
         options: ['1', '2', '3', '4', 5]
       });
-      radio1 = $builder.addFormObject('default', {
+      radio = $builder.addFormObject('default', {
         id: 'radio1',
         component: 'radio',
         inline: true,
@@ -95,7 +95,7 @@
         description: '',
         options: [1, 2, 3, 4, 5]
       });
-      radio2 = $builder.addFormObject('default', {
+      radio = $builder.addFormObject('default', {
         id: 'radio2',
         component: 'radio',
         inline: true,
@@ -103,7 +103,7 @@
         description: '',
         options: ['Yes', 'No']
       });
-      radio3 = $builder.addFormObject('default', {
+      radio = $builder.addFormObject('default', {
         id: 'radio2',
         component: 'radio',
         inline: true,
@@ -116,7 +116,7 @@
         component: 'divider',
         label: 'Building elevation C'
       });
-      radio0 = $builder.addFormObject('default', {
+      radio = $builder.addFormObject('default', {
         id: 'radio0',
         component: 'radio',
         inline: true,
@@ -124,7 +124,7 @@
         description: '',
         options: ['1', '2', '3', '4', 5]
       });
-      radio1 = $builder.addFormObject('default', {
+      radio = $builder.addFormObject('default', {
         id: 'radio1',
         component: 'radio',
         inline: true,
@@ -132,7 +132,7 @@
         description: '',
         options: [1, 2, 3, 4, 5]
       });
-      radio2 = $builder.addFormObject('default', {
+      radio = $builder.addFormObject('default', {
         id: 'radio2',
         component: 'radio',
         inline: true,
@@ -140,7 +140,7 @@
         description: '',
         options: ['Yes', 'No']
       });
-      radio3 = $builder.addFormObject('default', {
+      radio = $builder.addFormObject('default', {
         id: 'radio2',
         component: 'radio',
         inline: true,
@@ -153,7 +153,7 @@
         component: 'divider',
         label: 'Building elevation D'
       });
-      radio0 = $builder.addFormObject('default', {
+      radio = $builder.addFormObject('default', {
         id: 'radio0',
         component: 'radio',
         inline: true,
@@ -161,7 +161,7 @@
         description: '',
         options: ['1', '2', '3', '4', 5]
       });
-      radio1 = $builder.addFormObject('default', {
+      radio = $builder.addFormObject('default', {
         id: 'radio1',
         component: 'radio',
         inline: true,
@@ -169,7 +169,7 @@
         description: '',
         options: [1, 2, 3, 4, 5]
       });
-      radio2 = $builder.addFormObject('default', {
+      radio = $builder.addFormObject('default', {
         id: 'radio2',
         component: 'radio',
         inline: true,
@@ -177,7 +177,7 @@
         description: '',
         options: ['Yes', 'No']
       });
-      radio3 = $builder.addFormObject('default', {
+      radio = $builder.addFormObject('default', {
         id: 'radio2',
         component: 'radio',
         inline: true,
@@ -190,7 +190,7 @@
         component: 'divider',
         label: 'Site signage'
       });
-      radio0 = $builder.addFormObject('default', {
+      radio = $builder.addFormObject('default', {
         id: 'radio0',
         component: 'radio',
         inline: true,
@@ -198,7 +198,7 @@
         description: '',
         options: ['1', '2', '3', '4', 5]
       });
-      radio1 = $builder.addFormObject('default', {
+      radio = $builder.addFormObject('default', {
         id: 'radio1',
         component: 'radio',
         inline: true,
@@ -206,7 +206,7 @@
         description: '',
         options: [1, 2, 3, 4, 5]
       });
-      radio3 = $builder.addFormObject('default', {
+      radio = $builder.addFormObject('default', {
         id: 'radio2',
         component: 'radio',
         inline: true,
@@ -214,7 +214,7 @@
         description: '',
         options: ['Yes', 'No']
       });
-      radio3 = $builder.addFormObject('default', {
+      radio = $builder.addFormObject('default', {
         id: 'radio2',
         component: 'radio',
         inline: true,

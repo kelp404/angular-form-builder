@@ -44,12 +44,17 @@ angular.module 'builder.provider', []
             label: component.label ? ''
             description: component.description ? ''
             placeholder: component.placeholder ? ''
+            text: component.text ? ''
+            header: component.header ? ''
+            footer: component.footer ? ''
+            style: component.style ? ''
             editable: component.editable ? yes
             required: component.required ? no
             inline: component.inline ? no
             validation: component.validation ? '/.*/'
             validationOptions: component.validationOptions ? []
             options: component.options ? []
+            align: component.align ? []
             arrayToText: component.arrayToText ? no
             template: component.template
             templateUrl: component.templateUrl
@@ -76,6 +81,11 @@ angular.module 'builder.provider', []
             required: formObject.required ? component.required
             inline: formObject.inline ? component.inline
             validation: formObject.validation ? component.validation
+            text: formObject.text ? component.text
+            header: formObject.header ? component.header
+            footer: formObject.footer ? component.footer
+            align: formObject.align ? component.align
+            style: formObject.style ? component.style
         result
 
     @reindexFormObject = (name) =>
