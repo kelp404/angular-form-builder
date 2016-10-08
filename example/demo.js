@@ -40,7 +40,7 @@
       panel = $builder.addFormObject('default', {
         id: 'panel',
         component: 'panel',
-        label: 'Mental Disorders',
+        header: 'Mental Disorders',
         style: 'primary'
       });
       radio = $builder.addFormObject('default', {
@@ -109,5 +109,5 @@
       };
     }
   ]);
- 
+
 }).call(this);
