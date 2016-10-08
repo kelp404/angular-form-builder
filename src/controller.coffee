@@ -34,7 +34,8 @@ angular.module 'builder.controller', ['builder.provider']
 
         $scope.optionsText = formObject.options.join '\n'
 
-        $scope.$watch '[label, description, placeholder, required, inline, options, validation]', ->
+        $scope.$watch '[label, description, placeholder, required, inline, options, validation, text, header,
+ footer, align, style]', ->
             formObject.label = $scope.label
             formObject.description = $scope.description
             formObject.placeholder = $scope.placeholder
@@ -42,6 +43,11 @@ angular.module 'builder.controller', ['builder.provider']
             formObject.inline = $scope.inline
             formObject.options = $scope.options
             formObject.validation = $scope.validation
+            formObject.text = $scope.text
+            formObject.header = $scope.header
+            formObject.footer = $scope.footer
+            formObject.align = $scope.align
+            formObject.style = $scope.style
         , yes
 
         $scope.$watch 'optionsText', (text) ->
@@ -65,6 +71,11 @@ angular.module 'builder.controller', ['builder.provider']
                 inline: $scope.inline
                 optionsText: $scope.optionsText
                 validation: $scope.validation
+                text: $scope.text
+                header: $scope.header
+                footer: $scope.footer
+                align: $scope.align
+                style: $scope.style
         rollback: ->
             ###
             Rollback input value.
@@ -77,6 +88,11 @@ angular.module 'builder.controller', ['builder.provider']
             $scope.inline = @model.inline
             $scope.optionsText = @model.optionsText
             $scope.validation = @model.validation
+            $scope.text = @model.text
+            $scope.header = @model.header
+            $scope.footer = @model.footer
+            $scope.align = @model.align
+            $scope.style = @model.style
 ]
 
 

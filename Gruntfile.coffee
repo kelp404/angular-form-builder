@@ -50,7 +50,7 @@ module.exports = (grunt) ->
 								files: ['example/*.scss', 'src/*.scss']
 								tasks: ['compass']
 								options:
-#										spawn: no
+										spawn: no
 										livereload: LIVERELOAD_PORT
 #										livereload: true
 #										livereload:
@@ -64,7 +64,7 @@ module.exports = (grunt) ->
 								files: ['src/*.coffee', 'components/*.coffee', 'example/*.coffee']
 								tasks: ['coffee']
 								options:
-#										spawn: no
+										spawn: no
 										livereload: LIVERELOAD_PORT
 #										livereload: true
 #										livereload:

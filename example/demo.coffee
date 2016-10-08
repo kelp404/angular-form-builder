@@ -89,28 +89,28 @@ angular.module 'app', ['builder', 'builder.components', 'validator.rules']
 		id: 'divider'
 		component: 'divider'
 		label: 'Building elevation A'
-	radio0 = $builder.addFormObject 'default',
+	radio = $builder.addFormObject 'default',
 		id: 'radio0'
 		component: 'radio'
 		inline: yes
 		label: 'What is the condition of the sign can?'
 		description: ''
 		options: ['1', '2', '3', '4', 5]
-	radio1 = $builder.addFormObject 'default',
+	radio = $builder.addFormObject 'default',
 		id: 'radio1'
 		component: 'radio'
 		inline: yes
 		label: 'What is the condition of the sign face?'
 		description: ''
 		options: [1,2,3,4,5]
-	radio2 = $builder.addFormObject 'default',
+	radio = $builder.addFormObject 'default',
 		id: 'radio2'
 		component: 'radio'
 		inline: yes
 		label: 'Observed while illumination on?'
 		description: ''
 		options: ['Yes', 'No']
-	radio3 = $builder.addFormObject 'default',
+	radio = $builder.addFormObject 'default',
 		id: 'radio2'
 		component: 'radio'
 		inline: yes
@@ -122,28 +122,28 @@ angular.module 'app', ['builder', 'builder.components', 'validator.rules']
 		id: 'divider'
 		component: 'divider'
 		label: 'Building elevation B'
-	radio0 = $builder.addFormObject 'default',
+	radio = $builder.addFormObject 'default',
 		id: 'radio0'
 		component: 'radio'
 		inline: yes
 		label: 'What is the condition of the sign can?'
 		description: ''
 		options: ['1', '2', '3', '4', 5]
-	radio1 = $builder.addFormObject 'default',
+	radio = $builder.addFormObject 'default',
 		id: 'radio1'
 		component: 'radio'
 		inline: yes
 		label: 'What is the condition of the sign face?'
 		description: ''
 		options: [1,2,3,4,5]
-	radio2 = $builder.addFormObject 'default',
+	radio = $builder.addFormObject 'default',
 		id: 'radio2'
 		component: 'radio'
 		inline: yes
 		label: 'Observed while illumination on?'
 		description: ''
 		options: ['Yes', 'No']
-	radio3 = $builder.addFormObject 'default',
+	radio = $builder.addFormObject 'default',
 		id: 'radio2'
 		component: 'radio'
 		inline: yes
@@ -154,28 +154,28 @@ angular.module 'app', ['builder', 'builder.components', 'validator.rules']
 		id: 'divider'
 		component: 'divider'
 		label: 'Building elevation C'
-	radio0 = $builder.addFormObject 'default',
+	radio = $builder.addFormObject 'default',
 		id: 'radio0'
 		component: 'radio'
 		inline: yes
 		label: 'What is the condition of the sign can?'
 		description: ''
 		options: ['1', '2', '3', '4', 5]
-	radio1 = $builder.addFormObject 'default',
+	radio = $builder.addFormObject 'default',
 		id: 'radio1'
 		component: 'radio'
 		inline: yes
 		label: 'What is the condition of the sign face?'
 		description: ''
 		options: [1,2,3,4,5]
-	radio2 = $builder.addFormObject 'default',
+	radio = $builder.addFormObject 'default',
 		id: 'radio2'
 		component: 'radio'
 		inline: yes
 		label: 'Observed while illumination on?'
 		description: ''
 		options: ['Yes', 'No']
-	radio3 = $builder.addFormObject 'default',
+	radio = $builder.addFormObject 'default',
 		id: 'radio2'
 		component: 'radio'
 		inline: yes
@@ -188,28 +188,28 @@ angular.module 'app', ['builder', 'builder.components', 'validator.rules']
 		id: 'divider'
 		component: 'divider'
 		label: 'Building elevation D'
-	radio0 = $builder.addFormObject 'default',
+	radio = $builder.addFormObject 'default',
 		id: 'radio0'
 		component: 'radio'
 		inline: yes
 		label: 'What is the condition of the sign can?'
 		description: ''
 		options: ['1', '2', '3', '4', 5]
-	radio1 = $builder.addFormObject 'default',
+	radio = $builder.addFormObject 'default',
 		id: 'radio1'
 		component: 'radio'
 		inline: yes
 		label: 'What is the condition of the sign face?'
 		description: ''
 		options: [1,2,3,4,5]
-	radio2 = $builder.addFormObject 'default',
+	radio = $builder.addFormObject 'default',
 		id: 'radio2'
 		component: 'radio'
 		inline: yes
 		label: 'Observed while illumination on?'
 		description: ''
 		options: ['Yes', 'No']
-	radio3 = $builder.addFormObject 'default',
+	radio = $builder.addFormObject 'default',
 		id: 'radio2'
 		component: 'radio'
 		inline: yes
@@ -221,28 +221,28 @@ angular.module 'app', ['builder', 'builder.components', 'validator.rules']
 		id: 'divider'
 		component: 'divider'
 		label: 'Site signage'
-	radio0 = $builder.addFormObject 'default',
+	radio = $builder.addFormObject 'default',
 		id: 'radio0'
 		component: 'radio'
 		inline: yes
 		label: 'What is the condition of the sign support?'
 		description: ''
 		options: ['1', '2', '3', '4', 5]
-	radio1 = $builder.addFormObject 'default',
+	radio = $builder.addFormObject 'default',
 		id: 'radio1'
 		component: 'radio'
 		inline: yes
 		label: 'What is the condition of the sign face?'
 		description: ''
 		options: [1,2,3,4,5]
-	radio3 = $builder.addFormObject 'default',
+	radio = $builder.addFormObject 'default',
 		id: 'radio2'
 		component: 'radio'
 		inline: yes
 		label: 'Observed while illumination on?'
 		description: ''
 		options: ['Yes', 'No']
-	radio3 = $builder.addFormObject 'default',
+	radio = $builder.addFormObject 'default',
 		id: 'radio2'
 		component: 'radio'
 		inline: yes

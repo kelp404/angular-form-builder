@@ -31,14 +31,19 @@
         var component;
         copyObjectToScope(formObject, $scope);
         $scope.optionsText = formObject.options.join('\n');
-        $scope.$watch('[label, description, placeholder, required, inline, options, validation]', function() {
+        $scope.$watch('[label, description, placeholder, required, inline, options, validation, text, header, footer, align, style]', function() {
           formObject.label = $scope.label;
           formObject.description = $scope.description;
           formObject.placeholder = $scope.placeholder;
           formObject.required = $scope.required;
           formObject.inline = $scope.inline;
           formObject.options = $scope.options;
-          return formObject.validation = $scope.validation;
+          formObject.validation = $scope.validation;
+          formObject.text = $scope.text;
+          formObject.header = $scope.header;
+          formObject.footer = $scope.footer;
+          formObject.align = $scope.align;
+          return formObject.style = $scope.style;
         }, true);
         $scope.$watch('optionsText', function(text) {
           var x;
@@ -73,7 +78,12 @@
             required: $scope.required,
             inline: $scope.inline,
             optionsText: $scope.optionsText,
-            validation: $scope.validation
+            validation: $scope.validation,
+            text: $scope.text,
+            header: $scope.header,
+            footer: $scope.footer,
+            align: $scope.align,
+            style: $scope.style
           };
         },
         rollback: function() {
@@ -90,7 +100,12 @@
           $scope.required = this.model.required;
           $scope.inline = this.model.inline;
           $scope.optionsText = this.model.optionsText;
-          return $scope.validation = this.model.validation;
+          $scope.validation = this.model.validation;
+          $scope.text = this.model.text;
+          $scope.header = this.model.header;
+          $scope.footer = this.model.footer;
+          $scope.align = this.model.align;
+          return $scope.style = this.model.style;
         }
       };
     }
@@ -996,20 +1011,25 @@
       "default": []
     };
     this.convertComponent = function(name, component) {
-      var result, _ref, _ref1, _ref10, _ref2, _ref3, _ref4, _ref5, _ref6, _ref7, _ref8, _ref9;
+      var result, _ref, _ref1, _ref10, _ref11, _ref12, _ref13, _ref14, _ref15, _ref2, _ref3, _ref4, _ref5, _ref6, _ref7, _ref8, _ref9;
       result = {
         name: name,
         group: (_ref = component.group) != null ? _ref : 'Default',
         label: (_ref1 = component.label) != null ? _ref1 : '',
         description: (_ref2 = component.description) != null ? _ref2 : '',
         placeholder: (_ref3 = component.placeholder) != null ? _ref3 : '',
-        editable: (_ref4 = component.editable) != null ? _ref4 : true,
-        required: (_ref5 = component.required) != null ? _ref5 : false,
-        inline: (_ref6 = component.inline) != null ? _ref6 : false,
-        validation: (_ref7 = component.validation) != null ? _ref7 : '/.*/',
-        validationOptions: (_ref8 = component.validationOptions) != null ? _ref8 : [],
-        options: (_ref9 = component.options) != null ? _ref9 : [],
-        arrayToText: (_ref10 = component.arrayToText) != null ? _ref10 : false,
+        text: (_ref4 = component.text) != null ? _ref4 : '',
+        header: (_ref5 = component.header) != null ? _ref5 : '',
+        footer: (_ref6 = component.footer) != null ? _ref6 : '',
+        style: (_ref7 = component.style) != null ? _ref7 : '',
+        editable: (_ref8 = component.editable) != null ? _ref8 : true,
+        required: (_ref9 = component.required) != null ? _ref9 : false,
+        inline: (_ref10 = component.inline) != null ? _ref10 : false,
+        validation: (_ref11 = component.validation) != null ? _ref11 : '/.*/',
+        validationOptions: (_ref12 = component.validationOptions) != null ? _ref12 : [],
+        options: (_ref13 = component.options) != null ? _ref13 : [],
+        align: (_ref14 = component.align) != null ? _ref14 : [],
+        arrayToText: (_ref15 = component.arrayToText) != null ? _ref15 : false,
         template: component.template,
         templateUrl: component.templateUrl,
         popoverTemplate: component.popoverTemplate,
@@ -1024,7 +1044,7 @@
       return result;
     };
     this.convertFormObject = function(name, formObject) {
-      var component, result, _ref, _ref1, _ref2, _ref3, _ref4, _ref5, _ref6, _ref7, _ref8;
+      var component, result, _ref, _ref1, _ref10, _ref11, _ref12, _ref13, _ref2, _ref3, _ref4, _ref5, _ref6, _ref7, _ref8, _ref9;
       if (formObject == null) {
         formObject = {};
       }
@@ -1043,7 +1063,12 @@
         options: (_ref5 = formObject.options) != null ? _ref5 : component.options,
         required: (_ref6 = formObject.required) != null ? _ref6 : component.required,
         inline: (_ref7 = formObject.inline) != null ? _ref7 : component.inline,
-        validation: (_ref8 = formObject.validation) != null ? _ref8 : component.validation
+        validation: (_ref8 = formObject.validation) != null ? _ref8 : component.validation,
+        text: (_ref9 = formObject.text) != null ? _ref9 : component.text,
+        header: (_ref10 = formObject.header) != null ? _ref10 : component.header,
+        footer: (_ref11 = formObject.footer) != null ? _ref11 : component.footer,
+        align: (_ref12 = formObject.align) != null ? _ref12 : component.align,
+        style: (_ref13 = formObject.style) != null ? _ref13 : component.style
       };
       return result;
     };
