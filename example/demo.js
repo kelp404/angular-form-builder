@@ -36,33 +36,18 @@
     }
   ]).controller('DemoController', [
     '$scope', '$builder', '$validator', function($scope, $builder, $validator) {
-      var button, divider, radio;
-      divider = $builder.addFormObject('default', {
-        id: 'divider',
-        component: 'divider',
-        label: 'Building elevation A'
-      });
-      radio = $builder.addFormObject('default', {
-        id: 'radio0',
-        component: 'radio',
-        inline: true,
-        label: 'What is the condition of the sign can?',
-        description: '',
-        options: ['1', '2', '3', '4', 5]
-      });
-      radio = $builder.addFormObject('default', {
-        id: 'radio1',
-        component: 'radio',
-        inline: true,
-        label: 'What is the condition of the sign face?',
-        description: '',
-        options: [1, 2, 3, 4, 5]
+      var button, panel, radio;
+      panel = $builder.addFormObject('default', {
+        id: 'panel',
+        component: 'panel',
+        label: 'Mental Disorders',
+        style: 'primary'
       });
       radio = $builder.addFormObject('default', {
         id: 'radio2',
         component: 'radio',
         inline: true,
-        label: 'Observed while illumination on?',
+        label: 'Have you wished you were dead or wished you could go to sleep and not wake up?',
         description: '',
         options: ['Yes', 'No']
       });
@@ -70,36 +55,7 @@
         id: 'radio2',
         component: 'radio',
         inline: true,
-        label: 'If yes, were there any problems with illumination?',
-        description: '',
-        options: ['Yes', 'No']
-      });
-      divider = $builder.addFormObject('default', {
-        id: 'divider',
-        component: 'divider',
-        label: 'Building elevation B'
-      });
-      radio = $builder.addFormObject('default', {
-        id: 'radio0',
-        component: 'radio',
-        inline: true,
-        label: 'What is the condition of the sign can?',
-        description: '',
-        options: ['1', '2', '3', '4', 5]
-      });
-      radio = $builder.addFormObject('default', {
-        id: 'radio1',
-        component: 'radio',
-        inline: true,
-        label: 'What is the condition of the sign face?',
-        description: '',
-        options: [1, 2, 3, 4, 5]
-      });
-      radio = $builder.addFormObject('default', {
-        id: 'radio2',
-        component: 'radio',
-        inline: true,
-        label: 'Observed while illumination on?',
+        label: 'Have you actually had any thoughts of killing yourself?',
         description: '',
         options: ['Yes', 'No']
       });
@@ -107,36 +63,7 @@
         id: 'radio2',
         component: 'radio',
         inline: true,
-        label: 'If yes, were there any problems with illumination?',
-        description: '',
-        options: ['Yes', 'No']
-      });
-      divider = $builder.addFormObject('default', {
-        id: 'divider',
-        component: 'divider',
-        label: 'Building elevation C'
-      });
-      radio = $builder.addFormObject('default', {
-        id: 'radio0',
-        component: 'radio',
-        inline: true,
-        label: 'What is the condition of the sign can?',
-        description: '',
-        options: ['1', '2', '3', '4', 5]
-      });
-      radio = $builder.addFormObject('default', {
-        id: 'radio1',
-        component: 'radio',
-        inline: true,
-        label: 'What is the condition of the sign face?',
-        description: '',
-        options: [1, 2, 3, 4, 5]
-      });
-      radio = $builder.addFormObject('default', {
-        id: 'radio2',
-        component: 'radio',
-        inline: true,
-        label: 'Observed while illumination on?',
+        label: 'Have you been thinking about how you might kill yourself?',
         description: '',
         options: ['Yes', 'No']
       });
@@ -144,36 +71,7 @@
         id: 'radio2',
         component: 'radio',
         inline: true,
-        label: 'If yes, were there any problems with illumination?',
-        description: '',
-        options: ['Yes', 'No']
-      });
-      divider = $builder.addFormObject('default', {
-        id: 'divider',
-        component: 'divider',
-        label: 'Building elevation D'
-      });
-      radio = $builder.addFormObject('default', {
-        id: 'radio0',
-        component: 'radio',
-        inline: true,
-        label: 'What is the condition of the sign can?',
-        description: '',
-        options: ['1', '2', '3', '4', 5]
-      });
-      radio = $builder.addFormObject('default', {
-        id: 'radio1',
-        component: 'radio',
-        inline: true,
-        label: 'What is the condition of the sign face?',
-        description: '',
-        options: [1, 2, 3, 4, 5]
-      });
-      radio = $builder.addFormObject('default', {
-        id: 'radio2',
-        component: 'radio',
-        inline: true,
-        label: 'Observed while illumination on?',
+        label: 'Have you had these thoughts and had some intention of acting on them?',
         description: '',
         options: ['Yes', 'No']
       });
@@ -181,36 +79,7 @@
         id: 'radio2',
         component: 'radio',
         inline: true,
-        label: 'If yes, were there any problems with illumination?',
-        description: '',
-        options: ['Yes', 'No']
-      });
-      divider = $builder.addFormObject('default', {
-        id: 'divider',
-        component: 'divider',
-        label: 'Site signage'
-      });
-      radio = $builder.addFormObject('default', {
-        id: 'radio0',
-        component: 'radio',
-        inline: true,
-        label: 'What is the condition of the sign support?',
-        description: '',
-        options: ['1', '2', '3', '4', 5]
-      });
-      radio = $builder.addFormObject('default', {
-        id: 'radio1',
-        component: 'radio',
-        inline: true,
-        label: 'What is the condition of the sign face?',
-        description: '',
-        options: [1, 2, 3, 4, 5]
-      });
-      radio = $builder.addFormObject('default', {
-        id: 'radio2',
-        component: 'radio',
-        inline: true,
-        label: 'Observed while illumination on?',
+        label: 'Have you started to work out or worked out the details of how to kill yourself and do you intend to carry out this plan?',
         description: '',
         options: ['Yes', 'No']
       });
@@ -218,15 +87,15 @@
         id: 'radio2',
         component: 'radio',
         inline: true,
-        label: 'If yes, were there any problems with illumination?',
+        label: 'Have you done anything, started to do anything, or prepared to do anything to end your life?',
         description: '',
         options: ['Yes', 'No']
       });
       button = $builder.addFormObject('default', {
         id: 'button',
         component: 'button',
-        label: 'ADD A SIGN',
-        description: 'primary'
+        label: 'Apply',
+        style: 'primary'
       });
       $scope.form = $builder.forms['default'];
       $scope.input = [];
