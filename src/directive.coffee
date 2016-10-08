@@ -17,7 +17,6 @@ angular.module 'builder.directive', [
     # providers
     $builder = $injector.get '$builder'
     $drag = $injector.get '$drag'
-
     restrict: 'A'
     scope:
         fbBuilder: '='

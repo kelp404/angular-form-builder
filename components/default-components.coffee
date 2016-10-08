@@ -35,54 +35,6 @@ angular.module 'builder.components', ['builder', 'validator.rules']
 			"""
 
 	# ----------------------------------------
-	# Text Panel
-	# ----------------------------------------
-	$builderProvider.registerComponent 'panel',
-		group: 'Default'
-		label: 'Panel title'
-		header: 'Panel title'
-		description: 'Panel content'
-		style: 'default'
-		options: ['default', 'primary', 'success', 'warning', 'danger']
-		template:
-			"""
-			<div class="panel panel-{{style}}">
-					<div class="panel-heading">
-							<h3 class="panel-title">{{header}}</h3>
-				  </div>
-					<div class="panel-body">
-						{{description}}
-					</div>
-			</div>
-			"""
-		popoverTemplate:
-	    """
-			<form>
-					<div class="form-group">
-							<label class='control-label'>Panel title</label>
-							<input type='text' ng-model="header" validator="[required]" class='form-control'/>
-					</div>
-					<div class="form-group">
-							<label class='control-label'>Panel content</label>
-							<input type='text' ng-model="description" class='form-control'/>
-					</div>
-					<div class="form-group">
-              <label class='control-label'>Style</label>
-							<select ng-options="value for value in options" id="{{formName+index}}" class="form-control"
-									ng-model="style" ng-init="style = options[0]"/>
-					</div>
-
-
-					<hr/>
-					<div class='form-group'>
-							<input type='submit' ng-click="popover.save($event)" class='btn btn-primary' value='Save'/>
-							<input type='button' ng-click="popover.cancel($event)" class='btn btn-default' value='Cancel'/>
-							<input type='button' ng-click="popover.remove($event)" class='btn btn-danger' value='Delete'/>
-					</div>
-			</form>
-			"""
-
-	# ----------------------------------------
 	# Button
 	# ----------------------------------------
 	$builderProvider.registerComponent 'button',
@@ -388,4 +340,55 @@ angular.module 'builder.components', ['builder', 'validator.rules']
 						</div>
 				</form>
 				"""
+
+
+	# ----------------------------------------
+	# Text Panel
+	# ----------------------------------------
+	$builderProvider.registerComponent 'panel',
+		group: 'Default'
+		label: 'Panel title'
+		header: 'Panel title'
+		description: 'Panel content'
+		style: 'default'
+		options: ['default', 'primary', 'success', 'warning', 'danger']
+		template:
+			"""
+			<div class="panel panel-{{style}}">
+					<div class="panel-heading">
+							<h3 class="panel-title">{{header}}</h3>
+				  </div>
+					<div class="panel-body">
+						{{description}}
+					</div>
+			</div>
+			"""
+		popoverTemplate:
+			"""
+			<form>
+					<div class="form-group">
+							<label class='control-label'>Panel title</label>
+							<input type='text' ng-model="header" validator="[required]" class='form-control'/>
+					</div>
+					<div class="form-group">
+							<label class='control-label'>Panel content</label>
+							<input type='text' ng-model="description" class='form-control'/>
+					</div>
+					<div class="form-group">
+              <label class='control-label'>Style</label>
+							<select ng-options="value for value in options" id="{{formName+index}}" class="form-control"
+									ng-model="style" ng-init="style = options[0]"/>
+					</div>
+
+
+					<hr/>
+					<div class='form-group'>
+							<input type='submit' ng-click="popover.save($event)" class='btn btn-primary' value='Save'/>
+							<input type='button' ng-click="popover.cancel($event)" class='btn btn-default' value='Cancel'/>
+							<input type='button' ng-click="popover.remove($event)" class='btn btn-danger' value='Delete'/>
+					</div>
+			</form>
+			"""
+
 ]
+
