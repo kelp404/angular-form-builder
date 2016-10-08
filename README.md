@@ -8,13 +8,49 @@ This is an AngularJS form builder written in [CoffeeScript](http://coffeescript.
 
 
 
-##Frameworks
+##Used
 1. [AngularJS](http://angularjs.org/) 1.2.18
 2. [jQuery](http://jquery.com/) 2.1.0
 3. [Bootstrap 3](http://getbootstrap.com/)
 4. [angular-validator](https://github.com/kelp404/angular-validator)
 
 
+
+
+##builder.components
+> There are some default components at this module. This module is not required.
++ textInput
++ textArea
++ checkbox
++ radio
++ select
++ button
++ divider
++ ... new coming soon
+
+
+
+
+##Development
+```bash
+# install node modules
+$ npm install
+# install bower components
+$ bower install
+```
+```bash
+# run the local server and the file watcher to compile CoffeeScript
+$ grunt dev
+# compile coffee script and minify
+$ grunt build
+```
+
+
+##Unit Test
+>
+```bash
+$ grunt test
+```
 
 
 ##$builder
@@ -277,38 +313,3 @@ a.directive 'fbForm', fbForm
 ```
 
 
-
-
-##builder.components
-> There are some default components at this module. This module is not required.
-+ textInput
-+ textArea
-+ checkbox
-+ radio
-+ select
-
-
-
-
-##Unit Test
->
-```bash
-$ grunt test
-```
-
-
-
-
-##Development
-```bash
-# install node modules
-$ npm install
-# install bower components
-$ bower install
-```
-```bash
-# run the local server and the file watcher to compile CoffeeScript
-$ grunt dev
-# compile coffee script and minify
-$ grunt build
-```
