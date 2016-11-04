@@ -52,6 +52,7 @@ angular.module 'builder.controller', ['builder.provider']
             formObject.required = $scope.required
             formObject.effectiveDateEnabled = $scope.effectiveDateEnabled
 #            formObject.options = $scope.options
+            formObject.restrictReason = $scope.restrictReason
             formObject.validation = $scope.validation
             formObject.variables = $scope.variables
         , yes
@@ -77,6 +78,7 @@ angular.module 'builder.controller', ['builder.provider']
                 placeholder: $scope.placeholder
                 required: $scope.required
                 validation: $scope.validation
+                restrictReason : angular.copy($scope.restrictReason)
                 options: angular.copy($scope.options)
                 variables: angular.copy($scope.variables)
         rollback: ->
@@ -89,6 +91,7 @@ angular.module 'builder.controller', ['builder.provider']
             $scope.placeholder = @model.placeholder
             $scope.required = @model.required
             $scope.validation = @model.validation
+            $scope.restrictReason : angular.copy(@model.restrictReason)
             $scope.options = angular.copy(@model.options)
             $scope.variables = angular.copy(@model.variables)
 ]
