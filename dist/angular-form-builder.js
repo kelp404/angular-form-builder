@@ -59,6 +59,7 @@
           formObject.placeholder = $scope.placeholder;
           formObject.required = $scope.required;
           formObject.effectiveDateEnabled = $scope.effectiveDateEnabled;
+          formObject.restrictReason = $scope.restrictReason;
           formObject.validation = $scope.validation;
           return formObject.variables = $scope.variables;
         }, true);
@@ -85,6 +86,7 @@
             placeholder: $scope.placeholder,
             required: $scope.required,
             validation: $scope.validation,
+            restrictReason: angular.copy($scope.restrictReason),
             options: angular.copy($scope.options),
             variables: angular.copy($scope.variables)
           };
@@ -102,6 +104,7 @@
           $scope.placeholder = this.model.placeholder;
           $scope.required = this.model.required;
           $scope.validation = this.model.validation;
+          $scope.restrictReason = angular.copy(this.model.restrictReason);
           $scope.options = angular.copy(this.model.options);
           return $scope.variables = angular.copy(this.model.variables);
         }
