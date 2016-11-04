@@ -86,7 +86,7 @@
             placeholder: $scope.placeholder,
             required: $scope.required,
             validation: $scope.validation,
-            restrictReason: angular.copy($scope.restrictReason),
+            restrictReason: $scope.restrictReason,
             options: angular.copy($scope.options),
             variables: angular.copy($scope.variables)
           };
@@ -104,7 +104,7 @@
           $scope.placeholder = this.model.placeholder;
           $scope.required = this.model.required;
           $scope.validation = this.model.validation;
-          $scope.restrictReason = angular.copy(this.model.restrictReason);
+          $scope.restrictReason = this.model.restrictReason;
           $scope.options = angular.copy(this.model.options);
           return $scope.variables = angular.copy(this.model.variables);
         }
@@ -1073,7 +1073,8 @@
         template: component.template,
         templateUrl: component.templateUrl,
         popoverTemplate: component.popoverTemplate,
-        popoverTemplateUrl: component.popoverTemplateUrl
+        popoverTemplateUrl: component.popoverTemplateUrl,
+        restrictReason: component.restrictReason
       };
       if (!result.template && !result.templateUrl) {
         console.error("The template is empty.");
@@ -1084,7 +1085,7 @@
       return result;
     };
     this.convertFormObject = function(name, formObject) {
-      var component, result, _ref, _ref1, _ref10, _ref2, _ref3, _ref4, _ref5, _ref6, _ref7, _ref8, _ref9;
+      var component, result, _ref, _ref1, _ref10, _ref11, _ref2, _ref3, _ref4, _ref5, _ref6, _ref7, _ref8, _ref9;
       if (formObject == null) {
         formObject = {};
       }
@@ -1105,7 +1106,8 @@
         options: (_ref7 = formObject.options) != null ? _ref7 : component.options,
         required: (_ref8 = formObject.required) != null ? _ref8 : component.required,
         validation: (_ref9 = formObject.validation) != null ? _ref9 : component.validation,
-        variables: (_ref10 = formObject.variables) != null ? _ref10 : component.variables
+        variables: (_ref10 = formObject.variables) != null ? _ref10 : component.variables,
+        restrictReason: (_ref11 = formObject.restrictReason) != null ? _ref11 : component.restrictReason
       };
       return result;
     };

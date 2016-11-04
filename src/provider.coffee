@@ -58,6 +58,7 @@ angular.module 'builder.provider', []
             templateUrl: component.templateUrl
             popoverTemplate: component.popoverTemplate
             popoverTemplateUrl: component.popoverTemplateUrl
+            restrictReason: component.restrictReason
         if not result.template and not result.templateUrl
             console.error "The template is empty."
         if not result.popoverTemplate and not result.popoverTemplateUrl
@@ -81,6 +82,7 @@ angular.module 'builder.provider', []
             required: formObject.required ? component.required
             validation: formObject.validation ? component.validation
             variables: formObject.variables ? component.variables
+            restrictReason: formObject.restrictReason ? component.restrictReason
         result
 
     @reindexFormObject = (name) =>

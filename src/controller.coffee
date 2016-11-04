@@ -78,7 +78,7 @@ angular.module 'builder.controller', ['builder.provider']
                 placeholder: $scope.placeholder
                 required: $scope.required
                 validation: $scope.validation
-                restrictReason : angular.copy($scope.restrictReason)
+                restrictReason : $scope.restrictReason
                 options: angular.copy($scope.options)
                 variables: angular.copy($scope.variables)
         rollback: ->
@@ -91,7 +91,7 @@ angular.module 'builder.controller', ['builder.provider']
             $scope.placeholder = @model.placeholder
             $scope.required = @model.required
             $scope.validation = @model.validation
-            $scope.restrictReason = angular.copy(@model.restrictReason)
+            $scope.restrictReason = @model.restrictReason
             $scope.options = angular.copy(@model.options)
             $scope.variables = angular.copy(@model.variables)
 ]
