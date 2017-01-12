@@ -436,7 +436,7 @@
   ]).directive('fbComponents', function() {
     return {
       restrict: 'A',
-      template: "<ul ng-if=\"groups.length > 1\" class=\"nav nav-tabs nav-justified\">\n    <li ng-repeat=\"group in groups\" ng-class=\"{active:activeGroup==group}\">\n        <a href='#' ng-click=\"selectGroup($event, group)\">{{group}}</a>\n    </li>\n</ul>\n<div class='form-horizontal'>\n    <div class='fb-component' ng-repeat=\"component in components\"\n        fb-component=\"component\"></div>\n</div>",
+      template: "        <ul ng-if=\"groups.length > 1\" class=\"nav nav-tabs nav-justified\">\n            <li ng-repeat=\"group in groups\" ng-class=\"{active:activeGroup==group}\">\n                <a href='#' ng-click=\"selectGroup($event, group)\">{{group}}</a>\n            </li>\n        </ul>\n        <div class='form-horizontal col-sm-12 elementList'>\n            <div ng-repeat=\"component in components\">\n	<div class=\"form-group element-wrapper\">\n		<div class=\"col-sm-1\">\n			<button type='button' class='btn btn-danger btn-sm' ng-click=''>+</button>\n		</div>\n		<div class=\"col-sm-11\">\n			<div class='fb-component' fb-component=\"component\"></div>\n		</div>\n</div>\n        </div>",
       controller: 'fbComponentsController'
     };
   }).directive('fbComponent', [
@@ -974,6 +974,15 @@
 
 (function() {
   angular.module('builder', ['builder.directive']);
+
+}).call(this);
+
+(function() {
+  angular.module('app', ['builder', 'builder.components', 'validator.rules']).controller('PaginController', [
+    '$scope', '$builder', '$validator', function($scope, $builder, $validator) {
+      return $scope.pages = [$builder.forms['default']];
+    }
+  ]);
 
 }).call(this);
 

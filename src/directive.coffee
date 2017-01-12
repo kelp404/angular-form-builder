@@ -265,9 +265,16 @@ angular.module 'builder.directive', [
                 <a href='#' ng-click="selectGroup($event, group)">{{group}}</a>
             </li>
         </ul>
-        <div class='form-horizontal'>
-            <div class='fb-component' ng-repeat="component in components"
-                fb-component="component"></div>
+        <div class='form-horizontal col-sm-12 elementList'>
+            <div ng-repeat="component in components">
+				<div class="form-group element-wrapper">
+					<div class="col-sm-1">
+						<button type='button' class='btn btn-danger btn-sm' ng-click=''>+</button>
+					</div>
+					<div class="col-sm-11">
+						<div class='fb-component' fb-component="component"></div>
+					</div>
+			</div>
         </div>
         """
     controller: 'fbComponentsController'

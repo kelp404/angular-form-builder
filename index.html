@@ -1,70 +1,90 @@
 <!doctype html>
 <html ng-app="app">
 <head>
-    <meta charset="utf-8"/>
-    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
-    <title>angular-form-builder</title>
-    <link type="text/css" rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css"/>
-    <link type="text/css" rel="stylesheet" href="example/site.css"/>
-    <link type="text/css" rel="stylesheet" href="dist/angular-form-builder.css"/>
-    <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.0/jquery.min.js"></script>
-    <script type="text/javascript" src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
-    <script type="text/javascript" src="//code.angularjs.org/1.2.20/angular.min.js"></script>
-    <script type="text/javascript" src="dist/angular-form-builder.js"></script>
-    <script type="text/javascript" src="dist/angular-form-builder-components.js"></script>
-    <script type="text/javascript" src="//kelp404.github.io/angular-validator/dist/angular-validator.min.js"></script>
-    <script type="text/javascript" src="//kelp404.github.io/angular-validator/dist/angular-validator-rules.min.js"></script>
-    <script type="text/javascript" src="example/demo.js"></script>
+	<meta charset="utf-8"/>
+	<meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+	<title>angular-form-builder</title>
+	<link type="text/css" rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css"/>
+	<link type="text/css" rel="stylesheet" href="example/site.css"/>
+	<link type="text/css" rel="stylesheet" href="dist/angular-form-builder.css"/>
+	<script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.0/jquery.min.js"></script>
+	<script type="text/javascript" src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
+	<script type="text/javascript" src="//code.angularjs.org/1.2.20/angular.min.js"></script>
+	<script type="text/javascript" src="dist/angular-form-builder.js"></script>
+	<script type="text/javascript" src="dist/angular-form-builder-components.js"></script>
+	<script type="text/javascript" src="//kelp404.github.io/angular-validator/dist/angular-validator.min.js"></script>
+	<script type="text/javascript"
+	        src="//kelp404.github.io/angular-validator/dist/angular-validator-rules.min.js"></script>
+	<script type="text/javascript" src="example/demo.js"></script>
 </head>
 <body class="container" ng-controller="DemoController">
-    <div class="row">
-        <h1>Dynasty Form Builder</h1>
-        <hr/>
+<div class="row">
+	<h1>Sevan Form Builder</h1>
+	<hr/>
+	</div>
+	<div class="col-md-6">
+		<div class="panel panel-default" >
 
-        <div class="col-md-6">
-            <div class="panel panel-default">
-                <div class="panel-heading">
-                    <h3 class="panel-title">Builder</h3>
-                </div>
-                <div fb-builder="default"></div>
-                <div class="panel-footer">
-                    <div class="checkbox">
-                        <label><input type="checkbox" ng-model="isShowScope" />
-                            Show scope
-                        </label>
-                    </div>
-                    <pre ng-if="isShowScope">{{form}}</pre>
-                </div>
-            </div>
-        </div>
+			<div class="panel-heading text-center">
+				<div class="pull-left">
+					<button type="button" class="btn btn-primary btn-small _pull-right"
+					        ng-class="{disabled: !pages.length}"><</button>
+					<button type="button" class="btn btn-primary btn-small _pull-right disabled">></button>
+				</div>
+{{pages.length}}
+				<span class="panel-title" ng-init="currentPage=0">Page <b>#{{currentPage+1}}</b></span>
 
-        <div class="col-md-6">
-            <div fb-components></div>
-        </div>
-    </div>
+				<div class="pull-right">
+					<button type="button" class="btn btn-danger btn-small _pull-right disabled">-</button>
+					<button type="button" class="btn btn-success btn-small _pull-right">+</button>
+				</div>
 
-    <div class="row">
-        <h2>Web Page Form Example</h2>
-        <hr/>
-        <form class="form-horizontal">
-            <div ng-model="input" fb-form="default" fb-default="defaultValue"></div>
-            <div class="form-group">
-                <!--<div class="col-md-8 col-md-offset-4">-->
-                    <!--<input type="submit" ng-click="submit()" class="btn btn-default"/>-->
-                <!--</div>-->
-            <!--</div>-->
-        </form>
-        <div class="checkbox">
-            <label><input type="checkbox" ng-model="isShowScope" ng-init="isShowScope=false" />
-                Show scope
-            </label>
-        </div>
-        <pre ng-if="isShowScope">{{input}}</pre>
-    </div>
+				<div class="clearfix"></div>
 
-    <div class="row">
-        <div class="col-md-12 footer"></div>
-    </div>
+			</div>
+
+			<div fb-builder="default"></div>
+
+			<div class="panel-footer">
+				<div class="checkbox">
+					<label><input type="checkbox" ng-model="isShowScope"/>
+						Show scope
+					</label>
+				</div>
+				<pre ng-if="isShowScope">{{form}}</pre>
+			</div>
+
+		</div>
+	</div>
+
+	<div class="col-md-6">
+		<div fb-components id="buildLists"></div>
+	</div>
+</div>
+
+<div class="row">
+	<h2>Web Page Form Example</h2>
+	<hr/>
+	<form class="form-horizontal">
+		<div ng-model="input" fb-form="default" fb-default="defaultValue"></div>
+		<div class="form-group">
+			<div class="col-md-8 col-md-offset-4">
+				<input type="submit" ng-click="submit()" class="btn btn-default"/>
+			</div>
+		</div>
+	</form>
+	<div class="checkbox">
+		<label><input type="checkbox" ng-model="isShowScope" ng-init="isShowScope=false"/>
+			Show scope
+		</label>
+	</div>
+	<pre ng-if="isShowScope">{{input}}</pre>
+</div>
+
+<div class="row">
+	<div class="col-md-12 footer"></div>
+</div>
 
 </body>
+<script src="//localhost:35729/livereload.js"></script>
 </html>

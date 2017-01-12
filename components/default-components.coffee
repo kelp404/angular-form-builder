@@ -1,54 +1,9 @@
-angular.module 'builder.components', ['builder', 'validator.rules']
 
-.config ['$builderProvider', ($builderProvider) ->
+Global = this
 
-# ----------------------------------------
-# Text Panel
-# ----------------------------------------
-	$builderProvider.registerComponent 'panel',
-		group: 'Default'
-		label: 'Panel title'
-		header: 'Panel title'
-		description: 'Panel content'
-		style: 'default'
-		options: ['default', 'primary', 'success', 'warning', 'danger']
-		template:
-			"""
-			<div class="panel " ng-class="{' panel-{{style}} ': true}">
-					<div class="panel-heading">
-							<h3 class="panel-title">{{header}}</h3>
-				  </div>
-					<div class="panel-body hidden">
-						{{description}}
-					</div>
-			</div>
-			"""
-		popoverTemplate:
-			"""
-			<form>
-					<div class="form-group">
-							<label class='control-label'>Panel title</label>
-							<input type='text' ng-model="header" validator="[required]" class='form-control'/>
-					</div>
-					<div class="form-group hidden">
-							<label class='control-label'>Panel content</label>
-							<input type='text' ng-model="description" class='form-control'/>
-					</div>
-					<div class="form-group ">
-              <label class='control-label'>Style</label>
-							<select ng-options="value for value in options" id="{{formName+index}}" class="form-control"
-									ng-model="style" ng-init="style = options[0]"/>
-					</div>
+!Global.__fbComponents && (Global.__fbComponents = {})
 
-
-					<hr/>
-					<div class='form-group'>
-							<input type='submit' ng-click="popover.save($event)" class='btn btn-primary' value='Save'/>
-							<input type='button' ng-click="popover.cancel($event)" class='btn btn-default' value='Cancel'/>
-							<input type='button' ng-click="popover.remove($event)" class='btn btn-danger' value='Delete'/>
-					</div>
-			</form>
-			"""
+Global.__fbComponents.divider = ($builderProvider) ->
 
 	# ----------------------------------------
 	# Text Divider
@@ -82,46 +37,7 @@ angular.module 'builder.components', ['builder', 'validator.rules']
 			</form>
 			"""
 
-	# ----------------------------------------
-	# Button
-	# ----------------------------------------
-	$builderProvider.registerComponent 'button',
-		group: 'Default'
-		label: 'Button'
-		style: 'default'
-#		description: 'default'
-#				required: no
-		options: ['default', 'primary', 'success', 'warning', 'danger']
-		arrayToText: yes
-		template:
-			"""
-			<p></p>
-					<button type="button" class="btn " ng-class="{' btn-{{style}} ': true}" style="display:block; margin:0 auto;">{{label}}</button>
-			<p></p>
-			"""
-		popoverTemplate:
-			"""
-      <form>
-          <div class="form-group">
-              <label class='control-label'>Label</label>
-              <input type='text' ng-model="label" validator="[required]" class='form-control'/>
-          </div>
-					<div class="form-group">
-              <label class='control-label'>Style</label>
-							<select ng-options="value for value in options" id="{{formName+index}}" class="form-control"
-									ng-model="style" ng-init="style = options[0]"/>
-					</div>
-
-          <hr/>
-          <div class='form-group'>
-              <input type='submit' ng-click="popover.save($event)" class='btn btn-primary' value='Save'/>
-              <input type='button' ng-click="popover.cancel($event)" class='btn btn-default' value='Cancel'/>
-              <input type='button' ng-click="popover.remove($event)" class='btn btn-danger' value='Delete'/>
-          </div>
-      </form>
-      """
-
-
+Global.__fbComponents.default = ($builderProvider) ->
 	# ----------------------------------------
 	# text input
 	# ----------------------------------------
@@ -390,5 +306,68 @@ angular.module 'builder.components', ['builder', 'validator.rules']
 				"""
 
 
+	# ----------------------------------------
+	# Text Panel
+	# ----------------------------------------
+	$builderProvider.registerComponent 'panel',
+		group: 'Default'
+		label: 'Panel title'
+		header: 'Panel title'
+		description: 'Panel content'
+		style: 'default'
+		options: ['default', 'primary', 'success', 'warning', 'danger']
+		template:
+			"""
+			<div class="panel panel-{{style}}">
+					<div class="panel-heading">
+							<h3 class="panel-title">{{header}}</h3>
+				  </div>
+					<div class="panel-body">
+						{{description}}
+					</div>
+			</div>
+			"""
+		popoverTemplate:
+			"""
+			<form>
+					<div class="form-group">
+							<label class='control-label'>Panel title</label>
+							<input type='text' ng-model="header" validator="[required]" class='form-control'/>
+					</div>
+					<div class="form-group">
+							<label class='control-label'>Panel content</label>
+							<input type='text' ng-model="description" class='form-control'/>
+					</div>
+					<div class="form-group">
+              <label class='control-label'>Style</label>
+							<select ng-options="value for value in options" id="{{formName+index}}" class="form-control"
+									ng-model="style" ng-init="style = options[0]"/>
+					</div>
+
+
+					<hr/>
+					<div class='form-group'>
+							<input type='submit' ng-click="popover.save($event)" class='btn btn-primary' value='Save'/>
+							<input type='button' ng-click="popover.cancel($event)" class='btn btn-default' value='Cancel'/>
+							<input type='button' ng-click="popover.remove($event)" class='btn btn-danger' value='Delete'/>
+					</div>
+			</form>
+			"""
+
+components = [
+	'divider',
+	'default',
+	'button'
 ]
 
+config = ($builderProvider) ->
+#	Global.components.map (component) ->
+	for component of Global.__fbComponents
+		console.log component
+#		Global[component].$inject = ['$builderProvider']
+#		Global[component]($builderProvider)
+		Global.__fbComponents[component].$inject = ['$builderProvider']
+		Global.__fbComponents[component]($builderProvider)
+
+angular.module 'builder.components', ['builder', 'validator.rules']
+.config config
