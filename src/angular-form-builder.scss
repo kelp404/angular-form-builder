@@ -1,55 +1,80 @@
-
 @import "compass/css3";
 
+.elementList{
+  padding-top: 10px;
+}
+
+.element-wrapper{
+  padding-top: 10px;
+  border: 1px solid;
+}
 
 .fb-component {
-    padding: 10px;
+  padding: 10px;
+  cursor: move;
+  input {
     cursor: move;
-    input { cursor: move; }
-    label { cursor: move; }
-    select { cursor: move; }
-    textarea { cursor: move; }
+  }
+  label {
+    cursor: move;
+  }
+  select {
+    cursor: move;
+  }
+  textarea {
+    cursor: move;
+  }
 }
+
 .fb-form-object-editable {
-    padding: 10px;
+  padding: 10px;
 }
+
 .fb-form-object-editable.fb-draggable {
+  cursor: move;
+  input {
     cursor: move;
-    input { cursor: move; }
-    label { cursor: pointer; }
-    select { cursor: move; }
-    textarea { cursor: move; }
+  }
+  label {
+    cursor: pointer;
+  }
+  select {
+    cursor: move;
+  }
+  textarea {
+    cursor: move;
+  }
 }
+
 .fb-form-object-editable.empty {
-    cursor: default;
-    margin: 6px;
-    height: 80px;
-    border:dashed 1px #aaa;
-    background-color: #eee;
+  cursor: default;
+  margin: 6px;
+  height: 80px;
+  border: dashed 1px #aaa;
+  background-color: #eee;
 }
 
 .fb-draggable.dragging {
-    background-color: #ffffff;
-    position: absolute;
-    z-index: 800;
-    @include box-shadow(#666 0 0 20px);
+  background-color: #ffffff;
+  position: absolute;
+  z-index: 800;
+  @include box-shadow(#666 0 0 20px);
 }
 
 .fb-required:after {
-    color: #b94a48;
-    content: ' *';
+  color: #b94a48;
+  content: ' *';
 }
 
 .fb-builder {
-    min-height: 250px;
+  min-height: 250px;
 }
 
-
 .popover {
-    .control-label {
-        text-align: left;
-    }
-    form {
-        width: 240px;
-    }
+  .control-label {
+    text-align: left;
+  }
+  form {
+    width: 240px;
+  }
 }

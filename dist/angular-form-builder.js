@@ -24,20 +24,26 @@
         /*
         1. Copy origin formObject (ng-repeat="object in formObjects") to scope.
         2. Setup optionsText with formObject.options.
-        3. Watch scope.label, .description, .placeholder, .required, .options then copy to origin formObject.
+        3. Watch scope.label, .description, .placeholder, .required, .inline, .options then copy to origin formObject.
         4. Watch scope.optionsText then convert to scope.options.
         5. setup validationOptions
          */
         var component;
         copyObjectToScope(formObject, $scope);
         $scope.optionsText = formObject.options.join('\n');
-        $scope.$watch('[label, description, placeholder, required, options, validation]', function() {
+        $scope.$watch('[label, description, placeholder, required, inline, options, validation, text, header, footer, align, style]', function() {
           formObject.label = $scope.label;
           formObject.description = $scope.description;
           formObject.placeholder = $scope.placeholder;
           formObject.required = $scope.required;
+          formObject.inline = $scope.inline;
           formObject.options = $scope.options;
-          return formObject.validation = $scope.validation;
+          formObject.validation = $scope.validation;
+          formObject.text = $scope.text;
+          formObject.header = $scope.header;
+          formObject.footer = $scope.footer;
+          formObject.align = $scope.align;
+          return formObject.style = $scope.style;
         }, true);
         $scope.$watch('optionsText', function(text) {
           var x;
@@ -70,8 +76,14 @@
             description: $scope.description,
             placeholder: $scope.placeholder,
             required: $scope.required,
+            inline: $scope.inline,
             optionsText: $scope.optionsText,
-            validation: $scope.validation
+            validation: $scope.validation,
+            text: $scope.text,
+            header: $scope.header,
+            footer: $scope.footer,
+            align: $scope.align,
+            style: $scope.style
           };
         },
         rollback: function() {
@@ -86,8 +98,14 @@
           $scope.description = this.model.description;
           $scope.placeholder = this.model.placeholder;
           $scope.required = this.model.required;
+          $scope.inline = this.model.inline;
           $scope.optionsText = this.model.optionsText;
-          return $scope.validation = this.model.validation;
+          $scope.validation = this.model.validation;
+          $scope.text = this.model.text;
+          $scope.header = this.model.header;
+          $scope.footer = this.model.footer;
+          $scope.align = this.model.align;
+          return $scope.style = this.model.style;
         }
       };
     }
@@ -418,7 +436,7 @@
   ]).directive('fbComponents', function() {
     return {
       restrict: 'A',
-      template: "<ul ng-if=\"groups.length > 1\" class=\"nav nav-tabs nav-justified\">\n    <li ng-repeat=\"group in groups\" ng-class=\"{active:activeGroup==group}\">\n        <a href='#' ng-click=\"selectGroup($event, group)\">{{group}}</a>\n    </li>\n</ul>\n<div class='form-horizontal'>\n    <div class='fb-component' ng-repeat=\"component in components\"\n        fb-component=\"component\"></div>\n</div>",
+      template: "        <ul ng-if=\"groups.length > 1\" class=\"nav nav-tabs nav-justified\">\n            <li ng-repeat=\"group in groups\" ng-class=\"{active:activeGroup==group}\">\n                <a href='#' ng-click=\"selectGroup($event, group)\">{{group}}</a>\n            </li>\n        </ul>\n        <div class='form-horizontal col-sm-12 elementList'>\n            <div ng-repeat=\"component in components\">\n	<div class=\"form-group element-wrapper\">\n		<div class=\"col-sm-1\">\n			<button type='button' class='btn btn-danger btn-sm' ng-click=''>+</button>\n		</div>\n		<div class=\"col-sm-11\">\n			<div class='fb-component' fb-component=\"component\"></div>\n		</div>\n</div>\n        </div>",
       controller: 'fbComponentsController'
     };
   }).directive('fbComponent', [
@@ -959,6 +977,15 @@
 
 }).call(this);
 
+(function() {
+  angular.module('app', ['builder', 'builder.components', 'validator.rules']).controller('PaginController', [
+    '$scope', '$builder', '$validator', function($scope, $builder, $validator) {
+      return $scope.pages = [$builder.forms['default']];
+    }
+  ]);
+
+}).call(this);
+
 
 /*
     component:
@@ -993,19 +1020,25 @@
       "default": []
     };
     this.convertComponent = function(name, component) {
-      var result, _ref, _ref1, _ref2, _ref3, _ref4, _ref5, _ref6, _ref7, _ref8, _ref9;
+      var result, _ref, _ref1, _ref10, _ref11, _ref12, _ref13, _ref14, _ref15, _ref2, _ref3, _ref4, _ref5, _ref6, _ref7, _ref8, _ref9;
       result = {
         name: name,
         group: (_ref = component.group) != null ? _ref : 'Default',
         label: (_ref1 = component.label) != null ? _ref1 : '',
         description: (_ref2 = component.description) != null ? _ref2 : '',
         placeholder: (_ref3 = component.placeholder) != null ? _ref3 : '',
-        editable: (_ref4 = component.editable) != null ? _ref4 : true,
-        required: (_ref5 = component.required) != null ? _ref5 : false,
-        validation: (_ref6 = component.validation) != null ? _ref6 : '/.*/',
-        validationOptions: (_ref7 = component.validationOptions) != null ? _ref7 : [],
-        options: (_ref8 = component.options) != null ? _ref8 : [],
-        arrayToText: (_ref9 = component.arrayToText) != null ? _ref9 : false,
+        text: (_ref4 = component.text) != null ? _ref4 : '',
+        header: (_ref5 = component.header) != null ? _ref5 : '',
+        footer: (_ref6 = component.footer) != null ? _ref6 : '',
+        style: (_ref7 = component.style) != null ? _ref7 : '',
+        editable: (_ref8 = component.editable) != null ? _ref8 : true,
+        required: (_ref9 = component.required) != null ? _ref9 : false,
+        inline: (_ref10 = component.inline) != null ? _ref10 : false,
+        validation: (_ref11 = component.validation) != null ? _ref11 : '/.*/',
+        validationOptions: (_ref12 = component.validationOptions) != null ? _ref12 : [],
+        options: (_ref13 = component.options) != null ? _ref13 : [],
+        align: (_ref14 = component.align) != null ? _ref14 : [],
+        arrayToText: (_ref15 = component.arrayToText) != null ? _ref15 : false,
         template: component.template,
         templateUrl: component.templateUrl,
         popoverTemplate: component.popoverTemplate,
@@ -1020,7 +1053,7 @@
       return result;
     };
     this.convertFormObject = function(name, formObject) {
-      var component, result, _ref, _ref1, _ref2, _ref3, _ref4, _ref5, _ref6, _ref7;
+      var component, result, _ref, _ref1, _ref10, _ref11, _ref12, _ref13, _ref2, _ref3, _ref4, _ref5, _ref6, _ref7, _ref8, _ref9;
       if (formObject == null) {
         formObject = {};
       }
@@ -1038,7 +1071,13 @@
         placeholder: (_ref4 = formObject.placeholder) != null ? _ref4 : component.placeholder,
         options: (_ref5 = formObject.options) != null ? _ref5 : component.options,
         required: (_ref6 = formObject.required) != null ? _ref6 : component.required,
-        validation: (_ref7 = formObject.validation) != null ? _ref7 : component.validation
+        inline: (_ref7 = formObject.inline) != null ? _ref7 : component.inline,
+        validation: (_ref8 = formObject.validation) != null ? _ref8 : component.validation,
+        text: (_ref9 = formObject.text) != null ? _ref9 : component.text,
+        header: (_ref10 = formObject.header) != null ? _ref10 : component.header,
+        footer: (_ref11 = formObject.footer) != null ? _ref11 : component.footer,
+        align: (_ref12 = formObject.align) != null ? _ref12 : component.align,
+        style: (_ref13 = formObject.style) != null ? _ref13 : component.style
       };
       return result;
     };
@@ -1096,6 +1135,7 @@
             placeholder: {string} The placeholder of the input.
             editable: {bool} Is the form object editable?
             required: {bool} Is the form object required?
+            inline: {bool} Is the form object inline?
             validation: {string} angular-validator. "/regex/" or "[rule1, rule2]". (default is RegExp(.*))
             validationOptions: {array} [{rule: angular-validator, label: 'option label'}] the options for the validation. (default is [])
             options: {array} The input options.
@@ -1155,6 +1195,7 @@
             placeholder: {string} The form object placeholder.
             options: {array} The form object options.
             required: {bool} Is the form object required? (default is no)
+            inline: {bool} Is the form object inline? (default is no)
             validation: {string} angular-validator. "/regex/" or "[rule1, rule2]".
             [index]: {int} The form object index. It will be updated by $builder.
         @return: The form object.

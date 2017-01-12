@@ -13,3 +13,6 @@ bower_components
 
 # compass
 .sass-cache
+
+#Test
+/test/*
