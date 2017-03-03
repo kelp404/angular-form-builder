@@ -368,6 +368,7 @@
                     newOptions.push(option);
                   }
                 }
+                $(element).popover('show');
                 scope.options = newOptions;
               }
               $validator.validate(scope).success(function() {

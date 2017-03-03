@@ -200,6 +200,7 @@ angular.module 'builder.directive', [
                 ###
                 The shown event of the popover.
                 ###
+                $(element).popover 'show'
                 scope.data.backup()
                 popover.isClickedSave = no
             cancel: ($event) ->
