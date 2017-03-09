@@ -317,7 +317,8 @@
             view = $compile(template)(scope);
             return $(element).html(view);
           });
-          $(element).on('click', function() {
+          $(element).on('click', function(e) {
+            e.preventDefault();
             return false;
           });
           $drag.draggable($(element), {
@@ -390,6 +391,7 @@
               /*
               The shown event of the popover.
                */
+              $(element).popover('show');
               scope.data.backup();
               return popover.isClickedSave = false;
             },
