@@ -308,7 +308,6 @@
                     var popover;
                     scope.inputArray = [];
                     scope.$component = $builder.components[scope.formObject.component];
-                    console.log('scope.$component',scope.$component);
                     scope.setupScope(scope.formObject);
                     scope.$watch('$component.template', function(template) {
                         var view;
@@ -394,7 +393,6 @@
                         },
                         modal: function($event) {
 
-                            console.log('afb:396',scope.data);
 
                           /*
                            The modal event of the popover.
@@ -407,7 +405,6 @@
                         },
                         show: function($event) {
 
-                            console.log('afb:396',scope.data);
 
                           /*
                            The modal event of the popover.
@@ -1310,20 +1307,6 @@
                 }
                 var current_component = _this.forms[name][index].component;
                 $rootScope.modal_template = _this.components[current_component].popoverTemplate;
-                //_this.forms[name][index] - current_formobject
-                console.log('modalFormObject-name', name);
-                console.log('modalFormObject-index', index);
-                console.log('modalFormObject-formObject', formObject);
-                console.log('modalFormObject-component', _this.components);
-                console.log('modalFormObject-component[current_component]', _this.components[current_component]);
-                console.log('modalFormObject-component[current_component].popoverTemplate', _this.components[current_component].popoverTemplate);
-                console.log('modalFormObject-forms', _this.forms);
-                console.log('modalFormObject-forms[name]', _this.forms[name][index]);
-                console.log('modalFormObject-forms[name][component]', _this.forms[name][index].component);
-                // console.log('modalFormObject-loadTemplate', _this.loadTemplate('textInput'));
-                console.log('modalFormObject-currentId', _this.currentId);
-                console.log('modalFormObject-convertComponent', _this.convertComponent(name, current_component));
-                console.log('modalFormObject-convertFormObject', _this.convertComponent(name, _this.forms[name][index]));
 
               /*
                Remove the form object by the index.
@@ -1334,7 +1317,6 @@
                 fieldEditFormObjectCallback = function() {
                     var formObjects;
                     formObjects = _this.forms[name];
-                    console.log('formObjects',formObjects);
                     //duplicate the formobject
                     //fake a formobject
                     //updateFormObjectIndex
