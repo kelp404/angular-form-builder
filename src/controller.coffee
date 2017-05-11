@@ -7,9 +7,22 @@ copyObjectToScope = (object, scope) ->
     ###
     for key, value of object when key isnt '$$hashKey'
         # copy object.{} to scope.{}
-        scope[key] = value
+        if key != 'options'
+            scope[key] = value
+        else
+            copyObjectOptionsToScopeOptions(value, scope)
     return
 
+copyObjectOptionsToScopeOptions = (options, scope) ->
+    scope.options = []
+    for option in options
+        newOption = option
+        unless typeof option == 'string' || option instanceof String
+            newOption = {}
+            for key, value of option when key isnt '$$hashKey'
+                newOption[key] = value
+              
+        scope.options.push(newOption)
 
 # ----------------------------------------
 # builder.controller
@@ -25,27 +38,30 @@ angular.module 'builder.controller', ['builder.provider']
     $scope.setupScope = (formObject) ->
         ###
         1. Copy origin formObject (ng-repeat="object in formObjects") to scope.
-        2. Setup optionsText with formObject.options.
-        3. Watch scope.label, .description, .placeholder, .required, .options then copy to origin formObject.
-        4. Watch scope.optionsText then convert to scope.options.
-        5. setup validationOptions
+        2. Watch scope.label, .description, .placeholder, .required, .effectiveDateEnabled, .options then copy to origin formObject.
+        3. setup validationOptions
         ###
         copyObjectToScope formObject, $scope
 
-        $scope.optionsText = formObject.options.join '\n'
+#        $scope.optionsText = formObject.options.join '\n'
 
-        $scope.$watch '[label, description, placeholder, required, options, validation]', ->
+        $scope.$watch '[label, description, placeholder, required, effectiveDateEnabled, validation, variables]', ->
             formObject.label = $scope.label
             formObject.description = $scope.description
             formObject.placeholder = $scope.placeholder
             formObject.required = $scope.required
-            formObject.options = $scope.options
+            formObject.effectiveDateEnabled = $scope.effectiveDateEnabled
+#            formObject.options = $scope.options
+            formObject.restrictReason = $scope.restrictReason
             formObject.validation = $scope.validation
+            formObject.variables = $scope.variables
         , yes
 
-        $scope.$watch 'optionsText', (text) ->
-            $scope.options = (x for x in text.split('\n') when x.length > 0)
-            $scope.inputText = $scope.options[0]
+        $scope.$watch 'options', ->
+            formObject.options = $scope.options
+            if ($scope.options?.length > 0)
+                $scope.inputText = $scope.options[0].value
+        , yes
 
         component = $builder.components[formObject.component]
         $scope.validationOptions = component.validationOptions
@@ -61,8 +77,10 @@ angular.module 'builder.controller', ['builder.provider']
                 description: $scope.description
                 placeholder: $scope.placeholder
                 required: $scope.required
-                optionsText: $scope.optionsText
                 validation: $scope.validation
+                restrictReason : $scope.restrictReason
+                options: angular.copy($scope.options)
+                variables: angular.copy($scope.variables)
         rollback: ->
             ###
             Rollback input value.
@@ -72,8 +90,10 @@ angular.module 'builder.controller', ['builder.provider']
             $scope.description = @model.description
             $scope.placeholder = @model.placeholder
             $scope.required = @model.required
-            $scope.optionsText = @model.optionsText
             $scope.validation = @model.validation
+            $scope.restrictReason = @model.restrictReason
+            $scope.options = angular.copy(@model.options)
+            $scope.variables = angular.copy(@model.variables)
 ]
 
 

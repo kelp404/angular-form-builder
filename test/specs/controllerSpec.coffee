@@ -27,7 +27,7 @@ describe 'builder.controller', ->
                     description: 'description'
                     placeholder: 'placeholder'
                     required: no
-                    options: ['value one', 'two']
+                    options: [{id: 0, value: 'value one'}, {id: 1, value: 'two'}]
                     validation: '/.*/'
                 $scope.setupScope formObject
 
@@ -39,9 +39,6 @@ describe 'builder.controller', ->
                 expect(formObject.required).toBe no
                 expect(formObject.options).toEqual $scope.options
                 expect(formObject.validation).toEqual $scope.validation
-
-            it '$scope.setupScope(formObject) $scope.optionsText is joined by `\\n` from options', ->
-                expect($scope.optionsText).toEqual 'value one\ntwo'
 
             it '$scope.setupScope(formObject) $scope.$watch `[label, description, placeholder, required, options, validation]`', ->
                 $scope.label = 'new'
@@ -60,7 +57,7 @@ describe 'builder.controller', ->
                 $scope.$digest()
                 expect(formObject.required).toBe $scope.required
 
-                $scope.options = ['value']
+                $scope.options = [{id: 0, value: 'value'}]
                 $scope.$digest()
                 expect(formObject.options).toEqual $scope.options
 
@@ -68,10 +65,10 @@ describe 'builder.controller', ->
                 $scope.$digest()
                 expect(formObject.validation).toEqual $scope.validation
 
-            it '$scope.setupScope(formObject) $scope.$watch `optionsText`', ->
-                $scope.optionsText = "one\ntwo"
+            it '$scope.setupScope(formObject) $scope.$watch `options`', ->
+                $scope.options = [{id: 0, value: 'one'}, {id: 1, value: 'two'}]
                 $scope.$digest()
-                expect(['one', 'two']).toEqual $scope.options
+                expect([{id: 0, value: 'one'}, {id: 1, value: 'two'}]).toEqual $scope.options
                 expect('one').toEqual $scope.inputText
 
             it '$scope.setupScope(formObject) setup validationOptions', ->
@@ -88,8 +85,10 @@ describe 'builder.controller', ->
                     description: 'description'
                     placeholder: 'placeholder'
                     required: no
-                    options: ['value one', 'two']
+                    options: [{id: 0, value: 'value one'}, {id: 1, value: 'two'}]
                     validation: '/.*/'
+                    variables:
+                        defaultValue: 'Default'
                 $scope.setupScope formObject
 
             it '$scope.data.model is null', ->
@@ -102,8 +101,10 @@ describe 'builder.controller', ->
                     description: 'description'
                     placeholder: 'placeholder'
                     required: no
-                    optionsText: 'value one\ntwo'
+                    options: [{id: 0, value: 'value one'}, {id: 1, value: 'two'}]
                     validation: '/.*/'
+                    variables:
+                        defaultValue: 'Default'
                 .toEqual $scope.data.model
 
             it '$scope after call $scope.data.rollback()', ->
@@ -112,14 +113,12 @@ describe 'builder.controller', ->
                 $scope.description = ''
                 $scope.placeholder = ''
                 $scope.required = yes
-                $scope.optionsText = ''
                 $scope.data.rollback()
                 $scope.$digest()
                 expect(formObject.label).toEqual $scope.label
                 expect(formObject.description).toEqual $scope.description
                 expect(formObject.placeholder).toEqual $scope.placeholder
                 expect(formObject.required).toEqual $scope.required
-                expect(formObject.options.join('\n')).toEqual $scope.optionsText
 
 
     describe 'fbComponentsController', ->
@@ -193,7 +192,7 @@ describe 'builder.controller', ->
                     description: 'description'
                     placeholder: 'placeholder'
                     required: no
-                    options: ['value one', 'two']
+                    options: [{id: 0, value: 'value one'}, {id: 1, value: 'two'}]
                     template: "<div class='form-group'></div>"
                     popoverTemplate: "<div class='form-group'></div>"
 
@@ -257,7 +256,7 @@ describe 'builder.controller', ->
                     description: 'description'
                     placeholder: 'placeholder'
                     required: no
-                    options: ['value one', 'two']
+                    options: [{id: 0, value: 'value one'}, {id: 1, value: 'two'}]
             it '$scope.copyObjectToScope(formObject) copy properties to $scope without `$$hashKey`', ->
                 $scope.copyObjectToScope formObject
                 expect($scope.$$hashKey).toBeUndefined()

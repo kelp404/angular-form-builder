@@ -52,4 +52,13 @@
     form {
         width: 240px;
     }
+    .handle {
+        cursor: ns-resize;
+        display: inline-block;
+        height: 1.7em;
+        background-color: #EEE;
+        width: 14px;
+        text-align: center;
+        color: #AAA;
+    }
 }

@@ -90,6 +90,16 @@ angular.module 'app', ['builder', 'builder.components', 'validator.rules']
         options: ['Dog', 'Cat']
     $builder.addFormObject 'default',
         component: 'sampleInput'
+    $builder.addFormObject 'bob',
+        component: 'sampleInput'
+    $builder.addFormObject 'bob',
+        component: 'sampleInput'
+        label: 'Bob 1'
+        description: 'Bob 1 description'
+    $builder.addFormObject 'bob',
+        component: 'sampleInput'
+        label: 'Bob 2'
+        description: 'Bob 2 description'
     # formObjects
     $scope.form = $builder.forms['default']
 
@@ -102,6 +112,10 @@ angular.module 'app', ['builder', 'builder.components', 'validator.rules']
     # formObjectId: default value
     $scope.defaultValue[textbox.id] = 'default value'
     $scope.defaultValue[checkbox.id] = [yes, yes]
+
+    $scope.$on('removalConfirmationTrigger', (event, data) ->
+        data.callback() if confirm("Really remove it??!")
+    )
 
     $scope.submit = ->
         $validator.validate $scope, 'default'

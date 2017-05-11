@@ -20,7 +20,7 @@ angular.module 'builder.directive', [
 
     restrict: 'A'
     scope:
-        fbBuilder: '='
+        fbBuilder: '@'
     template:
         """
         <div class='form-horizontal'>
@@ -92,17 +92,20 @@ angular.module 'builder.directive', [
                 if not isHover and draggable.mode is 'drag'
                     # remove the form object by draggin out
                     formObject = draggable.object.formObject
-                    if formObject.editable
-                        $builder.removeFormObject attrs.fbBuilder, formObject.index
+                    if formObject.editable and formObject.addable
+                        for formItem in $builder.forms[scope.formName]
+                            if formItem.$$hashKey == draggable.object.formObject.$$hashKey
+                                $builder.removeFormObject attrs.fbBuilder, formObject.index
+                                break
                 else if isHover
                     if draggable.mode is 'mirror'
                         # insert a form object
-                        $builder.insertFormObject scope.formName, $(element).find('.empty').index('.fb-form-object-editable'),
+                        $builder.insertFormObject scope.formName, $(element).find('.empty').index(),
                             component: draggable.object.componentName
                     if draggable.mode is 'drag'
                         # update the index of form objects
                         oldIndex = draggable.object.formObject.index
-                        newIndex = $(element).find('.empty').index('.fb-form-object-editable')
+                        newIndex = $(element).find('.empty').index()
                         newIndex-- if oldIndex < newIndex
                         $builder.updateFormObjectIndex scope.formName, oldIndex, newIndex
                 $(element).find('.empty').remove()
@@ -174,6 +177,12 @@ angular.module 'builder.directive', [
                 The save event of the popover.
                 ###
                 $event.preventDefault()
+                if Array.isArray(scope.options)
+                    newOptions = []
+                    for option in scope.options
+                        unless option.value == ""
+                            newOptions.push(option)
+                    scope.options = newOptions
                 $validator.validate(scope).success ->
                     popover.isClickedSave = yes
                     $(element).popover 'hide'
@@ -191,6 +200,7 @@ angular.module 'builder.directive', [
                 ###
                 The shown event of the popover.
                 ###
+                $(element).popover 'show'
                 scope.data.backup()
                 popover.isClickedSave = no
             cancel: ($event) ->
@@ -203,6 +213,22 @@ angular.module 'builder.directive', [
                     $event.preventDefault()
                     $(element).popover 'hide'
                 return
+            addOption: (optionObject) ->
+                ###
+                The create option event of the popover.
+                ###
+                scope.options.push(optionObject)
+            removeOption: ($index) ->
+                ###
+                The remove option event of the popover.
+                ###
+                scope.options.splice($index, 1)
+            saveDisabled: ->
+                ###
+                Disable the Save button if the options list is empty
+                ###
+                scope.options.length == 0
+
         # ----------------------------------------
         # popover.show
         # ----------------------------------------
@@ -267,8 +293,12 @@ angular.module 'builder.directive', [
             </li>
         </ul>
         <div class='form-horizontal'>
-            <div class='fb-component' ng-repeat="component in components"
-                fb-component="component"></div>
+          <div class='fb-component-container' ng-repeat="component in components | filter: {addable: 'true'}">
+            <button class='add-to-form btn btn-xs' ng-click="addThis(component.name); $event.stopPropagation(); $event.preventDefault();">
+              <span class='glyphicon glyphicon-plus'></span>
+            </button>
+            <div class='fb-component' fb-component="component"></div>
+          </div>
         </div>
         """
     controller: 'fbComponentsController'
@@ -379,7 +409,7 @@ angular.module 'builder.directive', [
             $(element).html view
 
         # select the first option
-        if not scope.$component.arrayToText and scope.formObject.options.length > 0
+        if not scope.$component.arrayToText and scope.formObject.options?.length > 0
             scope.inputText = scope.formObject.options[0]
 
         # set default value

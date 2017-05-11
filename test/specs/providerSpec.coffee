@@ -1,6 +1,7 @@
 describe 'builder.provider', ->
     fakeModule = null
     builderProvider = null
+    $rootScope = null
 
     beforeEach module('builder')
     beforeEach ->
@@ -8,6 +9,8 @@ describe 'builder.provider', ->
         fakeModule.config ($builderProvider) ->
             builderProvider = $builderProvider
     beforeEach module('fakeModule')
+    beforeEach inject ($injector) ->
+      $rootScope = $injector.get('$rootScope')
 
 
     # ----------------------------------------
@@ -98,9 +101,12 @@ describe 'builder.provider', ->
                 placeholder: ''
                 editable: yes
                 required: no
+                addable: true
+                effectiveDateEnabled: true
                 validation: '/.*/'
                 validationOptions: []
                 options: []
+                variables: {}
                 arrayToText: no
                 template: "<div class='form-group'></div>"
                 templateUrl: undefined
@@ -116,9 +122,12 @@ describe 'builder.provider', ->
                 placeholder: 'placeholder'
                 editable: no
                 required: yes
+                addable: true
+                effectiveDateEnabled: true
                 validation: '/regexp/'
                 validationOptions: []
-                options: ['value one']
+                options: [{id: 0, value: 'value one'}]
+                variables: {defaultValue: 'Default'}
                 arrayToText: yes
                 template: "<div class='form-group'></div>"
                 popoverTemplate: "<div class='form-group'></div>"
@@ -130,9 +139,13 @@ describe 'builder.provider', ->
                 placeholder: 'placeholder'
                 editable: no
                 required: yes
+                addable: true
+                effectiveDateEnabled: true
                 validation: '/regexp/'
                 validationOptions: []
-                options: ['value one']
+                options: [{id: 0, value: 'value one'}]
+                variables:
+                    defaultValue: 'Default'
                 arrayToText: yes
                 template: "<div class='form-group'></div>"
                 templateUrl: undefined
@@ -157,8 +170,12 @@ describe 'builder.provider', ->
                 placeholder: 'placeholder'
                 editable: yes
                 required: yes
+                addable: true
+                effectiveDateEnabled: true
                 validation: '/regexp/'
-                options: ['value one']
+                options: [{id: 0, value: 'value one'}]
+                variables:
+                    defaultValue: 'Default'
                 arrayToText: yes
                 template: "<div class='form-group'></div>"
                 popoverTemplate: "<div class='form-group'></div>"
@@ -173,9 +190,13 @@ describe 'builder.provider', ->
                 label: 'Input Text'
                 description: 'description'
                 placeholder: 'placeholder'
-                options: ['value one']
+                options: [{id: 0, value: 'value one'}]
                 required: yes
+                addable: true
+                effectiveDateEnabled: true
                 validation: '/regexp/'
+                variables:
+                    defaultValue: 'Default'
             .toEqual formObject
 
         it '$builderProvider.convertFormObject()', inject ($builder) ->
@@ -189,9 +210,13 @@ describe 'builder.provider', ->
                 label: 'input label'
                 description: 'description A'
                 placeholder: 'placeholder A'
-                options: ['value']
+                options: [{id: 0, value: 'value'}]
                 required: no
+                addable: true
+                effectiveDateEnabled: true
                 validation: '/.*/'
+                variables:
+                    defaultValue: 'Default'
 
             expect
                 id: undefined
@@ -201,9 +226,13 @@ describe 'builder.provider', ->
                 label: 'input label'
                 description: 'description A'
                 placeholder: 'placeholder A'
-                options: ['value']
+                options: [{id: 0, value: 'value'}]
                 required: no
+                addable: true
+                effectiveDateEnabled: true
                 validation: '/.*/'
+                variables:
+                    defaultValue: 'Default'
             .toEqual formObject
 
 
@@ -230,8 +259,11 @@ describe 'builder.provider', ->
                 placeholder: ''
                 editable: yes
                 required: no
+                addable: true
+                effectiveDateEnabled: true
                 validation: '/.*/'
                 options: []
+                variables: {}
                 arrayToText: no
                 template: "<div class='form-group'></div>"
                 popoverTemplate: "<div class='form-group'></div>"
@@ -244,9 +276,12 @@ describe 'builder.provider', ->
                 placeholder: ''
                 editable: yes
                 required: no
+                addable: true
+                effectiveDateEnabled: true
                 validation: '/.*/'
                 validationOptions: []
                 options: []
+                variables: {}
                 arrayToText: no
                 template: "<div class='form-group'></div>"
                 templateUrl: undefined
@@ -334,17 +369,12 @@ describe 'builder.provider', ->
                 template: "<div class='form-group'></div>"
                 popoverTemplate: "<div class='form-group'></div>"
 
-        it '$builder.removeFormObject() will call formObject.splice() and reindexFormObject()', inject ($builder) ->
-            spyOn(builderProvider.forms.default, 'splice').and.callFake (index, length, object) ->
-                expect(index).toBe 1
-                expect(length).toBe 1
-                expect(object).toBeUndefined()
-            spyOn(builderProvider, 'reindexFormObject').and.callFake (name) ->
-                expect(name).toEqual 'default'
+        it '$builder.removeFormObject() will broadcast a message to trigger confirmation dialog, with a callback', inject ($builder) ->
+            spyOn($rootScope, '$broadcast').and.callFake (message, callback) ->
+              expect(message).toEqual 'removalConfirmationTrigger'
+              expect(callback).toBeDefined()
             $builder.removeFormObject 'default', 1
-            expect(builderProvider.forms.default.splice).toHaveBeenCalled()
-            expect(builderProvider.reindexFormObject).toHaveBeenCalled()
-
+            expect($rootScope.$broadcast).toHaveBeenCalled()
 
     describe '$builder.updateFormObjectIndex()', ->
         beforeEach -> inject ($builder) ->
