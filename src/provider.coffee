@@ -18,6 +18,7 @@ angular.module 'builder.provider', []
     $http = null
     $rootScope = null
     $templateCache = null
+    $drag = null
 
     @config =
         popoverPlacement: 'right'
@@ -96,6 +97,7 @@ angular.module 'builder.provider', []
         $http = $injector.get '$http'
         $rootScope = $injector.get '$rootScope'
         $templateCache = $injector.get '$templateCache'
+        $drag = $injector.get '$drag'
 
     @loadTemplate = (component) ->
         ###
@@ -205,6 +207,9 @@ angular.module 'builder.provider', []
         formObjects.splice newIndex, 0, formObject
         @reindexFormObject name
 
+    @clearDragData = () =>
+        $drag.clearData()
+
     # ----------------------------------------
     # $get
     # ----------------------------------------
@@ -223,5 +228,6 @@ angular.module 'builder.provider', []
         insertFormObject: @insertFormObject
         removeFormObject: @removeFormObject
         updateFormObjectIndex: @updateFormObjectIndex
+        clearDragData: @clearDragData
     ]
     return
