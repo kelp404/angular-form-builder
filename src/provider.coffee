@@ -208,8 +208,9 @@ angular.module 'builder.provider', []
         @reindexFormObject name
 
     @clearDragData = () =>
-        $drag.clearData()
-
+        $drag.data.draggables = {}
+        $drag.data.droppables = {}
+        return
     # ----------------------------------------
     # $get
     # ----------------------------------------
