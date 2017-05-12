@@ -289,6 +289,9 @@ angular.module 'builder.drag', []
             @data.droppables[droppable.id] = droppable
         result
 
+    @clearData = () =>
+        @data.draggables = {}
+        @data.droppables = {}
 
     # ----------------------------------------
     # $get
