@@ -999,12 +999,6 @@
         return result;
       };
     })(this);
-    this.clearData = (function(_this) {
-      return function() {
-        _this.data.draggables = {};
-        return _this.data.droppables = {};
-      };
-    })(this);
     this.get = function($injector) {
       this.setupEasing();
       this.setupProviders($injector);
@@ -1292,7 +1286,8 @@
     })(this);
     this.clearDragData = (function(_this) {
       return function() {
-        return $drag.clearData();
+        $drag.data.draggables = {};
+        $drag.data.droppables = {};
       };
     })(this);
     this.$get = [
@@ -1302,6 +1297,7 @@
           _this.setupProviders($injector);
           _ref = _this.components;
           for (name in _ref) {
+            component = _ref[name];
             component = _ref[name];
             _this.loadTemplate(component);
           }
