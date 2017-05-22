@@ -70,6 +70,7 @@ module.exports = (grunt) ->
         'uglify'
     ]
     grunt.registerTask 'test', ['karma']
+    grunt.registerTask('default', ['build']);
 
     # -----------------------------------
     # Plugins

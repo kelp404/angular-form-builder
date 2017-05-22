@@ -20,7 +20,8 @@ angular.module 'builder.directive', [
 
     restrict: 'A'
     scope:
-        fbBuilder: '='
+        fbBuilder: '=fbBuilder'
+        fbBuilderMeta: '=?fbBuilderMeta'
     template:
         """
         <div class='form-horizontal'>
@@ -33,6 +34,7 @@ angular.module 'builder.directive', [
         # valuables
         # ----------------------------------------
         scope.formName = attrs.fbBuilder
+        scope.fbBuilderMeta = scope.fbBuilderMeta || {}
         $builder.forms[scope.formName] ?= []
         scope.formObjects = $builder.forms[scope.formName]
         beginMove = yes
@@ -123,6 +125,7 @@ angular.module 'builder.directive', [
     scope:
         formObject: '=fbFormObjectEditable'
     link: (scope, element) ->
+        scope.form = scope.$parent.$parent.fbBuilderMeta;
         scope.inputArray = [] # just for fix warning
         # get component
         scope.$component = $builder.components[scope.formObject.component]

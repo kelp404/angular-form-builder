@@ -57,6 +57,9 @@
         component: 'sampleInput'
       });
       $scope.form = $builder.forms['default'];
+      $scope.formMeta = {
+        name: 'default'
+      };
       $scope.input = [];
       $scope.defaultValue = {};
       $scope.defaultValue[textbox.id] = 'default value';
