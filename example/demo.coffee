@@ -92,6 +92,9 @@ angular.module 'app', ['builder', 'builder.components', 'validator.rules']
         component: 'sampleInput'
     # formObjects
     $scope.form = $builder.forms['default']
+    $scope.formMeta = {
+        name: 'default',
+    }
 
     # ----------------------------------------
     # form
