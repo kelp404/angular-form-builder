@@ -994,7 +994,7 @@
       "default": []
     };
     this.convertComponent = function(name, component) {
-      var result, _ref, _ref1, _ref2, _ref3, _ref4, _ref5, _ref6, _ref7, _ref8, _ref9;
+      var result, _ref, _ref1, _ref10, _ref2, _ref3, _ref4, _ref5, _ref6, _ref7, _ref8, _ref9;
       result = {
         name: name,
         group: (_ref = component.group) != null ? _ref : 'Default',
@@ -1006,7 +1006,8 @@
         validation: (_ref6 = component.validation) != null ? _ref6 : '/.*/',
         validationOptions: (_ref7 = component.validationOptions) != null ? _ref7 : [],
         options: (_ref8 = component.options) != null ? _ref8 : [],
-        arrayToText: (_ref9 = component.arrayToText) != null ? _ref9 : false,
+        meta: (_ref9 = component.meta) != null ? _ref9 : {},
+        arrayToText: (_ref10 = component.arrayToText) != null ? _ref10 : false,
         template: component.template,
         templateUrl: component.templateUrl,
         popoverTemplate: component.popoverTemplate,
