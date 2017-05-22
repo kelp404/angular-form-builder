@@ -72,7 +72,8 @@
             placeholder: $scope.placeholder,
             required: $scope.required,
             optionsText: $scope.optionsText,
-            validation: $scope.validation
+            validation: $scope.validation,
+            meta: $scope.meta
           };
         },
         rollback: function() {
@@ -88,7 +89,8 @@
           $scope.placeholder = this.model.placeholder;
           $scope.required = this.model.required;
           $scope.optionsText = this.model.optionsText;
-          return $scope.validation = this.model.validation;
+          $scope.validation = this.model.validation;
+          return $scope.meta = this.model.meta;
         }
       };
     }

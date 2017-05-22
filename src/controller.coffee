@@ -64,6 +64,7 @@ angular.module 'builder.controller', ['builder.provider']
                 required: $scope.required
                 optionsText: $scope.optionsText
                 validation: $scope.validation
+                meta: $scope.meta
         rollback: ->
             ###
             Rollback input value.
@@ -75,6 +76,7 @@ angular.module 'builder.controller', ['builder.provider']
             $scope.required = @model.required
             $scope.optionsText = @model.optionsText
             $scope.validation = @model.validation
+            $scope.meta = @model.meta
 ]
 
 
