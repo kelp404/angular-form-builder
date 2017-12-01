@@ -348,7 +348,12 @@
               title: scope.$component.label,
               content: popover.view,
               container: 'body',
-              placement: $builder.config.popoverPlacement
+              placement: $builder.config.popoverPlacement,
+              trigger: 'manual'
+            }).click(function(e) {
+              $('.popover').not(this).hide();
+              $(this).popover('show');
+              e.preventDefault();
             });
           });
           scope.popover = {
@@ -1297,7 +1302,6 @@
           _this.setupProviders($injector);
           _ref = _this.components;
           for (name in _ref) {
-            component = _ref[name];
             component = _ref[name];
             _this.loadTemplate(component);
           }
