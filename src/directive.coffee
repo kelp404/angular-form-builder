@@ -165,12 +165,17 @@ angular.module 'builder.directive', [
             # compile popover
             popover.view = $compile(popover.html) scope
             $(element).addClass popover.id
-            $(element).popover
-                html: yes
-                title: scope.$component.label
-                content: popover.view
-                container: 'body'
-                placement: $builder.config.popoverPlacement
+            $(element).popover(
+              html: yes
+              title: scope.$component.label
+              content: popover.view
+              container: 'body'
+              placement: $builder.config.popoverPlacement
+              trigger: 'manual').click (e) ->
+                $('.popover').not(this).hide()
+                $(this).popover 'show'
+                e.preventDefault()
+                return
         scope.popover =
             save: ($event) ->
                 ###
