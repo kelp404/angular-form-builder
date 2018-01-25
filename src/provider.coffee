@@ -107,12 +107,12 @@ angular.module 'builder.provider', []
         if not component.template?
             $http.get component.templateUrl,
                 cache: $templateCache
-            .success (template) ->
+            .then (template) ->
                 component.template = template
         if not component.popoverTemplate?
             $http.get component.popoverTemplateUrl,
                 cache: $templateCache
-            .success (template) ->
+            .then (template) ->
                 component.popoverTemplate = template
 
     # ----------------------------------------
