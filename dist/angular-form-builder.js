@@ -1145,15 +1145,15 @@
       if (component.template == null) {
         $http.get(component.templateUrl, {
           cache: $templateCache
-        }).then(function(template) {
-          return component.template = template;
+        }).then(function(response) {
+          return component.template = response.data;
         });
       }
       if (component.popoverTemplate == null) {
         return $http.get(component.popoverTemplateUrl, {
           cache: $templateCache
-        }).then(function(template) {
-          return component.popoverTemplate = template;
+        }).then(function(response) {
+          return component.popoverTemplate = response.data;
         });
       }
     };
