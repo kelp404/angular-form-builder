@@ -2,6 +2,9 @@
   "name": "angular-form-builder",
   "version": "0.1.0",
   "description": "AngularJS form builder.",
+  "scripts": {
+    "test": "grunt karma"
+  },
   "homepage": "https://github.com/kelp404/angular-form-builder",
   "repository": {
     "type": "git",
@@ -21,27 +24,27 @@
       "url": "https://github.com/kelp404/angular-form-builder/graphs/contributors"
     }
   ],
-  "licenses": [
-    {
-      "type": "MIT",
-      "url": "http://opensource.org/licenses/mit-license.php"
-    }
-  ],
+  "license": "MIT",
   "bugs": {
     "url": "https://github.com/kelp404/angular-form-builder/issues"
   },
   "devDependencies": {
-    "grunt": "~0.4.2",
-    "grunt-contrib-coffee": "^0.12.0",
-    "grunt-contrib-compass": "^1.0.1",
-    "grunt-contrib-connect": "^0.8.0",
-    "grunt-contrib-uglify": "^0.6.0",
-    "grunt-contrib-watch": "^0.6.1",
-    "grunt-karma": "^0.9.0",
-    "karma": "^0.12.16",
-    "karma-coffee-preprocessor": "~0.2.1",
-    "karma-jasmine": "^0.2.2",
-    "karma-phantomjs-launcher": "^0.1.4",
-    "karma-script-launcher": "~0.1.0"
+    "angular": "1.2.32",
+    "angular-mocks": "1.2.32",
+    "angular-validator": "git+https://git@github.com/kelp404/angular-validator.git#0.2.8",
+    "grunt": "0.4.2",
+    "grunt-contrib-coffee": "0.12.0",
+    "grunt-contrib-compass": "1.0.1",
+    "grunt-contrib-connect": "0.8.0",
+    "grunt-contrib-uglify": "0.6.0",
+    "grunt-contrib-watch": "0.6.1",
+    "grunt-karma": "0.9.0",
+    "jquery": "3.3.1",
+    "jasmine-core": "2.9.1",
+    "karma": "2.0.0",
+    "karma-coffee-preprocessor": "1.0.1",
+    "karma-jasmine": "1.1.1",
+    "karma-phantomjs-launcher": "1.0.4",
+    "phantomjs-prebuilt": "2.1.16"
   }
 }
