@@ -67,7 +67,7 @@
           var _ref;
           formObject.options = $scope.options;
           if (((_ref = $scope.options) != null ? _ref.length : void 0) > 0) {
-            return $scope.inputText = $scope.options[0].value;
+            return $scope.inputText = $scope.options[0];
           }
         }, true);
         component = $builder.components[formObject.component];
