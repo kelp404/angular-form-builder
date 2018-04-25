@@ -60,7 +60,7 @@ angular.module 'builder.controller', ['builder.provider']
         $scope.$watch 'options', ->
             formObject.options = $scope.options
             if ($scope.options?.length > 0)
-                $scope.inputText = $scope.options[0].value
+                $scope.inputText = $scope.options[0]
         , yes
 
         component = $builder.components[formObject.component]
