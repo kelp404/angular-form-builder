@@ -293,11 +293,12 @@
     }
   ]).directive('fbFormObjectEditable', [
     '$injector', function($injector) {
-      var $builder, $compile, $drag, $validator;
+      var $builder, $compile, $drag, $timeout, $validator;
       $builder = $injector.get('$builder');
       $drag = $injector.get('$drag');
       $compile = $injector.get('$compile');
       $validator = $injector.get('$validator');
+      $timeout = $injector.get('$timeout');
       return {
         restrict: 'A',
         controller: 'fbFormObjectEditableController',
@@ -414,7 +415,8 @@
               /*
               The create option event of the popover.
                */
-              return scope.options.push(optionObject);
+              scope.options.push(optionObject);
+              return $validator.validate(scope);
             },
             removeOption: function($index) {
 
@@ -429,6 +431,18 @@
               Disable the Save button if the options list is empty
                */
               return scope.options.length === 0;
+            },
+            validateOption: function(event, code, value, group) {
+
+              /*
+              The validate option event of the popover.
+               */
+              if (!!code && !!value) {
+                $validator.validate(scope, group);
+                return $timeout(function() {
+                  return event.target.focus();
+                });
+              }
             }
           };
           $(element).on('show.bs.popover', function() {

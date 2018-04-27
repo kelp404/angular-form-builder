@@ -120,6 +120,7 @@ angular.module 'builder.directive', [
     $drag = $injector.get '$drag'
     $compile = $injector.get '$compile'
     $validator = $injector.get '$validator'
+    $timeout = $injector.get '$timeout'
 
     restrict: 'A'
     controller: 'fbFormObjectEditableController'
@@ -223,6 +224,7 @@ angular.module 'builder.directive', [
                 The create option event of the popover.
                 ###
                 scope.options.push(optionObject)
+                $validator.validate(scope)
             removeOption: ($index) ->
                 ###
                 The remove option event of the popover.
@@ -233,6 +235,14 @@ angular.module 'builder.directive', [
                 Disable the Save button if the options list is empty
                 ###
                 scope.options.length == 0
+            validateOption: (event, code, value, group) ->
+                ###
+                The validate option event of the popover.
+                ###
+                if !!code and !!value
+                    $validator.validate(scope, group)
+                    $timeout ->
+                        event.target.focus()
 
         # ----------------------------------------
         # popover.show
