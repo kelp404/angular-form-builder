@@ -12,6 +12,16 @@
 }
 .fb-form-object-editable {
     padding: 10px;
+    border: 1px solid #fff;
+    &.active {
+        background-color: #f5f5f5;
+        border-top: 1px solid #ddd;
+        border-bottom: 1px solid #ddd;
+        @include transition(background-color 1000ms linear);
+    }
+    &:hover {
+        border: 1px dashed #aaa;
+    }
 }
 .fb-form-object-editable.fb-draggable {
     cursor: move;
