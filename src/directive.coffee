@@ -230,6 +230,7 @@ angular.module 'builder.directive', [
                 The remove option event of the popover.
                 ###
                 scope.options.splice($index, 1)
+                $validator.validate(scope)
             saveDisabled: ->
                 ###
                 Disable the Save button if the options list is empty

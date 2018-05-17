@@ -423,7 +423,8 @@
               /*
               The remove option event of the popover.
                */
-              return scope.options.splice($index, 1);
+              scope.options.splice($index, 1);
+              return $validator.validate(scope);
             },
             saveDisabled: function() {
 
