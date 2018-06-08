@@ -214,12 +214,12 @@ angular.module 'builder.components', ['builder', 'validator.rules', 'ui.sortable
                       <div ng-repeat="item in options">
                         <div class="handle">::</div>
                         <input type="text" ng-model="item.value" required/>
-                        <a class="btn btn-danger btn-xs right" type="button" ng-click="popover.removeOption($index)"><span class="glyphicon glyphicon-minus"></span></a>
+                        <a class="btn btn-danger btn-xs right" type="button" ng-click="popover.removeOption($index)"><span class="fa fa-minus"></span></a>
                       </div>
                     </div>
                 </div>
                 <div class="form-group">
-                    <button class="btn btn-primary btn-xs" type="button" ng-click="popover.addOption()"><span class="glyphicon glyphicon-plus"></span> Add Option</button>
+                    <button class="btn btn-primary btn-xs" type="button" ng-click="popover.addOption()"><span class="fa fa-plus"></span> Add Option</button>
                 </div>
 
                 <hr/>
@@ -271,12 +271,12 @@ angular.module 'builder.components', ['builder', 'validator.rules', 'ui.sortable
                       <div ng-repeat="item in options">
                         <div class="handle">::</div>
                         <input type="text" ng-model="item.value" required/>
-                        <a class="btn btn-danger btn-xs right" type="button" ng-click="popover.removeOption($index)"><span class="glyphicon glyphicon-minus"></span></a>
+                        <a class="btn btn-danger btn-xs right" type="button" ng-click="popover.removeOption($index)"><span class="fa fa-minus"></span></a>
                       </div>
                     </div>
                 </div>
                 <div class="form-group">
-                    <button class="btn btn-primary btn-xs" type="button" ng-click="popover.addOption({value:'', deletable: true})"><span class="glyphicon glyphicon-plus"></span> Add Option</button>
+                    <button class="btn btn-primary btn-xs" type="button" ng-click="popover.addOption({value:'', deletable: true})"><span class="fa fa-plus"></span> Add Option</button>
                 </div>
 
                 <hr/>

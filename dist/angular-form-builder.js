@@ -498,7 +498,7 @@
   ]).directive('fbComponents', function() {
     return {
       restrict: 'A',
-      template: "<ul ng-if=\"groups.length > 1\" class=\"nav nav-tabs nav-justified\">\n    <li ng-repeat=\"group in groups\" ng-class=\"{active:activeGroup==group}\">\n        <a href='#' ng-click=\"selectGroup($event, group)\">{{group}}</a>\n    </li>\n</ul>\n<div class='form-horizontal'>\n  <div class='fb-component-container' ng-repeat=\"component in components | filter: {addable: 'true'}\">\n    <button class='add-to-form btn btn-xs' ng-click=\"addThis(component.name); $event.stopPropagation(); $event.preventDefault();\">\n      <span class='glyphicon glyphicon-plus'></span>\n    </button>\n    <div class='fb-component' fb-component=\"component\"></div>\n  </div>\n</div>",
+      template: "<ul ng-if=\"groups.length > 1\" class=\"nav nav-tabs nav-justified\">\n    <li ng-repeat=\"group in groups\" ng-class=\"{active:activeGroup==group}\">\n        <a href='#' ng-click=\"selectGroup($event, group)\">{{group}}</a>\n    </li>\n</ul>\n<div class='form-horizontal'>\n  <div class='fb-component-container' ng-repeat=\"component in components | filter: {addable: 'true'}\">\n    <button class='add-to-form btn btn-xs' ng-click=\"addThis(component.name); $event.stopPropagation(); $event.preventDefault();\">\n      <span class='fa fa-plus'></span>\n    </button>\n    <div class='fb-component' fb-component=\"component\"></div>\n  </div>\n</div>",
       controller: 'fbComponentsController'
     };
   }).directive('fbComponent', [

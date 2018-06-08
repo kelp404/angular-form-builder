@@ -311,7 +311,7 @@ angular.module 'builder.directive', [
         <div class='form-horizontal'>
           <div class='fb-component-container' ng-repeat="component in components | filter: {addable: 'true'}">
             <button class='add-to-form btn btn-xs' ng-click="addThis(component.name); $event.stopPropagation(); $event.preventDefault();">
-              <span class='glyphicon glyphicon-plus'></span>
+              <span class='fa fa-plus'></span>
             </button>
             <div class='fb-component' fb-component="component"></div>
           </div>
